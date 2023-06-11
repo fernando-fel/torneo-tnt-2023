@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.torneo.Core.Data.Equipo
 import com.example.torneo.Core.Data.Torneo
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,6 +63,46 @@ fun UpdateTorneoContent(
         Button(
             onClick = {
                 updateTorneo(torneo)
+                navigateBack()
+            }
+        ) {
+            Text(text = "Actualizar")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdateEquipoContent(
+    padding: PaddingValues,
+    equipo: Equipo,
+    updateNombre: (nombre:String) ->Unit,
+    updateEquipo: (equipo:Equipo) -> Unit,
+    navigateBack: () -> Unit
+){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        TextField(
+            value = equipo.nombre,
+            onValueChange = { nombre->
+                updateNombre(nombre)
+            },
+            placeholder = {
+                Text("Nombre del torneo")
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+
+        Button(
+            onClick = {
+                updateEquipo(equipo)
                 navigateBack()
             }
         ) {

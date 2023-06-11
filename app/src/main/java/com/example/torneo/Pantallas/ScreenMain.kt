@@ -40,6 +40,7 @@ fun ScreenMain(){
         composable(Routes.SesionOk.route){
             SesionOk(navController = navController)
         }
+
         composable(Routes.TorneosScreen.route){
             TorneosScreen(
                 navController = { torneoId ->
@@ -63,5 +64,35 @@ fun ScreenMain(){
                 }
             )
         }
+        composable(
+            route = Routes.EquiposScreen.route
+        ) {
+            EquiposScreen(
+                navController = { equipoId ->
+                    navController.navigate(
+                        "${Routes.UpdateEquipoScreen.route}/${equipoId}"
+                    )
+                }
+            )
+        }
+        composable(
+            route = "${Routes.UpdateEquipoScreen.route}/{${Constantes.EQUIPO_ID}}",
+            arguments = listOf(
+                navArgument("equipoId"){
+                    type = NavType.IntType
+                }
+            )
+
+        ){
+                navBackStackEntry ->
+            val equipoId = navBackStackEntry.arguments?.getInt(Constantes.EQUIPO_ID) ?:0
+            UpdateEquipoScreen(
+                equipoId = equipoId,
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
     }
 }
