@@ -11,11 +11,16 @@ sealed class Routes(val route: String) {
 
     object Login : Routes("Login")
     object SignUp : Routes("SignUp")
-    object ForgotPassword: Routes("ForgotPassword")
+    object ForgotPassword : Routes("ForgotPassword")
     object SesionIncorrecto : Routes("SesionIncorrecto")
     object SesionOk : Routes("SesionOK")
     object TorneosScreen : Routes("TorneosScreen")
     object UpdateTorneoScreen : Routes("UpdateTorneoScreen")
+
+    object EquiposScreen : Routes("EquiposScreen")
+    object UpdateEquipoScreen : Routes("UpdateEquipoScreen")
+
+
     object SplashScreen: Routes("SplashScreen")
 
     object ScreenMain: Routes("ScreenMain")

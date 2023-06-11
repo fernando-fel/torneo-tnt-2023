@@ -14,3 +14,12 @@ fun DeleteIcon(
         Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo" )
     }
 }
+
+@Composable
+fun DeleteIcon2(
+    deleteEquipo: () -> Unit
+){
+    IconButton(onClick = deleteEquipo ) {
+        Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Equipo" )
+    }
+}

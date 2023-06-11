@@ -16,7 +16,6 @@ import com.example.torneo.Pantallas.UpdateTorneoScreen
 fun NavGraph (
     navController: NavHostController
 ){
-
     NavHost(navController = navController,Routes.TorneosScreen.route){
         composable(
             route = Routes.TorneosScreen.route

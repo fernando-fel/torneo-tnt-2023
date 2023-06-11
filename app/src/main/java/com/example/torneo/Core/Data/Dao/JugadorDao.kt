@@ -16,18 +16,18 @@ interface JugadorDao{
     fun getAlphabetizedJugador(): Flow<List<Jugador>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(jugador: Jugador)
+    fun insertJugador(jugador: Jugador)
 
     @Delete
-    suspend fun delete(jugador: Jugador)
+    fun deleteJugador(jugador: Jugador)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun update(jugador: Jugador)
+    fun updateJugador(jugador: Jugador)
 
     @Query("DELETE FROM jugador_table")
     suspend fun deleteAll()
 
-    @Query("SELECT * from jugador_table WHERE dni = :dni")
-    fun getJugador(dni: Int): Flow<Jugador>
+    @Query("SELECT * from jugador_table WHERE id = :id")
+    fun getJugador(id: Int): Jugador
 }
 

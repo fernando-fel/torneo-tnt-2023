@@ -20,4 +20,5 @@ interface EquipoRepository {
      */
     suspend fun updateEquipo(equipo: Equipo)
 
+    suspend fun getEquipo(id: Int): Equipo
 }

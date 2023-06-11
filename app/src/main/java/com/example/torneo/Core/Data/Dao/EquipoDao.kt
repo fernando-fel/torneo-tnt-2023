@@ -16,17 +16,17 @@ interface EquipoDao{
     fun getAlphabetizedEquipo(): Flow<List<Equipo>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(equipo: Equipo)
+    fun insertEquipo(equipo: Equipo)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun update(equipo: Equipo)
+    fun updateEquipo(equipo: Equipo)
 
     @Delete
-    suspend fun delete(equipo: Equipo)
+    fun deleteEquipo(equipo: Equipo)
 
     @Query("DELETE FROM equipo_table")
     suspend fun deleteAll()
 
-    @Query("SELECT * from equipo_table WHERE nombre = :nombre")
-    fun getEquipo(nombre: String): Flow<Equipo>
+    @Query("SELECT * from equipo_table WHERE id = :id")
+    fun getEquipo(id: Int): Equipo
 }

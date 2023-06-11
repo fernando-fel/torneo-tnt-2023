@@ -21,3 +21,26 @@ fun AddTorneoFlotingActionButton(
         Icon(imageVector = Icons.Default.Add , contentDescription = ADD_TORNEO )
     }
 }
+@Composable
+fun AddEquipoFlotingActionButton(
+    openDialog:()-> Unit
+){
+    FloatingActionButton(
+        onClick = openDialog,
+        modifier = Modifier.background(Color.Black)
+    ) {
+        Icon(imageVector = Icons.Default.Add , contentDescription = "Equipo" )
+    }
+}
+
+@Composable
+fun AddJugadorFlotingActionButton(
+    openDialog:()-> Unit
+){
+    FloatingActionButton(
+        onClick = openDialog,
+        modifier = Modifier.background(Color.Black)
+    ) {
+        Icon(imageVector = Icons.Default.Add , contentDescription = "Alta Jugador" )
+    }
+}

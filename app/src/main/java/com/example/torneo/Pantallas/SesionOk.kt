@@ -68,7 +68,7 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
-                        onClick = { /* Acción para la opción Ver partidos */ },
+                        onClick = { navController.navigate(Routes.EquiposScreen.route)},
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(

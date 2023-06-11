@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.SemanticsActions.OnClick
 import androidx.compose.ui.unit.dp
+import com.example.torneo.Core.Data.Equipo
 import com.example.torneo.Core.Data.Torneo
 
 
@@ -57,6 +58,47 @@ fun TorneoCard(
             )
             DeleteIcon(
                 deleteTorneo = deleteTorneo
+            )
+        }
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EquipoCard(
+    equipo: Equipo,
+    deleteEquipo: ()-> Unit,
+    navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
+){
+    Card(
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier
+            .padding(
+                start = 8.dp,
+                end = 8.dp,
+                top = 4.dp,
+                bottom = 4.dp
+            )
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation() ,
+        onClick = {
+            navigateToUpdateEquipoScreen(equipo.id)
+        }
+
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Column() {
+                Text(text = equipo.nombre)
+            }
+            Spacer(
+                modifier = Modifier.weight(1f)
+            )
+            DeleteIcon2(
+                deleteEquipo = deleteEquipo
             )
         }
     }

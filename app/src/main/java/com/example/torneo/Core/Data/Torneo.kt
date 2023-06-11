@@ -18,7 +18,8 @@ data class Torneo(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
     val nombre: String,
     val anio: Int?,
-    val tipo: String?
+    val tipo: String?,
+
 )
 
 @Dao
