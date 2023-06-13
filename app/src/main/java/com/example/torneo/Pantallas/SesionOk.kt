@@ -68,7 +68,7 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
-                        onClick = { navController.navigate(Routes.EquiposScreen.route)},
+                        onClick = { navController.navigate(Routes.EquiposScreen.route) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
@@ -84,6 +84,17 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                     ) {
                         Text(
                             text = "Jugadores",
+                            fontSize = 30.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(
+                        onClick = { navController.navigate(Routes.Fixture.route) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Fixture",
                             fontSize = 30.sp
                         )
                     }

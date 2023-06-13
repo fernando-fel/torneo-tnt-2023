@@ -4,11 +4,7 @@ import com.example.torneo.Core.Constantes.Companion.TORNEOS_SCREEN
 import com.example.torneo.Core.Constantes.Companion.UPDATE_TORNEO_SCREEN
 
 sealed class Routes(val route: String) {
-    //object TorneosScreen: Routes(TORNEOS_SCREEN)
-    //object UpdateTorneoScreen : Routes(UPDATE_TORNEO_SCREEN)
-
-    //este anda bien
-
+    object SplashScreen: Routes("SplashScreen")
     object Login : Routes("Login")
     object SignUp : Routes("SignUp")
     object ForgotPassword : Routes("ForgotPassword")
@@ -19,10 +15,8 @@ sealed class Routes(val route: String) {
 
     object EquiposScreen : Routes("EquiposScreen")
     object UpdateEquipoScreen : Routes("UpdateEquipoScreen")
-
-
-    object SplashScreen: Routes("SplashScreen")
-
+    object Fixture : Routes("Fixture")
+    object UnPartido : Routes("UnPartido")
     object ScreenMain: Routes("ScreenMain")
 
 }

@@ -26,21 +26,20 @@ fun ScreenMain(){
             SplashScreen(navController)
         }
         composable(Routes.Login.route) {
-            LoginPage(navController = navController)
+            LoginPage(navController)
         }
         composable(Routes.SignUp.route) {
-            SignUp(navController = navController)
+            SignUp(navController)
         }
         composable(Routes.ForgotPassword.route) {
-            ForgotPassword(navController = navController)
+            ForgotPassword(navController)
         }
         composable(Routes.SesionIncorrecto.route){
-            SesionIncorrecto(navController = navController)
+            SesionIncorrecto(navController)
         }
         composable(Routes.SesionOk.route){
-            SesionOk(navController = navController)
+            SesionOk(navController)
         }
-
         composable(Routes.TorneosScreen.route){
             TorneosScreen(
                 navController = { torneoId ->
@@ -64,9 +63,7 @@ fun ScreenMain(){
                 }
             )
         }
-        composable(
-            route = Routes.EquiposScreen.route
-        ) {
+        composable(route = Routes.EquiposScreen.route) {
             EquiposScreen(
                 navController = { equipoId ->
                     navController.navigate(
@@ -92,6 +89,24 @@ fun ScreenMain(){
                     navController.popBackStack()
                 }
             )
+        }
+
+        composable(Routes.Fixture.route){
+            Fixture(navController)
+        }
+
+        composable(
+            route = "${Routes.UnPartido.route}/{equipoLocal}/{equipoVisitante}/{golLocal}/{golVisitante}",
+            arguments = listOf(navArgument("equipoLocal") { type = NavType.StringType },
+                navArgument("equipoVisitante") { type = NavType.StringType },
+                navArgument("golLocal") { type = NavType.IntType },
+                navArgument("golVisitante") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val equipoLocal = backStackEntry.arguments?.getString("equipoLocal")
+            val equipoVisitante = backStackEntry.arguments?.getString("equipoVisitante")
+            val golLocal = backStackEntry.arguments?.getInt("golLocal")
+            val golVisitante = backStackEntry.arguments?.getInt("golVisitante")
+            UnPartido(navController)
         }
 
     }
