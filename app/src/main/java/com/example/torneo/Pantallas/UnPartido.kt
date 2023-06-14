@@ -88,7 +88,7 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                             )
-                            Text(text = partido.golLocal.toString(), fontSize = 30.sp)
+                            Text(text = golLocal.value.toString(), fontSize = 30.sp)
                             Text(text = golVisitante.value.toString(), fontSize = 30.sp)
                             Text(
                                 text = "${partido.equipoVisitante}",
@@ -131,8 +131,8 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                             ) {
                                 Button(
                                     onClick = {
-                                        if (partido.golLocal > 0) {
-                                            partido.golLocal -= 1
+                                        if (golLocal.value > 0) {
+                                            golLocal.value -= 1
                                         }
                                     },
                                 ) {
@@ -140,8 +140,8 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                 }
                                 Button(
                                     onClick = {
-                                        if (partido.golLocal >= 0) {
-                                            partido.golLocal += 1
+                                        if (golLocal.value >= 0) {
+                                            golLocal.value += 1
                                         }
                                     },
                                 ) {

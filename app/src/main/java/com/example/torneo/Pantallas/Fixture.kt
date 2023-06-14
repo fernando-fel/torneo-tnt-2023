@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -37,7 +38,7 @@ fun Fixture(navController: NavHostController){
     val fixtureData = FixtureData(
         numFechas = 1,
         partidos = listOf(
-            Partido("Equipo A", "Equipo B", 0,9),
+            Partido("Equipo A", "Equipo B", 0, 0),
             Partido("Equipo C", "Equipo D", 0, 0),
             Partido("Equipo E", "Equipo F", 0, 0),
             Partido("Equipo G", "Equipo H", 0, 0),
@@ -231,7 +232,7 @@ data class FixtureData(
 data class Partido(
     val equipoLocal: String,
     val equipoVisitante: String,
-    var golLocal: Int,
+    val golLocal: Int,
     val golVisitante:Int,
 )
 
