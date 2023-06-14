@@ -1,9 +1,12 @@
 package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,11 +21,15 @@ import androidx.navigation.NavHostController
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
 @Composable
 @ExperimentalMaterial3Api
@@ -49,9 +56,12 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(20.dp),
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
+
                 ) {
+                    Spacer(modifier = Modifier.height(50.dp))
+                    HorizontalScroll()
                     Text(text = "Bienvenido!", style = TextStyle(fontSize = 60.sp, fontFamily = FontFamily.Cursive))
                     Spacer(modifier = Modifier.height(50.dp))
 
@@ -102,6 +112,33 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
             }
         })
 }
+
+@Composable
+fun HorizontalScroll() {
+    val scrollState = rememberScrollState()
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState)
+    ) {
+
+        repeat(10) {
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .background(randomColor())
+            ){
+                Text(
+                    text = "Publicidad",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+}
+
+fun randomColor() = Color(Random.nextLong(0xFFFFFFFF))
+
 /*
 Column(
 modifier = Modifier
