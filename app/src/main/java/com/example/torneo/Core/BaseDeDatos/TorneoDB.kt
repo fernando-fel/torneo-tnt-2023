@@ -4,20 +4,30 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.torneo.Core.Data.Dao.EquipoDao
+import com.example.torneo.Core.Data.Dao.FechaDao
 import com.example.torneo.Core.Data.Dao.JugadorDao
-import com.example.torneo.Core.Data.Equipo
+import com.example.torneo.Core.Data.Dao.PartidoDao
+import com.example.torneo.Core.Data.Dao.TorneoDao
+import com.example.torneo.Core.Data.Entity.Equipo
+import com.example.torneo.Core.Data.Entity.Fecha
+import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.Jugador
-import com.example.torneo.Core.Data.Torneo
-import com.example.torneo.Core.Data.TorneoDao
 
 
-@Database(entities = [Torneo::class, Equipo::class, Jugador::class], version=4, exportSchema = false)
+@Database(entities = [Torneo::class, Equipo::class, Jugador::class, Fecha::class, Partido::class], version=6, exportSchema = false)
 abstract class TorneoDB: RoomDatabase() {
     abstract fun torneoDao(): TorneoDao
 
     abstract fun equipoDao(): EquipoDao
 
     abstract fun jugadorDao() : JugadorDao
+
+    abstract fun fechaDao(): FechaDao
+
+    abstract fun partidoDao(): PartidoDao
+
+    //abstract fun equipoJugadorDao() : EquipoJugadorDao
 
 
 }

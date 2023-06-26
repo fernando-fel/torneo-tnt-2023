@@ -1,10 +1,9 @@
 package com.example.torneo.Core.Data.repository
-import com.example.torneo.Core.Data.Dao.EquipoDao
+
 import com.example.torneo.Core.Data.Dao.JugadorDao
-import com.example.torneo.Core.Data.Equipo
+
 import com.example.torneo.Core.Data.Jugador
-import com.example.torneo.Core.Data.TorneoDao
-import kotlinx.coroutines.flow.Flow
+
 
 class JugadorRepositoryImpl(private val jugadorDao: JugadorDao
 ): JugadorRepository{
@@ -18,5 +17,6 @@ class JugadorRepositoryImpl(private val jugadorDao: JugadorDao
 
     override fun getJugador(id:Int) = jugadorDao.getJugador(id)
 
+    override fun getJugadoresPorEquipo (id: Int) = jugadorDao.getJugadoresByEquipo(id)
 
 }

@@ -1,6 +1,6 @@
 package com.example.torneo.Core.Data.repository
 
-import com.example.torneo.Core.Data.Torneo
+import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.flow.Flow
 
 typealias Torneos = List<Torneo>

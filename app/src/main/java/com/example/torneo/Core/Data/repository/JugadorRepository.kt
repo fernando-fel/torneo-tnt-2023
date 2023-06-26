@@ -22,4 +22,5 @@ interface JugadorRepository {
 
     fun getJugador(id: Int): Jugador
 
+    fun getJugadoresPorEquipo(id: Int): Flow<Jugadores>
 }

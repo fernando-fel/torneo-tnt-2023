@@ -6,23 +6,26 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.torneo.Core.Data.Entity.Equipo
+import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.repository.EquipoRepository
+import com.example.torneo.Core.Data.repository.FechaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EquiposViewModel @Inject constructor(
-    private val repo: EquipoRepository
+class FechasViewModel @Inject constructor(
+    private val repo: FechaRepository
 ): ViewModel()
 {
-    var equipo by mutableStateOf(Equipo(0,""))
+
+    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = 1, numero = 0))
     var openDialog by mutableStateOf(false)
-    val equipos = repo.getEquipoFromRoom()
-    fun addEquipo(equipo: Equipo) = viewModelScope.launch(Dispatchers.IO)
+    val fechas = repo.getFechasByTorneo(1)
+    fun addFecha(fecha: Fecha) = viewModelScope.launch(Dispatchers.IO)
     {
-        repo.addEquipoToRoom(equipo)
+        repo.addFecha(fecha)
     }
     fun closeDialog(){
         openDialog = false
@@ -30,25 +33,23 @@ class EquiposViewModel @Inject constructor(
     fun openDialog(){
         openDialog = true
     }
-    fun deleteEquipo(equipo: Equipo) =
+    fun deleteFecha(fecha:Fecha) =
         viewModelScope.launch(Dispatchers.IO){
-            repo.deleteEquipo(equipo)
+            repo.deleteFecha(fecha)
         }
 
-    fun  updateNombre(nombre:String){
+/*    fun  updateNombre(nombre:String){
         equipo = equipo.copy(
             nombre= nombre
         )
-    }
+    }*/
 
-    fun updateEquipo(equipo :Equipo) {
+    fun updateFecha(fecha: Fecha) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.updateEquipo(equipo)
+            repo.updateFecha(fecha)
         }
     }
-    fun getEquipo(id: Int) = viewModelScope.launch(
-        Dispatchers.IO
-    ) {
-        equipo = repo.getEquipo(id)
+    fun getFecha(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        fecha = repo.getFecha(id)
     }
 }

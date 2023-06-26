@@ -11,6 +11,8 @@ sealed class Routes(val route: String) {
     object SesionIncorrecto : Routes("SesionIncorrecto")
     object SesionOk : Routes("SesionOK")
     object TorneosScreen : Routes("TorneosScreen")
+    object FechasScreen : Routes("FechasScreen")
+    object UpdateFechasScreen : Routes("UpdateFechasScreen")
     object UpdateTorneoScreen : Routes("UpdateTorneoScreen")
 
     object EquiposScreen : Routes("EquiposScreen")

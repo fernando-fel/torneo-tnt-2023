@@ -34,8 +34,8 @@ fun UpdateTorneoScreen(
                 updateNombre = { nombre ->
                     viewModel.updateNombre(nombre)
                 },
-                updateTipo = { tipo ->
-                    viewModel.updateTipo(tipo)
+                updateUbicacion = { ubicacion ->
+                    viewModel.updateUbicacion(ubicacion)
                 },
                 updateTorneo = { torneo ->
                     viewModel.updateTorneo(torneo)

@@ -8,7 +8,7 @@ import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import androidx.room.Update
 import com.example.torneo.Core.Constantes.Companion.TORNEO_TABLE
-import com.example.torneo.Core.Data.Torneo
+import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,6 +30,6 @@ interface TorneoDao{
     suspend fun update(torneo: Torneo)
 
     @Query("SELECT * from torneo_table WHERE id = :id")
-    fun getTorneo(id: Int): Flow<Torneo>
+    fun getTorneo(id: Int): Torneo
 }
 

@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.torneo.Core.BaseDeDatos.OfflineTorneosRepository
 import com.example.torneo.Core.BaseDeDatos.TorneoDB_Impl
 import com.example.torneo.Core.Data.repository.EquipoRepository
+import com.example.torneo.Core.Data.repository.FechaRepository
 import com.example.torneo.Core.Data.repository.JugadorRepository
 
 /**
@@ -14,6 +15,7 @@ interface AppContainer {
     val torneoRepository: TorneoRepository
     val equipoRepository: EquipoRepository
     val jugadorRepository: JugadorRepository
+    val fechaRepository: FechaRepository
 }
 
 /**

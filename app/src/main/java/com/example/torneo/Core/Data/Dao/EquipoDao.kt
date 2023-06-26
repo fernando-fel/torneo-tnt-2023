@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.torneo.Core.Data.Equipo
+import com.example.torneo.Core.Data.Entity.Equipo
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -18,30 +18,32 @@ import androidx.compose.ui.focus.focusRequester
 import com.example.torneo.Core.Constantes.Companion.DISMISS
 import com.example.torneo.Core.Constantes.Companion.NO_VALUE
 import com.example.torneo.Core.Data.Entity.Equipo
+import com.example.torneo.Core.Data.Entity.Fecha
 
 import kotlinx.coroutines.job
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEquiposAlertDialog(
+fun AddFechasAlertDialog(
     openDialog: Boolean,
     closeDialog: ()->Unit,
-    addEquipo: (equipo : Equipo) -> Unit
+    addFecha: (fecha: Fecha) -> Unit
 ){
     if (openDialog){
-        var nombre by remember { mutableStateOf(NO_VALUE) }
+        var numero by remember { mutableStateOf(NO_VALUE) }
+        var dia by remember { mutableStateOf(NO_VALUE) }
         val focusRequester = FocusRequester()
 
         AlertDialog(onDismissRequest = { closeDialog },
             title = {
-                Text("Agregar Equipo")
+                Text("Agregar Fecha")
             },
             text = {
                 Column(){
-                    TextField(value = nombre,
-                        onValueChange = {nombre = it},
+                    TextField(value = numero,
+                        onValueChange = {numero = it},
                         placeholder = {
-                            Text("Nombre del Equipo")
+                            Text("Numero de fecha")
                         },
                         modifier = Modifier.focusRequester(
                             focusRequester
@@ -56,8 +58,8 @@ fun AddEquiposAlertDialog(
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val equipo = Equipo(0,nombre)
-                        addEquipo(equipo)
+                        val fecha = Fecha(0, idTorneo = 1, numero = 2)
+                        addFecha(fecha)
                     }) {
                     Text(text = ("Agregar Equipo"))
                 }
@@ -70,3 +72,4 @@ fun AddEquiposAlertDialog(
         )
     }
 }
+

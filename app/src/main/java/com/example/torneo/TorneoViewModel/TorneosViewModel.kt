@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.torneo.Core.Constantes.Companion.NO_VALUE
-import com.example.torneo.Core.Data.Torneo
+import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.repository.TorneoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ class TorneosViewModel @Inject constructor(
     private val repo: TorneoRepository
 ): ViewModel()
 {
-    var torneo by mutableStateOf(Torneo(0,NO_VALUE,2023, NO_VALUE))
+    var torneo by mutableStateOf(Torneo(0, ubicacion = "", idTorneo = 1, precio = 1.0000, fechaInicio = "hoy", fechaFin = "mañaa", estado = "empezado", nombre = "nombre"))
     var openDialog by mutableStateOf(false)
     val torneos = repo.getAllTorneos()
     fun addTorneo(torneo: Torneo) = viewModelScope.launch(Dispatchers.IO)
@@ -41,9 +41,9 @@ class TorneosViewModel @Inject constructor(
             nombre= nombre
         )
     }
-    fun  updateTipo(tipo: String){
+    fun  updateUbicacion(ubicacion: String){
         torneo = torneo.copy(
-            tipo = tipo
+            ubicacion = ubicacion
         )
     }
     fun updateTorneo(torneo : Torneo) {

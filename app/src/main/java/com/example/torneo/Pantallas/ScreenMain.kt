@@ -8,8 +8,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.torneo.Core.Constantes
+import com.example.torneo.Core.Constantes.Companion.FECHA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
 import com.example.torneo.Splash.SplashScreen
+
 
 
 @Composable
@@ -44,7 +46,8 @@ fun ScreenMain(){
             TorneosScreen(
                 navController = { torneoId ->
                 navController.navigate("${Routes.UpdateTorneoScreen.route}/${torneoId}")
-            })
+            },
+            navController2 = navController)
         }
         composable("${Routes.UpdateTorneoScreen.route}/{$TORNEO_ID}",
             arguments = listOf(
@@ -94,6 +97,41 @@ fun ScreenMain(){
         composable(Routes.Fixture.route){
             Fixture(navController)
         }
+
+
+        composable(route = Routes.FechasScreen.route) {
+            FechasScreen(
+                navController = { fechasId ->
+                    navController.navigate(
+                        "${Routes.UpdateFechasScreen.route}/${fechasId}"
+                    )
+                }
+            )
+        }
+        composable(
+            route = "${Routes.UpdateFechasScreen.route}/{${FECHA_ID}}",
+            arguments = listOf(
+                navArgument("fechaId"){
+                    type = NavType.IntType
+                }
+            )
+
+        ){
+/*                navBackStackEntry ->
+            val fechaId = navBackStackEntry.arguments?.getInt(FECHA_ID)?:0
+            UpdateFechasScreen(
+                equipoId = fechaId,
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )*/
+        }
+
+        composable(Routes.Fixture.route){
+            Fixture(navController)
+        }
+
+
 
         composable(
             route = "${Routes.UnPartido.route}/{equipoLocal}/{equipoVisitante}/{golLocal}/{golVisitante}",

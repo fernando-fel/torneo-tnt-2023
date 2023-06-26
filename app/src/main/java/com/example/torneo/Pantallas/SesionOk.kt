@@ -97,6 +97,16 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                             fontSize = 30.sp
                         )
                     }
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(
+                        onClick = { navController.navigate(Routes.FechasScreen.route)},
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Fechas",
+                            fontSize = 30.sp
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(

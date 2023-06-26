@@ -1,6 +1,6 @@
 package com.example.torneo.Core.Data.repository
 
-import com.example.torneo.Core.Data.Equipo
+import com.example.torneo.Core.Data.Entity.Equipo
 import kotlinx.coroutines.flow.Flow
 
 

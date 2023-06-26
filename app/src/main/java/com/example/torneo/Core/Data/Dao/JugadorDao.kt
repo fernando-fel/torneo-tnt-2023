@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface JugadorDao{
 
+    @Query("SELECT * FROM jugador_table WHERE id = :equipoId")
+    fun getJugadoresByEquipo(equipoId: Int): Flow<List<Jugador>>
+
     @Query("SELECT * FROM jugador_table ORDER BY nombre ASC")
     fun getAlphabetizedJugador(): Flow<List<Jugador>>
 

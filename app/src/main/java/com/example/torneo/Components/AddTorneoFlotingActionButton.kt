@@ -44,3 +44,26 @@ fun AddJugadorFlotingActionButton(
         Icon(imageVector = Icons.Default.Add , contentDescription = "Alta Jugador" )
     }
 }
+
+@Composable
+fun AddFechaFlotingActionButton(
+    openDialog:()-> Unit
+){
+    FloatingActionButton(
+        onClick = openDialog,
+        modifier = Modifier.background(Color.Black)
+    ) {
+        Icon(imageVector = Icons.Default.Add , contentDescription = "Alta Fecha" )
+    }
+}
+@Composable
+fun AddPartidoFlotingActionButton(
+    openDialog:()-> Unit
+){
+    FloatingActionButton(
+        onClick = openDialog,
+        modifier = Modifier.background(Color.Black)
+    ) {
+        Icon(imageVector = Icons.Default.Add , contentDescription = "alta Partido" )
+    }
+}

@@ -1,5 +1,7 @@
 package com.example.torneo.Pantallas
 
+import androidx.compose.foundation.background
+import androidx.compose.material.AlertDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -82,7 +85,7 @@ fun LoginPage(navController: NavHostController) {
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
         val inicioSesionOk = remember { mutableStateOf(false) }
-
+        val showErrorDialog = remember { mutableStateOf(false) }
         Spacer(modifier = Modifier.height(30.dp))
         TextField(
             label = { Text(text = "Nombre de Usuario") },
@@ -126,8 +129,9 @@ fun LoginPage(navController: NavHostController) {
                         // Acción para iniciar sesión correctamente
                         // Pantalla Home, Alta torneo, Ver Partidos, Ver Fechas
                     } else {
+                        showErrorDialog.value = true
                         // Acción para mostrar un mensaje de error o realizar otra acción
-                        navController.navigate(Routes.SesionIncorrecto.route)
+                        //navController.navigate(Routes.SesionIncorrecto.route)
                     }
                 },
                 shape = RoundedCornerShape(50.dp),
@@ -137,6 +141,23 @@ fun LoginPage(navController: NavHostController) {
             ) {
                 Text(text = "Iniciar Sesion")
             }
+            if (showErrorDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { showErrorDialog.value = false },
+                    title = { Text(text = "Error de inicio de sesión") },
+                    text = { Text(text = "Clave o Usuario Incorrecto. Por favor, intenta nuevamente.") },
+                    confirmButton = {
+                        Button(
+                            onClick = { showErrorDialog.value = false },
+
+                        ) {
+                            Text(text = "Aceptar")
+                        }
+                    },
+                    backgroundColor = Color.Red
+                )
+            }
+
         }
 
         Spacer(modifier = Modifier.height(20.dp))

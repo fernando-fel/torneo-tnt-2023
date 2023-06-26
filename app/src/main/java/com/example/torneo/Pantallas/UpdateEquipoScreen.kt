@@ -8,10 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.torneo.Components.UpdateEquipoContent
 import com.example.torneo.Components.UpdateEquipoTopBar
-import com.example.torneo.Components.UpdateTorneoContent
-import com.example.torneo.Components.UpdateTorneoTopBar
 import com.example.torneo.TorneoViewModel.EquiposViewModel
-import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

@@ -11,6 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.torneo.Components.AddTorneoFlotingActionButton
 import com.example.torneo.Components.AddTorneosAlertDialog
 import com.example.torneo.Components.TorneosContent
@@ -20,10 +22,11 @@ import com.example.torneo.TorneoViewModel.TorneosViewModel
 @Composable
 fun TorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
-    navController: (torneoId: Int) -> Unit
+    navController: (torneoId: Int) -> Unit,
+    navController2: NavHostController
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarTorneosScreen(viewModel, navController)
+        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navController2)
     }
 }
 
@@ -31,7 +34,8 @@ fun TorneosScreen(
 @Composable
 fun ScaffoldWithTopBarTorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
-    navController: (torneoId: Int) -> Unit
+    navController: (torneoId: Int) -> Unit,
+    navController2: NavHostController
 ){
     val torneos by viewModel.torneos.collectAsState(
         initial = emptyList() )
@@ -50,7 +54,8 @@ fun ScaffoldWithTopBarTorneosScreen(
                     torneo->
                     viewModel.deleteTorneo(torneo)
                 },
-                navigateToUpdateTorneoScreen =  navController
+                navigateToUpdateTorneoScreen =  navController,
+                navController2
             )
             AddTorneosAlertDialog(
                 openDialog = viewModel.openDialog,

@@ -15,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.torneo.Core.Data.Equipo
-import com.example.torneo.Core.Data.Torneo
+import com.example.torneo.Core.Data.Entity.Equipo
+import com.example.torneo.Core.Data.Entity.Torneo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +24,7 @@ fun UpdateTorneoContent(
     padding: PaddingValues,
     torneo: Torneo,
     updateNombre: (nombre:String) ->Unit,
-    updateTipo: (tipo: String) -> Unit,
+    updateUbicacion: (ubicacion: String) -> Unit,
     updateTorneo: (torneo:Torneo) -> Unit,
     navigateBack: () -> Unit
 
@@ -48,14 +48,14 @@ fun UpdateTorneoContent(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        torneo.tipo?.let {
+        torneo.ubicacion?.let {
             TextField(
                 value = it,
-                onValueChange = { tipo ->
-                    updateTipo(tipo)
+                onValueChange = { ubicacion ->
+                    updateUbicacion(ubicacion)
                 },
                 placeholder = {
-                    Text("Tipo de torneo")
+                    Text("Ubicacion de torneo")
                 }
             )
         }

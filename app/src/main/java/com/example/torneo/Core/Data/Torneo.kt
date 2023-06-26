@@ -1,8 +1,5 @@
 package com.example.torneo.Core.Data
 
-
-
-
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
@@ -12,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-
+/*
 @Entity(tableName = "torneo_table")
 data class Torneo(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
@@ -22,6 +19,22 @@ data class Torneo(
 
 )
 
+ */
+
+import androidx.room.ColumnInfo
+
+@Entity(tableName = "torneo_table",)
+data class Torneo (
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "idTorneo") val idTorneo: Int,
+    @ColumnInfo(name = "nombre") val nombre: String,
+    @ColumnInfo(name = "fechaInicio") val fechaInicio: String,
+    @ColumnInfo(name = "fechaFin") val fechaFin: String,
+    @ColumnInfo(name = "ubicacion") val ubicacion: String,
+    @ColumnInfo(name = "precio") val precio: Double,
+    @ColumnInfo(name = "estado") val estado: String,
+)
+/*
 @Dao
 interface TorneoDao {
 
@@ -43,6 +56,7 @@ interface TorneoDao {
     @Query("SELECT * from torneo_table WHERE id = :id")
     fun getTorneo(id: Int): Torneo
 }
+
 
 @Dao
 interface JugadorDao{
@@ -86,4 +100,4 @@ interface EquipoDao{
 
     @Query("SELECT * from equipo_table WHERE nombre = :nombre")
     fun getEquipo(nombre: String): Flow<Equipo>
-}
+}*/

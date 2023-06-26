@@ -11,6 +11,7 @@ class Constantes {
         //Arguments
         const val TORNEO_ID = "torneoId"
         const val EQUIPO_ID = "equipoId"
+        const val FECHA_ID = "fechaId"
         //ACTIONS
         const val ADD_TORNEO = "Agregar torneo"
         const val DELETE_TORNEO = "Borrar torneo"

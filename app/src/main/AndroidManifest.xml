@@ -21,6 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Torneo"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC3tf0DqxDBnjIM9KfScRz-05eAj7rF1hg"
+            />
         <activity
             android:name=".Core.MainActivity"
             android:exported="true"
@@ -32,7 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".GeofenceBroadcastReceiver" />
+<!--        <receiver android:name=".GeofenceBroadcastReceiver" />-->
     </application>
 
 </manifest>

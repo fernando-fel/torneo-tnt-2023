@@ -20,10 +20,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.example.torneo.Core.Constantes.Companion.ADD_TORNEO
 import com.example.torneo.Core.Constantes.Companion.DISMISS
-import com.example.torneo.Core.Constantes.Companion.NOMBRE_TORNEO
 import com.example.torneo.Core.Constantes.Companion.NO_VALUE
-import com.example.torneo.Core.Data.Torneo
+import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.job
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,9 +32,15 @@ fun AddTorneosAlertDialog(
     closeDialog: ()->Unit,
     addTorneo: (torneo:Torneo) -> Unit
 ){
+
     if (openDialog){
         var nombre by remember { mutableStateOf(NO_VALUE) }
-        var tipo by remember { mutableStateOf(NO_VALUE) }
+        var ubicacion by remember { mutableStateOf(NO_VALUE) }
+        var fechaInicio by remember { mutableStateOf(NO_VALUE) }
+        var fechaFin by remember { mutableStateOf(NO_VALUE) }
+        var precio by remember { mutableStateOf(NO_VALUE) }
+        var estado by remember { mutableStateOf(NO_VALUE) }
+
         val focusRequester = FocusRequester()
 
         AlertDialog(onDismissRequest = { closeDialog },
@@ -43,11 +49,11 @@ fun AddTorneosAlertDialog(
         },
             text = {
                 Column(){
-                TextField(value = nombre,
-                    onValueChange = {nombre = it},
-                    placeholder = {
-                    Text("Nombre del torneo")
-                },
+                    TextField(value = nombre,
+                        onValueChange = {nombre = it},
+                        placeholder = {
+                        Text("Nombre del torneo")
+                    },
                     modifier = Modifier.focusRequester(
                         focusRequester
                     )
@@ -61,15 +67,51 @@ fun AddTorneosAlertDialog(
                     modifier = Modifier.height(16.dp)
                 )
                 TextField(
-                    value = tipo,
-                    onValueChange =  {tipo = it},
-                    placeholder = {Text("Tipo de torneo") }
-                )}
+                    value = ubicacion,
+                    onValueChange =  {ubicacion = it},
+                    placeholder = {Text("Ubicacion del torneo") }
+                )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    TextField(
+                        value = fechaInicio,
+                        onValueChange =  {fechaInicio = it},
+                        placeholder = {Text("Fecha de inicio del torneo") }
+                    )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    TextField(
+                        value = fechaFin,
+                        onValueChange =  {fechaFin = it},
+                        placeholder = {Text("Fecha de finalizacion del torneo") }
+                    )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    TextField(
+                        value = precio,
+                        onValueChange =  {precio = it},
+                        placeholder = {Text("Precio de inicio del torneo") }
+                    )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    TextField(
+                        value = estado,
+                        onValueChange =  {estado = it},
+                        placeholder = {Text("Estado del torneo") }
+                    )
+
+                    //(nombre, fecha inicio, fecha fin, ubicacion, precio, estado)
+                }
+
             },
     confirmButton = {
         TextButton(
             onClick = { closeDialog()
-            val torneo = Torneo(0,nombre,2023, tipo)
+            val torneo = Torneo(0, nombre = nombre, idTorneo = 1, estado = estado, fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio.toDouble(), ubicacion = ubicacion)
             addTorneo(torneo)
         }) {
             Text(text = (ADD_TORNEO))
