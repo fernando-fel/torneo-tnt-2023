@@ -167,6 +167,8 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                     Text(text = "-", fontSize = 25.sp)
                                 }
                             }
+                        } else if (stateButton.value == ButtonState.Fin){
+                            navController.navigate(Routes.Fixture.route)
                         }
                     }
                 }

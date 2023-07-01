@@ -67,16 +67,8 @@ fun ScaffoldFixture(navController: NavHostController, fixtureData: FixtureData) 
 
 @Composable
 fun FixtureView(navController: NavHostController, fixtureData: FixtureData) {
-    val gradient = Brush.radialGradient(
-        0.5f to Color.Transparent,
-        1.0f to Color.Blue,
-        radius = 1500.0f,
-        tileMode = TileMode.Repeated
-    )
-
     Column(
         modifier = Modifier
-            .background(gradient)
             .padding(20.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
