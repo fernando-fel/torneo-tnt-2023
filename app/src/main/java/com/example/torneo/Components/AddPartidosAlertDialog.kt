@@ -127,7 +127,7 @@ fun AddPartidosAlertDialog(
                                         idVisitante = visitante.toInt(), idLocal = local.toInt(),
                                         idFecha = fecha.toInt(), hora = hora, dia = dia,
                                         golVisitante = 0, golLocal = 0,
-                                        estado = estado, id = 0)
+                                        estado = estado, id = 0, idPersona = "")
                         addPartido(partido)
                     }) {
                     Text(text = ("Agregar Partido"))

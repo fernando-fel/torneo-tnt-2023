@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.torneo.Components.AddFechaFlotingActionButton
 import com.example.torneo.Components.AddFechasAlertDialog
 import com.example.torneo.Components.AddTorneoFlotingActionButton
@@ -25,21 +26,28 @@ import com.example.torneo.TorneoViewModel.TorneosViewModel
 @Composable
 fun FechasScreen(
     viewModel: FechasViewModel = hiltViewModel(),
-    navController: (idFecha:  Int) -> Unit
+    navController: (idFecha:  Int) -> Unit,
+    torneoId: Int
+    //navController2: NavHostController
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarFechasScreen(viewModel, navController)
+        ScaffoldWithTopBarFechasScreen(torneoId,viewModel, navController)
+    //, navController2)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldWithTopBarFechasScreen(
+    torneoId: Int,
     viewModel: FechasViewModel = hiltViewModel(),
-    navController: (fechasId: Int) -> Unit
+    navController: (fechasId: Int) -> Unit,
+
 ){
-    val fechas by viewModel.fechas.collectAsState(
-        initial = emptyList() )
+    val fechas by viewModel.fechas.collectAsState(initial = emptyList() )
+
+    val fechasDeTorneo: List<Fecha> = fechas.filter { fecha -> fecha.idTorneo == torneoId }
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -50,14 +58,17 @@ fun ScaffoldWithTopBarFechasScreen(
         content = { padding->
             FechasContent(
                 padding = padding,
-                fechas = fechas,
+                fechas = fechasDeTorneo,
                 deleteFecha={
                         fecha->
-                    viewModel.deleteFecha(fecha)
+                        viewModel.deleteFecha(fecha)
                 },
                 navigateToUpdateFechaScreen =  navController
+                ,
+                //navController2
             )
             AddFechasAlertDialog(
+                torneoId = torneoId,
                 openDialog = viewModel.openDialog,
                 closeDialog = {
                     viewModel.closeDialog()

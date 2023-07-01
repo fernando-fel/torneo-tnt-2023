@@ -13,18 +13,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class FechasViewModel @Inject constructor(
-    private val repo: FechaRepository
+    private val repo: FechaRepository,
 ): ViewModel()
 {
-
-    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = 1, numero = 0))
+    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = 1, numero = 0,estado = "Creado"))
     var openDialog by mutableStateOf(false)
-    val fechas = repo.getFechasByTorneo(1)
+    val fechas = repo.getAllFechas()
     fun addFecha(fecha: Fecha) = viewModelScope.launch(Dispatchers.IO)
     {
+        //fecha.idTorneo = idTorneo
         repo.addFecha(fecha)
     }
     fun closeDialog(){

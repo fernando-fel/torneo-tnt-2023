@@ -2,6 +2,7 @@ package com.example.torneo.Pantallas
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,8 +48,12 @@ fun ScreenMain(){
                 navController = { torneoId ->
                 navController.navigate("${Routes.UpdateTorneoScreen.route}/${torneoId}")
             },
-            navController2 = navController)
+                navigateToFechaScreen = { torneoId ->
+                    navController.navigate("${Routes.FechasScreen.route}/$torneoId")
+                },
+            )
         }
+
         composable("${Routes.UpdateTorneoScreen.route}/{$TORNEO_ID}",
             arguments = listOf(
                 navArgument(TORNEO_ID){
@@ -98,14 +103,19 @@ fun ScreenMain(){
             Fixture(navController)
         }
 
-
-        composable(route = Routes.FechasScreen.route) {
-            FechasScreen(
-                navController = { fechasId ->
-                    navController.navigate(
-                        "${Routes.UpdateFechasScreen.route}/${fechasId}"
-                    )
+        composable(route = "${Routes.FechasScreen.route}/{$TORNEO_ID}",
+            arguments = listOf(
+                navArgument(TORNEO_ID){
+                    type = NavType.IntType
                 }
+            )
+        ) { navBackStackEntry ->
+            val torneoId = navBackStackEntry.arguments?.getInt(TORNEO_ID) ?: 0
+            FechasScreen(
+                navController = { idFecha ->
+                    // Realiza la acción deseada con idFecha
+                },
+                torneoId = torneoId
             )
         }
         composable(
@@ -130,10 +140,7 @@ fun ScreenMain(){
         composable(Routes.Fixture.route){
             Fixture(navController)
         }
-
-
-
-        composable(
+            composable(
             route = "${Routes.UnPartido.route}/{equipoLocal}/{equipoVisitante}/{golLocal}/{golVisitante}",
             arguments = listOf(navArgument("equipoLocal") { type = NavType.StringType },
                 navArgument("equipoVisitante") { type = NavType.StringType },

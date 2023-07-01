@@ -8,10 +8,19 @@ import androidx.room.PrimaryKey
 import com.example.torneo.Core.Data.Equipo
 
 
+@Entity(tableName = "persona_table")
+data class Persona(
+@PrimaryKey(autoGenerate = true) val id: Int = 1,
+@ColumnInfo(name = "idPersona") val idPersona: Int,
+@ColumnInfo(name = "nombre") val nombre: String,
+@ColumnInfo(name= "username") val username: String,
+@ColumnInfo(name = "pass") val pass: String,
+@ColumnInfo(name = "rol") val rol: String,
 
+)
 @Entity(tableName = "torneo_table",)
 data class Torneo (
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int = 1,
     @ColumnInfo(name = "idTorneo") val idTorneo: Int,
     @ColumnInfo(name = "nombre") val nombre: String,
     @ColumnInfo(name = "fechaInicio") val fechaInicio: String,
@@ -27,7 +36,8 @@ data class Torneo (
     ForeignKey(entity = Fecha::class, parentColumns = ["id"], childColumns = ["idFecha"], onDelete = ForeignKey.CASCADE),
     ForeignKey(entity = Equipo::class, parentColumns = ["id"], childColumns = ["idLocal"], onDelete = ForeignKey.CASCADE),
     ForeignKey(entity = Equipo::class, parentColumns = ["id"], childColumns = ["idVisitante"], onDelete = ForeignKey.CASCADE),
-])
+    ForeignKey(entity = Persona::class, parentColumns = ["id"], childColumns = ["idPersona"], onDelete = ForeignKey.CASCADE),
+    ])
 data class Partido(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
     @ColumnInfo(name = "idFecha") val idFecha: Int,
@@ -40,7 +50,7 @@ data class Partido(
     @ColumnInfo(name = "golVisitante") val golVisitante: Int,
     @ColumnInfo(name = "estado") val estado: String,
     @ColumnInfo(name = "resultado") val resultado: String,
-
+    @ColumnInfo(name = "idPersona") val idPersona: String,
 )
 
 @Entity(tableName = "fecha_table",
@@ -49,8 +59,9 @@ data class Partido(
 ])
 data class Fecha(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
-    @ColumnInfo(name="idTorneo") val idTorneo: Int,
-    @ColumnInfo(name="numeroFecha") val numero: Int,
+    @ColumnInfo(name= "idTorneo") val idTorneo: Int,
+    @ColumnInfo(name= "numeroFecha") val numero: Int,
+    @ColumnInfo(name= "estado") val estado: String,
 
 )
 

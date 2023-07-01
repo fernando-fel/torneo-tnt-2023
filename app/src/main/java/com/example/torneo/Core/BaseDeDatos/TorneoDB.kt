@@ -7,15 +7,17 @@ import com.example.torneo.Core.Data.Dao.EquipoDao
 import com.example.torneo.Core.Data.Dao.FechaDao
 import com.example.torneo.Core.Data.Dao.JugadorDao
 import com.example.torneo.Core.Data.Dao.PartidoDao
+import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Dao.TorneoDao
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.Jugador
 
 
-@Database(entities = [Torneo::class, Equipo::class, Jugador::class, Fecha::class, Partido::class], version=6, exportSchema = false)
+@Database(entities = [Torneo::class, Equipo::class, Jugador::class, Fecha::class, Partido::class, Persona::class], version=7, exportSchema = false)
 abstract class TorneoDB: RoomDatabase() {
     abstract fun torneoDao(): TorneoDao
 
@@ -26,6 +28,8 @@ abstract class TorneoDB: RoomDatabase() {
     abstract fun fechaDao(): FechaDao
 
     abstract fun partidoDao(): PartidoDao
+
+    abstract fun personaDao(): PersonaDao
 
     //abstract fun equipoJugadorDao() : EquipoJugadorDao
 

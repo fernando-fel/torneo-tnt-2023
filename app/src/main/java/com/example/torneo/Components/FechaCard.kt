@@ -55,8 +55,8 @@ fun FechaCard(
             verticalAlignment = Alignment.CenterVertically
         ){
             Column() {
-                Text("Nombre")
-                Text(text = fecha.numero.toString())
+                Text("Fecha numero " + fecha.numero.toString())
+                Text("Estado de fecha" + fecha.estado)
             }
             Spacer(
                 modifier = Modifier.weight(1f)
