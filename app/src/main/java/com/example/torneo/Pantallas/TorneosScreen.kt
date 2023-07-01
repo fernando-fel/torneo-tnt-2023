@@ -23,10 +23,11 @@ import com.example.torneo.TorneoViewModel.TorneosViewModel
 fun TorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
     navController: (torneoId: Int) -> Unit,
-    navController2: NavHostController
+    navigateToFechaScreen: (torneoId: Int) -> Unit,
+
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navController2)
+        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navigateToFechaScreen)
     }
 }
 
@@ -35,10 +36,11 @@ fun TorneosScreen(
 fun ScaffoldWithTopBarTorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
     navController: (torneoId: Int) -> Unit,
-    navController2: NavHostController
+    navigateToFechaScreen: (torneoId: Int) -> Unit,
+
 ){
-    val torneos by viewModel.torneos.collectAsState(
-        initial = emptyList() )
+    val torneos by viewModel.torneos.collectAsState(initial = emptyList() )
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -55,7 +57,7 @@ fun ScaffoldWithTopBarTorneosScreen(
                     viewModel.deleteTorneo(torneo)
                 },
                 navigateToUpdateTorneoScreen =  navController,
-                navController2
+                navigateToFechaScreen
             )
             AddTorneosAlertDialog(
                 openDialog = viewModel.openDialog,

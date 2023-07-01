@@ -1,5 +1,6 @@
 package com.example.torneo.Core.Data.repository
 
+import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.flow.Flow
 
@@ -31,5 +32,6 @@ interface TorneoRepository {
      * Update item in the data source
      */
     suspend fun updateTorneo(torneo: Torneo)
+
 
 }

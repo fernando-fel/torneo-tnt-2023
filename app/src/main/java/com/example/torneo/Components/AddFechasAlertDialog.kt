@@ -25,6 +25,7 @@ import kotlinx.coroutines.job
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddFechasAlertDialog(
+    torneoId : Int,
     openDialog: Boolean,
     closeDialog: ()->Unit,
     addFecha: (fecha: Fecha) -> Unit
@@ -58,7 +59,7 @@ fun AddFechasAlertDialog(
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val fecha = Fecha(0, idTorneo = 1, numero = 2)
+                        val fecha = Fecha(0, idTorneo = torneoId, numero = 2,estado="Empezado")
                         addFecha(fecha)
                     }) {
                     Text(text = ("Agregar Equipo"))

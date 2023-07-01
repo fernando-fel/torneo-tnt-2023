@@ -18,7 +18,7 @@ fun TorneosContent (
     torneos : Torneos,
     deleteTorneo: (torneo: Torneo)->Unit,
     navigateToUpdateTorneoScreen: (torneoId: Int)-> Unit,
-    navController : NavHostController
+    navegarParaUnaFecha: (torneoId: Int)-> Unit
 
 ){
     LazyColumn(
@@ -35,8 +35,7 @@ fun TorneosContent (
                 },
                 navigateToUpdateTorneoScreen =
                     navigateToUpdateTorneoScreen,
-                navController
-
+                    navegarParaUnaFecha
 
             )
         }

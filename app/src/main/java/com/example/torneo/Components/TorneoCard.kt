@@ -1,5 +1,7 @@
 package com.example.torneo.Components
 
+
+import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +36,7 @@ fun TorneoCard(
     torneo: Torneo,
     deleteTorneo: ()-> Unit,
     navigateToUpdateTorneoScreen: (torneoId: Int)-> Unit,
-    navController : NavHostController
+    navigateToFechasScreen: (torneoId: Int) -> Unit
 ){
 
         Card(
@@ -49,9 +51,7 @@ fun TorneoCard(
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation() ,
             onClick = {
-                navController.navigate(Routes.FechasScreen.route)
-            //navigateToUpdateTorneoScreen(torneo.id)
-
+                navigateToFechasScreen(torneo.id)
         }
 
     ){

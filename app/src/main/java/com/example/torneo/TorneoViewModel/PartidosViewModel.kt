@@ -25,7 +25,7 @@ class PartidosViewModel @Inject constructor(
 
     var partido by mutableStateOf(Partido(id = 0, estado = "", dia = "", golLocal = 0, golVisitante = 0,
                                         hora = "", idFecha = 0, idLocal = 0, idVisitante = 0, numCancha = "",
-                                         resultado = ""))
+                                         resultado = "", idPersona = ""))
     var openDialog by mutableStateOf(false)
     val partidos = repo.getAllPartidos()
     fun addPartido(partido: Partido) = viewModelScope.launch(Dispatchers.IO)
