@@ -3,6 +3,8 @@ package com.example.torneo.Components
 
 import android.os.Bundle
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -55,17 +58,55 @@ fun TorneoCard(
         }
 
     ){
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-
-            Column() {
-                Text(text = torneo.nombre)
-                Text((torneo.ubicacion).toString())
+            val modifier = if (torneo.estado == "en Curso") {
+                Modifier
+                    .border(2.dp, Color.Green)
+                    .fillMaxWidth()
+                    .padding(12.dp)
+            } else if(torneo.estado == "finalizado") {
+                Modifier
+                    .border(2.dp, Color.Red)
+                    .fillMaxWidth()
+                    .padding(12.dp)
             }
+            else{
+                Modifier
+                    .border(2.dp, Color.White)
+                    .fillMaxWidth()
+                    .padding(12.dp)
+            }
+
+            Row(
+                modifier = modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+            if (torneo.estado == "en Curso") {
+                Column() {
+                    Text("Nombre del torneo " + torneo.nombre)
+                    Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
+                    Text("El torneo Finaliza el:  " + torneo.fechaFin)
+                    Text("Estado del torneo: " + torneo.estado)
+                }
+            }
+            else if(torneo.estado == "finalizado") {
+                Column() {
+                    Text("Nombre del torneo " + torneo.nombre)
+                    Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
+                    Text("El torneo Finalizo el:  " + torneo.fechaFin)
+                    Text("Estado del torneo: " + torneo.estado)
+                }
+
+            }
+            else{
+                Column() {
+                Text("Nombre del torneo " + torneo.nombre)
+                Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
+                Text("El torneo Finalizo el:  " + torneo.fechaFin)
+                Text("Estado del torneo: " + torneo.estado)
+                Text("Precio del torneo" + torneo.precio)
+            }
+            }
+
             Spacer(
                 modifier = Modifier.weight(1f)
             )

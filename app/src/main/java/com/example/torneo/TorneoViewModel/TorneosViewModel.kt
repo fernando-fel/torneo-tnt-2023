@@ -42,9 +42,9 @@ class TorneosViewModel @Inject constructor(
             nombre= nombre
         )
     }
-    fun  updateUbicacion(ubicacion: String){
+    fun  updateUbicacion(estado: String){
         torneo = torneo.copy(
-            ubicacion = ubicacion
+            estado = estado
         )
     }
     fun updateTorneo(torneo : Torneo) {

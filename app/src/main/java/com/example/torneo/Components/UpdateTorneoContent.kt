@@ -48,14 +48,14 @@ fun UpdateTorneoContent(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        torneo.ubicacion?.let {
+        torneo.estado?.let {
             TextField(
                 value = it,
-                onValueChange = { ubicacion ->
-                    updateUbicacion(ubicacion)
+                onValueChange = { estado ->
+                    updateUbicacion(estado)
                 },
                 placeholder = {
-                    Text("Ubicacion de torneo")
+                    Text("Estado del torneo")
                 }
             )
         }
