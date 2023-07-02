@@ -39,11 +39,16 @@ class FechasViewModel @Inject constructor(
             repo.deleteFecha(fecha)
         }
 
-/*    fun  updateNombre(nombre:String){
-        equipo = equipo.copy(
-            nombre= nombre
+    fun updateEstado(estado : String){
+        fecha = fecha.copy(
+            estado = estado
         )
-    }*/
+    }
+    fun updateNumero(numero: String){
+        fecha = fecha.copy(
+            numero = numero.toInt()
+        )
+    }
 
     fun updateFecha(fecha: Fecha) {
         viewModelScope.launch(Dispatchers.IO) {
