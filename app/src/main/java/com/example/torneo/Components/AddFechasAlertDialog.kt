@@ -35,34 +35,36 @@ fun AddFechasAlertDialog(
         var dia by remember { mutableStateOf(NO_VALUE) }
         val focusRequester = FocusRequester()
 
-        AlertDialog(onDismissRequest = { closeDialog },
+        AlertDialog(
+            onDismissRequest = { closeDialog },
             title = {
                 Text("Agregar Fecha")
             },
             text = {
                 Column(){
-                    TextField(value = numero,
+                    TextField(
+                        value = numero,
                         onValueChange = {numero = it},
                         placeholder = {
                             Text("Numero de fecha")
                         },
-                        modifier = Modifier.focusRequester(
-                            focusRequester
-                        )
+                        modifier = Modifier.focusRequester(focusRequester)
                     )
-                    LaunchedEffect(Unit ){
+                    LaunchedEffect(Unit){
                         coroutineContext.job.invokeOnCompletion {
                             focusRequester .requestFocus()
                         }
-                    } }
+                    }
+                }
             },
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val fecha = Fecha(0, idTorneo = torneoId, numero = 2,estado="Empezado")
+                        val fecha = Fecha(0, idTorneo = torneoId, numero = 2, estado=" Empezado")
                         addFecha(fecha)
-                    }) {
-                    Text(text = ("Agregar Equipo"))
+                    }
+                ){
+                    Text(text = ("Agregar Fecha"))
                 }
             },
             dismissButton = {
@@ -73,4 +75,3 @@ fun AddFechasAlertDialog(
         )
     }
 }
-

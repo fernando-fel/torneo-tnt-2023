@@ -85,6 +85,7 @@ fun EquipoCard(
     deleteEquipo: ()-> Unit,
     navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
 ){
+
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
