@@ -60,7 +60,7 @@ fun AddFechasAlertDialog(
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val fecha = Fecha(0, idTorneo = torneoId, numero = 2, estado=" Empezado")
+                        val fecha = Fecha(0, idTorneo = torneoId, numero = numero.toInt(), estado=" Empezado")
                         addFecha(fecha)
                     }
                 ){

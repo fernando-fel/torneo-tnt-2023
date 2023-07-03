@@ -119,7 +119,10 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                             fontSize = 30.sp
                         )
                     }
-                    myMarket()
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                        myMarket()
+
                 }
             }
         })
@@ -150,18 +153,3 @@ fun HorizontalScroll() {
 }
 
 fun randomColor() = Color(Random.nextLong(0xFFFFFFFF))
-
-/*
-Column(
-modifier = Modifier
-.padding(padding)
-.fillMaxSize(),
-verticalArrangement = Arrangement.Center,
-horizontalAlignment = Alignment.CenterHorizontally
-) {
-    Text(
-        text = "Inicio Sesion",
-        fontSize = 30.sp,
-        color = Color.Black
-    )
-}*/
