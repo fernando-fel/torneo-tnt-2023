@@ -1,5 +1,6 @@
 package com.example.torneo.Mapas
 
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +20,7 @@ fun myMarket(){
     //val marker = LatLng(-43.268135,-65.313812)
     val properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
     val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
-    GoogleMap(modifier = Modifier.fillMaxSize(),
+    GoogleMap(modifier = Modifier.fillMaxHeight(),
     properties = properties,
         uiSettings = uiSettings
     ){

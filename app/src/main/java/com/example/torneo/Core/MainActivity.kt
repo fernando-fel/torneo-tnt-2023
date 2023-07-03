@@ -29,18 +29,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.example.torneo.Core.MainActivity.Companion.MY_CHANNEL_ID
 import com.example.torneo.Mapas.myMarket
+import com.example.torneo.Notificaciones.Notificaciones
 import com.example.torneo.Pantallas.ScreenMain
 
 
 import com.example.torneo.ui.theme.TorneoTheme
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 //class MainActivity : ComponentActivity() {
 class MainActivity : AppCompatActivity() {
+    companion object{
+        const val MY_CHANNEL_ID = "my_channel"
+    }
     @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -50,8 +62,13 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    Firebase.initialize(context = this)
+                    Firebase.appCheck.installAppCheckProviderFactory(
+                        PlayIntegrityAppCheckProviderFactory.getInstance(),
+                    )
                     //myMarket()
                     ScreenMain()
+                    //Notificaciones()
                     //AppNavigation()
                     //Esta es propia se ve
                     //NavGraph(navController = rememberNavController())
@@ -59,11 +76,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        setupAuth()
+        //setupAuth()
 
     }
 
-    private var canAuthenticate = false
+}
+/*    private var canAuthenticate = false
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private fun setupAuth() {
 
@@ -123,7 +141,7 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-}
+}*/
 
 
 /*
