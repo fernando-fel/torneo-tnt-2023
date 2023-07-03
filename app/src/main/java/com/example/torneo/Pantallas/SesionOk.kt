@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.example.torneo.Mapas.myMarket
 import kotlin.random.Random
 
 @Composable
@@ -118,6 +119,7 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                             fontSize = 30.sp
                         )
                     }
+                    myMarket()
                 }
             }
         })
