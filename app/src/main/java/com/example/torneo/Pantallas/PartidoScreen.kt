@@ -23,10 +23,11 @@ import com.example.torneo.TorneoViewModel.TorneosViewModel
 @Composable
 fun PartidoScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
-    navController: (partidoId: Int) -> Unit
+    navController: (partidoId: Int) -> Unit,
+    fechaId: Int,
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarPartidosScreen(viewModel, navController)
+        ScaffoldWithTopBarPartidosScreen(viewModel, navController, fechaId)
     }
 }
 
@@ -34,15 +35,16 @@ fun PartidoScreen(
 @Composable
 fun ScaffoldWithTopBarPartidosScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
-    navController: (partidoId: Int) -> Unit
+    navController: (partidoId: Int) -> Unit,
+    fechaId: Int,
 ){
-    val partidos by viewModel.partidos.collectAsState(
-        initial = emptyList() )
+    val partidos by viewModel.partidos.collectAsState( initial = emptyList() )
+
     Scaffold (
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Partidos Screen")
+                    Text("Partidos")
                 })
         },
         content = { padding->
@@ -56,6 +58,7 @@ fun ScaffoldWithTopBarPartidosScreen(
                 navigateToUpdatePartidoScreen =  navController
             )
             AddPartidosAlertDialog(
+                fechaId = fechaId,
                 openDialog = viewModel.openDialog,
                 closeDialog = {
                     viewModel.closeDialog()

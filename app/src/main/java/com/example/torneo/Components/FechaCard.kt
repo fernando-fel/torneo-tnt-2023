@@ -30,7 +30,8 @@ import com.example.torneo.R
 fun FechaCard(
     fecha: Fecha,
     deleteFecha: ()-> Unit,
-    navigateToUpdateFechaScreen: (fechaId: Int)-> Unit
+    navigateToUpdateFechaScreen: (fechaId: Int)-> Unit,
+    navigateToPartidoScreen: (fechaId: Int) -> Unit,
 ){
     Card(
         shape = MaterialTheme.shapes.medium,
@@ -44,7 +45,7 @@ fun FechaCard(
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation() ,
         onClick = {
-            navigateToUpdateFechaScreen(fecha.id)
+            navigateToPartidoScreen(fecha.id)
         }
 
     ){

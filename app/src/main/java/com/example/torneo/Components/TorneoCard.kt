@@ -42,7 +42,7 @@ fun TorneoCard(
     navigateToFechasScreen: (torneoId: Int) -> Unit
 ){
 
-        Card(
+    Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .padding(
@@ -58,28 +58,28 @@ fun TorneoCard(
         }
 
     ){
-            val modifier = if (torneo.estado == "en Curso") {
-                Modifier
-                    .border(2.dp, Color.Green)
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            } else if(torneo.estado == "finalizado") {
-                Modifier
-                    .border(2.dp, Color.Red)
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            }
-            else{
-                Modifier
-                    .border(2.dp, Color.White)
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            }
+        val modifier = if (torneo.estado == "en Curso") {
+            Modifier
+                .border(2.dp, Color.Green)
+                .fillMaxWidth()
+                .padding(12.dp)
+        } else if(torneo.estado == "finalizado") {
+            Modifier
+                .border(2.dp, Color.Red)
+                .fillMaxWidth()
+                .padding(12.dp)
+        }
+        else{
+            Modifier
+                .border(2.dp, Color.White)
+                .fillMaxWidth()
+                .padding(12.dp)
+        }
 
-            Row(
-                modifier = modifier,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             if (torneo.estado == "en Curso") {
                 Column() {
                     Text("Nombre del torneo " + torneo.nombre)
@@ -95,30 +95,26 @@ fun TorneoCard(
                     Text("El torneo Finalizo el:  " + torneo.fechaFin)
                     Text("Estado del torneo: " + torneo.estado)
                 }
-
             }
             else{
-                Column() {
-                Text("Nombre del torneo " + torneo.nombre)
-                Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
-                Text("El torneo Finalizo el:  " + torneo.fechaFin)
-                Text("Estado del torneo: " + torneo.estado)
-                Text("Precio del torneo" + torneo.precio)
-            }
+                    Column() {
+                    Text("Nombre del torneo " + torneo.nombre)
+                    Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
+                    Text("El torneo Finalizo el:  " + torneo.fechaFin)
+                    Text("Estado del torneo: " + torneo.estado)
+                    Text("Precio del torneo" + torneo.precio)
+                }
             }
 
-            Spacer(
-                modifier = Modifier.weight(1f)
-            )
+            Spacer( modifier = Modifier.weight(1f) )
             IconButton(onClick = {navigateToUpdateTorneoScreen(torneo.id)}) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Agregar Torneo" )
             }
-            DeleteIcon(
-                deleteTorneo = deleteTorneo
-            )
+            DeleteIcon(deleteTorneo = deleteTorneo)
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EquipoCard(

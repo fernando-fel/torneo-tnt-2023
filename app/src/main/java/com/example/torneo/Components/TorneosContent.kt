@@ -47,7 +47,8 @@ fun FechasContent (
     padding: PaddingValues,
     fechas : List<Fecha>,
     deleteFecha: (fecha: Fecha)->Unit,
-    navigateToUpdateFechaScreen: (fechaId: Int)-> Unit
+    navigateToUpdateFechaScreen: (fechaId: Int)-> Unit,
+    navegarParaPartidos: (fechaId: Int)-> Unit
 
 ){
     LazyColumn(
@@ -63,7 +64,8 @@ fun FechasContent (
                     deleteFecha(fecha)
                 },
                 navigateToUpdateFechaScreen =
-                navigateToUpdateFechaScreen
+                navigateToUpdateFechaScreen,
+                navegarParaPartidos
             )
         }
     }

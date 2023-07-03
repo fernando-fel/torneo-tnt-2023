@@ -21,4 +21,6 @@ sealed class Routes(val route: String) {
     object UnPartido : Routes("UnPartido")
     object ScreenMain: Routes("ScreenMain")
 
+    object PartidoScreen : Routes("PartidoScreen")
+
 }

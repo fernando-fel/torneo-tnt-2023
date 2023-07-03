@@ -29,6 +29,7 @@ import kotlinx.coroutines.job
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddPartidosAlertDialog(
+    fechaId: Int,
     openDialog: Boolean,
     closeDialog: ()->Unit,
     addPartido: (partido: Partido) -> Unit
@@ -43,6 +44,7 @@ fun AddPartidosAlertDialog(
         var golL by remember { mutableStateOf(NO_VALUE) }
         var golV by remember { mutableStateOf(NO_VALUE) }
         var estado by remember { mutableStateOf(NO_VALUE) }
+        var juez by remember { mutableStateOf(NO_VALUE) }
 
 
         val focusRequester = FocusRequester()
@@ -114,6 +116,14 @@ fun AddPartidosAlertDialog(
                         onValueChange =  {numeroCancha = it},
                         placeholder = {Text("Nombre de cancha") }
                     )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    TextField(
+                        value = juez,
+                        onValueChange =  {juez = it},
+                        placeholder = {Text("Nombre de juez ") }
+                    )
                     LaunchedEffect(Unit ){
                         coroutineContext.job.invokeOnCompletion {
                             focusRequester .requestFocus()
@@ -125,9 +135,9 @@ fun AddPartidosAlertDialog(
                     onClick = { closeDialog()
                         val partido = Partido(resultado = "", numCancha = numeroCancha,
                                         idVisitante = visitante.toInt(), idLocal = local.toInt(),
-                                        idFecha = fecha.toInt(), hora = hora, dia = dia,
+                                        idFecha = fechaId, hora = hora, dia = dia,
                                         golVisitante = 0, golLocal = 0,
-                                        estado = estado, id = 0, idPersona = "")
+                                        estado = estado, id = 0, idPersona = juez.toInt())
                         addPartido(partido)
                     }) {
                     Text(text = ("Agregar Partido"))

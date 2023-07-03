@@ -27,11 +27,11 @@ import com.example.torneo.TorneoViewModel.TorneosViewModel
 fun FechasScreen(
     viewModel: FechasViewModel = hiltViewModel(),
     navController: (idFecha:  Int) -> Unit,
-    torneoId: Int
-    //navController2: NavHostController
+    torneoId: Int,
+    navigateToPartidoScreen: (fechaId: Int) -> Unit
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarFechasScreen(torneoId,viewModel, navController)
+        ScaffoldWithTopBarFechasScreen(torneoId,viewModel, navController, navigateToPartidoScreen)
     //, navController2)
     }
 }
@@ -42,6 +42,7 @@ fun ScaffoldWithTopBarFechasScreen(
     torneoId: Int,
     viewModel: FechasViewModel = hiltViewModel(),
     navController: (fechasId: Int) -> Unit,
+    navigateToPartidoScreen: (fechaId: Int) -> Unit,
 
 ){
     val fechas by viewModel.fechas.collectAsState(initial = emptyList() )
@@ -63,8 +64,8 @@ fun ScaffoldWithTopBarFechasScreen(
                         fecha->
                         viewModel.deleteFecha(fecha)
                 },
-                navigateToUpdateFechaScreen =  navController
-                ,
+                navigateToUpdateFechaScreen =  navController,
+                navigateToPartidoScreen
                 //navController2
             )
             AddFechasAlertDialog(

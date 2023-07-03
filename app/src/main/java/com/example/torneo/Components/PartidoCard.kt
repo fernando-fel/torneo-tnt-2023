@@ -63,7 +63,7 @@ fun PartidoCard(
                 modifier = Modifier.weight(1f)
             )
             IconButton(onClick = {navigateToUpdatePartidoScreen(partido.id)}) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Agregar Partido" )
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar Partido" )
             }
             Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Partido" )
 

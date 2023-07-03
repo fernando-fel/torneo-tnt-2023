@@ -115,9 +115,29 @@ fun ScreenMain(){
                 navController = { idFecha ->
                     // Realiza la acción deseada con idFecha
                 },
-                torneoId = torneoId
+                torneoId = torneoId,
+                navigateToPartidoScreen = { fechaId ->
+                    navController.navigate("${Routes.PartidoScreen.route}/$fechaId")
+                },
+
             )
         }
+        composable(route = "${Routes.PartidoScreen.route}/{$FECHA_ID}",
+            arguments = listOf(
+                navArgument(FECHA_ID){
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val fechaId = navBackStackEntry.arguments?.getInt(FECHA_ID) ?: 0
+            PartidoScreen(
+                navController = { partidoId ->
+                    // Realiza la acción deseada con partidoId
+                },
+                fechaId = fechaId
+            )
+        }
+
         composable(
             route = "${Routes.UpdateFechasScreen.route}/{${FECHA_ID}}",
             arguments = listOf(
