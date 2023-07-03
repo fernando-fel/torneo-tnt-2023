@@ -88,16 +88,16 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    /*Spacer(modifier = Modifier.height(20.dp))
                     Button(
-                        onClick = { /* Acción para la opción Ver Fechas */ },
+                        onClick = { *//* Acción para la opción Ver Fechas *//* },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
                             text = "Jugadores",
                             fontSize = 30.sp
                         )
-                    }
+                    }*/
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = { navController.navigate(Routes.FechasScreen.route)},

@@ -17,7 +17,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import com.example.torneo.Core.Constantes.Companion.DISMISS
 import com.example.torneo.Core.Constantes.Companion.NO_VALUE
-import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
 
 import kotlinx.coroutines.job
@@ -32,7 +31,6 @@ fun AddFechasAlertDialog(
 ){
     if (openDialog){
         var numero by remember { mutableStateOf(NO_VALUE) }
-        var dia by remember { mutableStateOf(NO_VALUE) }
         val focusRequester = FocusRequester()
 
         AlertDialog(
