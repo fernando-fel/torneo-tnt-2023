@@ -57,6 +57,7 @@ data class Partido(
     foreignKeys =[
         ForeignKey(entity = Torneo::class, parentColumns = ["id"], childColumns = ["idTorneo"], onDelete = ForeignKey.CASCADE),
 ])
+
 data class Fecha(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
     @ColumnInfo(name= "idTorneo") val idTorneo: Int,

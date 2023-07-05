@@ -5,25 +5,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.torneo.Core.Data.Entity.Equipo
-import com.example.torneo.Core.Data.repository.EquipoRepository
+import com.example.torneo.Core.Data.Entity.Persona
+import com.example.torneo.Core.Data.repository.PersonaRepository
+import com.example.torneo.Core.Data.repository.PersonaRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
-class EquiposViewModel @Inject constructor(
-    private val repo: EquipoRepository
+class PersonasViewModel @Inject constructor(
+    private val repo: PersonaRepository
 ): ViewModel()
 {
-    var equipo by mutableStateOf(Equipo(0,""))
+    var persona by mutableStateOf(Persona(0, 0,"","","","" ))
     var openDialog by mutableStateOf(false)
-    val equipos = repo.getEquipoFromRoom()
+    var personas = repo.getPersonaFromRoom()
 
-    fun addEquipo(equipo: Equipo) = viewModelScope.launch(Dispatchers.IO)
+    fun addPersona(persona: Persona) = viewModelScope.launch(Dispatchers.IO)
     {
-        repo.addEquipoToRoom(equipo)
+        repo.addPersonaToRoom(persona)
     }
     fun closeDialog(){
         openDialog = false
@@ -31,25 +33,25 @@ class EquiposViewModel @Inject constructor(
     fun openDialog(){
         openDialog = true
     }
-    fun deleteEquipo(equipo: Equipo) =
+    fun deletePersona(persona: Persona) =
         viewModelScope.launch(Dispatchers.IO){
-            repo.deleteEquipo(equipo)
+            repo.deletePersona(persona)
         }
 
     fun  updateNombre(nombre:String){
-        equipo = equipo.copy(
+        persona = persona.copy(
             nombre= nombre
         )
     }
 
-    fun updateEquipo(equipo :Equipo) {
+    fun updatePersona(persona : Persona) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.updateEquipo(equipo)
+            repo.updatePersona(persona)
         }
     }
-    fun getEquipo(id: Int) = viewModelScope.launch(
+    fun getPersona(id: Int) = viewModelScope.launch(
         Dispatchers.IO
     ) {
-        equipo = repo.getEquipo(id)
+        persona = repo.getPersona(id)
     }
 }

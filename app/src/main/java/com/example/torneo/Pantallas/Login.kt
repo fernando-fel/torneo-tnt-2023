@@ -52,7 +52,8 @@ import com.example.torneo.Splash.Splash
 fun LoginPage(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize().padding(40.dp,0.dp,40.dp,30.dp), contentAlignment = Alignment.BottomCenter) {
         Button(
-            onClick = { navController.navigate(Routes.SignUp.route) },
+            onClick = {
+                navController.navigate(Routes.SignUp.route) },
             shape = RoundedCornerShape(50.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -60,7 +61,7 @@ fun LoginPage(navController: NavHostController) {
         ) {
             Text(
                 text = "Registrarse",
-                )
+            )
         }
     }
     Column(
@@ -159,7 +160,6 @@ fun LoginPage(navController: NavHostController) {
                     backgroundColor = Color.Red
                 )
             }
-
         }
 
         Spacer(modifier = Modifier.height(20.dp))

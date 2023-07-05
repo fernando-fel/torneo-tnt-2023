@@ -3,6 +3,7 @@ package com.example.torneo.Pantallas
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,7 +13,7 @@ import com.example.torneo.Core.Constantes
 import com.example.torneo.Core.Constantes.Companion.FECHA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
 import com.example.torneo.Splash.SplashScreen
-
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 
 
 @Composable
@@ -32,7 +33,8 @@ fun ScreenMain(){
             LoginPage(navController)
         }
         composable(Routes.SignUp.route) {
-            SignUp(navController)
+            val viewModelPersona: PersonasViewModel = viewModel()
+            SignUp(viewModelPersona, navController)
         }
         composable(Routes.ForgotPassword.route) {
             ForgotPassword(navController)
@@ -160,7 +162,7 @@ fun ScreenMain(){
         composable(Routes.Fixture.route){
             Fixture(navController)
         }
-            composable(
+        composable(
             route = "${Routes.UnPartido.route}/{equipoLocal}/{equipoVisitante}/{golLocal}/{golVisitante}",
             arguments = listOf(navArgument("equipoLocal") { type = NavType.StringType },
                 navArgument("equipoVisitante") { type = NavType.StringType },

@@ -31,7 +31,7 @@ interface PersonaDao{
     @Query("DELETE FROM persona_table")
     suspend fun deleteAll()
 
-    @Query("SELECT * from jugador_table WHERE id = :id")
-    fun getJugador(id: Int): Jugador
+    @Query("SELECT * from persona_table WHERE id = :id")
+    fun getPersona(id: Int): Persona
 }
 

@@ -6,8 +6,8 @@ import com.example.torneo.Core.BaseDeDatos.TorneoDB
 import com.example.torneo.Core.Constantes.Companion.TORNEO_TABLE
 import com.example.torneo.Core.Data.Dao.EquipoDao
 import com.example.torneo.Core.Data.Dao.FechaDao
-import com.example.torneo.Core.Data.Dao.JugadorDao
 import com.example.torneo.Core.Data.Dao.PartidoDao
+import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Dao.TorneoDao
 
 import com.example.torneo.Core.Data.repository.EquipoRepository
@@ -15,10 +15,10 @@ import com.example.torneo.Core.Data.repository.EquipoRepositoryImpl
 import com.example.torneo.Core.Data.repository.FechaRepository
 import com.example.torneo.Core.Data.repository.FechaRepositoryImpl
 
-import com.example.torneo.Core.Data.repository.JugadorRepository
-import com.example.torneo.Core.Data.repository.JugadorRepositoryImpl
 import com.example.torneo.Core.Data.repository.PartidoRepository
 import com.example.torneo.Core.Data.repository.PartidoRepositoryImpl
+import com.example.torneo.Core.Data.repository.PersonaRepository
+import com.example.torneo.Core.Data.repository.PersonaRepositoryImpl
 import com.example.torneo.Core.Data.repository.TorneoRepository
 import com.example.torneo.Core.Data.repository.TorneoRepositoryImpl
 import dagger.Module
@@ -41,6 +41,7 @@ class AppModule {
         context : Context) = Room.databaseBuilder(context, TorneoDB::class.java,TORNEO_TABLE).fallbackToDestructiveMigration().build()
         .also{Instance = it}
 
+    //TORNEO
     @Singleton
     @Provides
     @JvmSuppressWildcards
@@ -56,7 +57,7 @@ class AppModule {
         return TorneoRepositoryImpl(
         torneoDao = torneoDao)}
 
-
+    //EQUIPO
     @Singleton
     @Provides
     @JvmSuppressWildcards
@@ -73,6 +74,7 @@ class AppModule {
             equipoDao = equipoDao)
     }
 
+    //FECHA
     @Singleton
     @Provides
     @JvmSuppressWildcards
@@ -89,8 +91,7 @@ class AppModule {
             fechaDao = fechaDao)
     }
 
-
-
+    //PARTIDO
     @Singleton
     @Provides
     @JvmSuppressWildcards
@@ -105,5 +106,22 @@ class AppModule {
     ): PartidoRepository {
         return PartidoRepositoryImpl(
             partidoDao = partidoDao)
+    }
+
+    //PERSONA
+    @Singleton
+    @Provides
+    @JvmSuppressWildcards
+    fun providePersonaDao(
+        torneoDB: TorneoDB) = torneoDB.personaDao()
+
+    @Singleton
+    @Provides
+    @JvmSuppressWildcards
+    fun providePersonaRepository(
+        personaDao: PersonaDao
+    ): PersonaRepository {
+        return PersonaRepositoryImpl(
+            personaDao = personaDao)
     }
 }
