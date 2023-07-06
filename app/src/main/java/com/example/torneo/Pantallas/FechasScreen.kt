@@ -11,17 +11,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.torneo.Components.AddFechaFlotingActionButton
 import com.example.torneo.Components.AddFechasAlertDialog
-import com.example.torneo.Components.AddTorneoFlotingActionButton
-import com.example.torneo.Components.AddTorneosAlertDialog
 import com.example.torneo.Components.FechasContent
-import com.example.torneo.Components.TorneosContent
-import com.example.torneo.Core.Constantes.Companion.TORNEOS_SCREEN
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.TorneoViewModel.FechasViewModel
-import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 @Composable
 fun FechasScreen(

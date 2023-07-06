@@ -14,8 +14,6 @@ import com.example.torneo.Core.Constantes.Companion.FECHA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
 import com.example.torneo.Splash.SplashScreen
 import com.example.torneo.TorneoViewModel.PersonasViewModel
-
-
 @Composable
 @ExperimentalMaterial3Api
 fun ScreenMain(){
@@ -148,15 +146,14 @@ fun ScreenMain(){
                 }
             )
 
-        ){
-/*                navBackStackEntry ->
+        ){ navBackStackEntry ->
             val fechaId = navBackStackEntry.arguments?.getInt(FECHA_ID)?:0
             UpdateFechasScreen(
-                equipoId = fechaId,
+                fechasId = fechaId,
                 navigateBack = {
                     navController.popBackStack()
                 }
-            )*/
+            )
         }
 
         composable(Routes.Fixture.route){
