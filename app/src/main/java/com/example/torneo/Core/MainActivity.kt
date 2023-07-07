@@ -15,12 +15,12 @@ import com.example.torneo.Core.Constantes.Companion.TORNEO_TABLE
 import com.example.torneo.Pantallas.ScreenMain
 
 import com.example.torneo.ui.theme.TorneoTheme
-import com.google.firebase.appcheck.ktx.appCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 import com.google.firebase.ktx.initialize
-import com.google.firebase.tracing.FirebaseTrace
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,9 +50,10 @@ class MainActivity : AppCompatActivity() {
                     sincronizar_db(fb_db, database)
 
                     Firebase.initialize(context = this)
-                    Firebase.appCheck.installAppCheckProviderFactory(
-                        PlayIntegrityAppCheckProviderFactory.getInstance(),
-                    )
+                    //Firebase.c
+                    //Firebase.appCheck.installAppCheckProviderFactory(
+                      //  PlayIntegrityAppCheckProviderFactory.getInstance(),
+                    //)
                     //myMarket()
                     ScreenMain()
                     //Notificaciones()
