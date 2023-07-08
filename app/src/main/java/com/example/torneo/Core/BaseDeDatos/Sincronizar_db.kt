@@ -48,13 +48,13 @@ fun sincronizar_personas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
     val scope = CoroutineScope(Dispatchers.IO)
     val dao = db_local.personaDao()
 
-    db_firebase.collection("persona")
+    db_firebase.collection("Persona")
         .get()
         .addOnSuccessListener { result ->
             for (document in result) {
                 Log.d(TAG, "${document.id} => ${document.data}")
                 val persona = Persona(
-                    id = document.id.toInt(),
+                    //id = document.id.toInt(),
                     nombre = document.getString("nombre") ?: "",
                     username = document.getString("username")?:"",
                     pass = document.getString("pass")?:"",
@@ -102,7 +102,7 @@ fun sincronizar_equipos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
 
 
 fun sincronizar_db(db_remota: FirebaseFirestore, db_local: TorneoDB) {
-    sincronizar_torneos(db_remota, db_local)
+    //sincronizar_torneos(db_remota, db_local)
     sincronizar_personas(db_remota, db_local)
-    sincronizar_equipos(db_remota, db_local)
+    //sincronizar_equipos(db_remota, db_local)
 }
