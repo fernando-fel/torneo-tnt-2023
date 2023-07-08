@@ -45,7 +45,7 @@ fun SesionOk(navController: NavHostController) {
 fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
     Scaffold(
         topBar = {
-            CustomTopAppBar(navController, "Bienvenido!", true)
+            CustomTopAppBar(navController, "Bienvenido", true)
         },
 
         content = { padding ->

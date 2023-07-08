@@ -10,13 +10,12 @@ import com.example.torneo.Core.Data.Equipo
 
 @Entity(tableName = "persona_table")
 data class Persona(
-@PrimaryKey(autoGenerate = true) val id: Int = 1,
-@ColumnInfo(name = "idPersona") val idPersona: Int,
-@ColumnInfo(name = "nombre") val nombre: String,
-@ColumnInfo(name= "username") val username: String,
-@ColumnInfo(name = "pass") val pass: String,
-@ColumnInfo(name = "rol") val rol: String,
-
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "idPersona") val idPersona: Int,
+    @ColumnInfo(name = "nombre") val nombre: String,
+    @ColumnInfo(name = "username") val username: String,
+    @ColumnInfo(name = "pass") val pass: String,
+    @ColumnInfo(name = "rol") val rol: String,
 )
 @Entity(tableName = "torneo_table",)
 data class Torneo (

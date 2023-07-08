@@ -2,6 +2,7 @@ package com.example.torneo.Pantallas
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -9,15 +10,38 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.torneo.Core.BaseDeDatos.TorneoDB
 import com.example.torneo.Core.Constantes
 import com.example.torneo.Core.Constantes.Companion.FECHA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
+import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Splash.SplashScreen
 import com.example.torneo.TorneoViewModel.PersonasViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 @Composable
 @ExperimentalMaterial3Api
-fun ScreenMain(){
+fun ScreenMain(database: TorneoDB){
     val navController = rememberNavController()
+
+    // Obtener instancia del DAO (carga de roles a mano en la base de datos)
+    val persona = database.personaDao()
+    LaunchedEffect(Unit) {
+        //persona.deleteAll()
+        val admin = Persona(idPersona = 1, nombre = "admin", username = "admin", pass = "admin", rol = "admin")
+        val juez = Persona(idPersona = 2, nombre = "", username = "juez", pass = "juez", rol = "juez")
+        if (persona.getPersona(1) == null) {
+            withContext(Dispatchers.IO) {
+                persona.insertPersona(admin)
+            }
+        }
+        if (persona.getPersona(2) == null) {
+            withContext(Dispatchers.IO) {
+                persona.insertPersona(juez)
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -28,11 +52,11 @@ fun ScreenMain(){
             SplashScreen(navController)
         }
         composable(Routes.Login.route) {
-            LoginPage(navController)
+            //val persona = database.personaDao()
+            LoginPage(navController, persona)
         }
         composable(Routes.SignUp.route) {
-            val viewModelPersona: PersonasViewModel = viewModel()
-            SignUp(viewModelPersona, navController)
+            SignUp(navController, persona)
         }
         composable(Routes.ForgotPassword.route) {
             ForgotPassword(navController)

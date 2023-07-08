@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -45,16 +47,16 @@ fun Splash(){
         verticalArrangement = Arrangement.Center
     ){
         Image (
-            modifier = Modifier.size(500.dp,300.dp),
             painter = painterResource(id = R.drawable.torneo2023),
-            contentDescription ="Logo"
+            contentDescription ="Logo",
+            modifier = Modifier.size(250.dp,250.dp)
         )
         Text(
             text = "TNT 2023",
-            modifier = Modifier.padding(vertical = 70.dp),
+            modifier = Modifier.padding(vertical = 40.dp),
             style = TextStyle(
                 fontSize = 40.sp,
-                fontWeight = FontWeight.ExtraBold,
+                fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
                 fontFamily = FontFamily.Serif
             )

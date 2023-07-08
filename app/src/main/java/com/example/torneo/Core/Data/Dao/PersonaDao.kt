@@ -20,18 +20,18 @@ interface PersonaDao{
     fun getAlphabetizedPersona(): Flow<List<Persona>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertPersona(persona:Persona)
+    suspend fun insertPersona(persona:Persona)
 
     @Delete
-    fun deletePersona(persona: Persona)
+    suspend fun deletePersona(persona: Persona)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    fun updatePersona(persona: Persona)
+    suspend fun updatePersona(persona: Persona)
 
     @Query("DELETE FROM persona_table")
     suspend fun deleteAll()
 
-    @Query("SELECT * from persona_table WHERE id = :id")
-    fun getPersona(id: Int): Persona
+    @Query("SELECT * from persona_table WHERE idPersona = :idPersona")
+    suspend fun getPersona(idPersona: Int): Persona
 }
 

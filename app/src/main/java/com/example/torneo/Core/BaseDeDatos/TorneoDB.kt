@@ -31,10 +31,9 @@ abstract class TorneoDB: RoomDatabase() {
 
     abstract fun personaDao(): PersonaDao
 
-    //abstract fun equipoJugadorDao() : EquipoJugadorDao
-
-
 }
+
+
 /*
 @Database(entities = [Torneo::class, Equipo::class], version = 2)
 abstract class TorneoDB : RoomDatabase() {

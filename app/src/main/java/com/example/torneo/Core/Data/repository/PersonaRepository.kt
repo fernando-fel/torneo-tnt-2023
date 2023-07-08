@@ -8,7 +8,7 @@ typealias Personas = List<Persona>
 interface PersonaRepository {
     fun getPersonaFromRoom() : Flow<Personas>
 
-    fun addPersonaToRoom(persona: Persona)
+    suspend fun addPersonaToRoom(persona: Persona)
 
     /**
      * Delete item from the data source
@@ -20,7 +20,9 @@ interface PersonaRepository {
      */
     suspend fun updatePersona(persona: Persona)
 
-    fun getPersona(id: Int): Persona
+    suspend fun getPersona(id: Int): Persona
 
     //fun getPersonasPorEquipo(id: Int): Flow<Personas>
 }
+
+

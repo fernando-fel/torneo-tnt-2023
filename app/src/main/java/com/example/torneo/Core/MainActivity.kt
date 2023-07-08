@@ -7,32 +7,44 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.torneo.Core.BaseDeDatos.TorneoDB
 import com.example.torneo.Core.BaseDeDatos.sincronizar_db
 import com.example.torneo.Core.Constantes.Companion.TORNEO_TABLE
+import com.example.torneo.Core.Data.Dao.PersonaDao
+import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Pantallas.ScreenMain
 
 import com.example.torneo.ui.theme.TorneoTheme
-import com.google.firebase.appcheck.ktx.appCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.appcheck.ktx.appCheck
+//import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+//import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
 import com.google.firebase.tracing.FirebaseTrace
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-//class MainActivity : ComponentActivity() {
 class MainActivity : AppCompatActivity() {
     companion object{
         const val MY_CHANNEL_ID = "my_channel"
     }
     @OptIn(ExperimentalMaterial3Api::class)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val database =
+            Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
+                .fallbackToDestructiveMigration().build()
+
         setContent {
             TorneoTheme {
                 // A surface container using the 'background' color from the theme
@@ -41,33 +53,24 @@ class MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    val database =
-                        Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
-                            .fallbackToDestructiveMigration().build()
-
-
-                    val fb_db = Firebase.firestore
+                    /*val fb_db = Firebase.firestore
                     sincronizar_db(fb_db, database)
 
                     Firebase.initialize(context = this)
                     Firebase.appCheck.installAppCheckProviderFactory(
                         PlayIntegrityAppCheckProviderFactory.getInstance(),
-                    )
+                    )*/
                     //myMarket()
-                    ScreenMain()
+
+                    ScreenMain(database = database)
                     //Notificaciones()
                     //AppNavigation()
-                    //Esta es propia se ve
-                    //NavGraph(navController = rememberNavController())
-                    //Greeting("Android")
                 }
             }
         }
-        //setupAuth()
-
     }
-
 }
+
 /*    private var canAuthenticate = false
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private fun setupAuth() {
