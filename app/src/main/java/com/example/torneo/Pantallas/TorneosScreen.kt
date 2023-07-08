@@ -1,7 +1,14 @@
 package com.example.torneo.Pantallas
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -9,7 +16,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -43,13 +54,54 @@ fun ScaffoldWithTopBarTorneosScreen(
 ){
     val torneos by viewModel.torneos.collectAsState(initial = emptyList() )
 
+    var mostrarFinalizados = remember { mutableStateOf(false) }
+    var mostrarEnCurso = remember { mutableStateOf(false) }
+    var mostrarTodos = remember { mutableStateOf(false) }
+
     Scaffold (
         topBar = {
             TopAppBar(
                 title = {
-                    Text(TORNEOS_SCREEN)
+                    Text(TORNEOS_SCREEN + "     ", modifier = Modifier.fillMaxWidth())
                 })
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        mostrarFinalizados.value = false
+                        mostrarEnCurso.value = false
+                        mostrarTodos.value = true
+                    }
+                ) {
+                    androidx.compose.material.Text(text = "Todos")
+                }
+                Button(
+                    onClick = {
+                        mostrarFinalizados.value = false
+                        mostrarEnCurso.value = true
+                        mostrarTodos.value = false
+                    }
+                ) {
+                    androidx.compose.material.Text(text = "en curso")
+                }
+                Button(
+                    onClick = {
+                        mostrarFinalizados.value = true
+                        mostrarEnCurso.value = false
+                        mostrarTodos.value = false
+                    }
+                ) {
+                    androidx.compose.material.Text(text = "Finalizados")
+                }
+
+            }
         },
+
+
         content = { padding->
             TorneosContent(
                 padding = padding,
@@ -59,7 +111,9 @@ fun ScaffoldWithTopBarTorneosScreen(
                     viewModel.deleteTorneo(torneo)
                 },
                 navigateToUpdateTorneoScreen =  navController,
-                navigateToFechaScreen
+                navigateToFechaScreen, mostrarTodos.value,mostrarFinalizados.value,
+                mostrarEnCurso.value
+
             )
             AddTorneosAlertDialog(
                 openDialog = viewModel.openDialog,

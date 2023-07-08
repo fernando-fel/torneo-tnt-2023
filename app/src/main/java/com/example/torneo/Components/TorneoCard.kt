@@ -45,12 +45,12 @@ fun TorneoCard(
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
-            .padding(
+            /*.padding(
                 start = 8.dp,
                 end = 8.dp,
                 top = 4.dp,
                 bottom = 4.dp
-            )
+            )*/
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation() ,
             onClick = {
