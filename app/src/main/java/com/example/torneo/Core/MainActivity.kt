@@ -1,6 +1,8 @@
 package com.example.torneo.Core
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +22,7 @@ import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Pantallas.ScreenMain
 
 import com.example.torneo.ui.theme.TorneoTheme
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
 import com.google.firebase.ktx.initialize
@@ -42,7 +45,9 @@ class MainActivity : AppCompatActivity() {
         val database =
             Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
                 .fallbackToDestructiveMigration().build()
-
+        val db = Firebase.firestore
+        // Add a new document with a generated ID
+        sincronizar_db(db,database)
         setContent {
             TorneoTheme {
                 // A surface container using the 'background' color from the theme

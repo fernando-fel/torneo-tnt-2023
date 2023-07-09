@@ -50,13 +50,20 @@ android {
 }
 
 dependencies {
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     //Fire Base
     //implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
- /*   implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation('com.google.firebase:firebase-auth-ktx') */
     //implementation('com.google-firebase:firebase-firestore-ktx')
-    implementation("com.google.firebase:firebase-firestore-ktx:24.6.1")
+    /*   implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation('com.google.firebase:firebase-auth-ktx') */
+
+    //implementation("com.google.firebase:firebase-firestore-ktx:24.6.1")
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
@@ -81,7 +88,9 @@ dependencies {
     //ROOM
     implementation "androidx.room:room-runtime:2.5.1"
     implementation 'androidx.constraintlayout:constraintlayout-compose:1.0.1'
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
+    /*implementation 'com.google.firebase:firebase-messaging-ktx:23.1.0'
+    implementation 'com.google.firebase:firebase-firestore:24.4.1'*/
     kapt "androidx.room:room-compiler:2.5.1"
     implementation "androidx.room:room-ktx:2.5.1"
     implementation "androidx.room:room-common:2.5.1"
