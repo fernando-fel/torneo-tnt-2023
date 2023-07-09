@@ -34,6 +34,7 @@ import javax.inject.Singleton
 class AppModule {
 
     private var Instance: TorneoDB? = null
+
     @Provides
     @JvmSuppressWildcards
     fun provideTorneoDb(
