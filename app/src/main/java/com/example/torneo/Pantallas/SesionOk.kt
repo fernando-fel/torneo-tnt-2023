@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -47,11 +48,10 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
         topBar = {
             CustomTopAppBar(navController, "Bienvenido", true)
         },
-
         content = { padding ->
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                //color = Color(0xFFD0BCFF)
+                color = MaterialTheme.colorScheme.background
             ) {
                 Column(
                     modifier = Modifier
@@ -63,8 +63,8 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                 ) {
                     Spacer(modifier = Modifier.height(50.dp))
                     HorizontalScroll()
-                    Text(text = "Bienvenido!", style = TextStyle(fontSize = 60.sp, fontFamily = FontFamily.Cursive))
-                    Spacer(modifier = Modifier.height(50.dp))
+                    //Text(text = "Bienvenido!", style = TextStyle(fontSize = 60.sp, fontFamily = FontFamily.Cursive))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
                         onClick = { navController.navigate(Routes.TorneosScreen.route) },
@@ -88,16 +88,6 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                         )
                     }
 
-                    /*Spacer(modifier = Modifier.height(20.dp))
-                    Button(
-                        onClick = { *//* Acción para la opción Ver Fechas *//* },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Jugadores",
-                            fontSize = 30.sp
-                        )
-                    }*/
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = { navController.navigate(Routes.FechasScreen.route)},
@@ -116,6 +106,16 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                     ) {
                         Text(
                             text = "Fixture",
+                            fontSize = 30.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(
+                        onClick = { navController.navigate(Routes.ListadoDePersonas.route) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Personas Inscriptas",
                             fontSize = 30.sp
                         )
                     }

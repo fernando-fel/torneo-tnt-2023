@@ -1,5 +1,6 @@
 package com.example.torneo.Pantallas
 
+import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.torneo.Components.AddPartidosAlertDialog
 import com.example.torneo.Components.AddTorneoFlotingActionButton
 import com.example.torneo.Components.AddTorneosAlertDialog
@@ -25,9 +27,10 @@ fun PartidoScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
     navController: (partidoId: Int) -> Unit,
     fechaId: Int,
+    navControllerBack: NavHostController
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarPartidosScreen(viewModel, navController, fechaId)
+        ScaffoldWithTopBarPartidosScreen(viewModel, navController, fechaId, navControllerBack)
     }
 }
 
@@ -37,15 +40,13 @@ fun ScaffoldWithTopBarPartidosScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
     navController: (partidoId: Int) -> Unit,
     fechaId: Int,
+    navControllerBack: NavHostController
 ){
     val partidos by viewModel.partidos.collectAsState( initial = emptyList() )
 
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Partidos")
-                })
+            CustomTopAppBar(navControllerBack, "Partidos", true)
         },
         content = { padding->
             PartidosContent(

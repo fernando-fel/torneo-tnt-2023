@@ -39,7 +39,7 @@ fun Notificaciones(){
         "Estoy creando una notificacion de texto largo"+
                 "Debe aparecer u icono a la derecha." +
                 "Esto es para ver como expande"
-    val iconoGrande = BitmapFactory.decodeResource(context.resources, R.drawable.logo)
+    val iconoGrande = BitmapFactory.decodeResource(context.resources, R.drawable.logo_v1)
 
     LaunchedEffect(Unit){
         crearCanalNotificacion(idChanell,context)
@@ -108,7 +108,7 @@ fun notificacionTextoLargo(context: Context,
                            iconoGrande: Bitmap?,
                             priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
     var builder = NotificationCompat.Builder(context,idChanell)
-        .setSmallIcon(R.drawable.logo)
+        .setSmallIcon(R.drawable.logo_v1)
         .setContentTitle(textTitle)
         .setContentText(textoLargo)
         .setLargeIcon(iconoGrande)
@@ -139,7 +139,7 @@ fun notificacionTextoLargo(context: Context,
 fun notificacionBasica(context: Context, idChanell: String, idNotificacion: Int, textTitle: String, textContent: String,
 priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
     val builder = NotificationCompat.Builder(context,idChanell)
-        .setSmallIcon(R.drawable.logo_2)
+        .setSmallIcon(R.drawable.logo_v2)
         .setContentTitle(textTitle)
         .setContentTitle(textContent)
         .setPriority(priority)

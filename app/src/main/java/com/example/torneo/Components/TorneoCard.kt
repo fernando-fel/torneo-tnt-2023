@@ -5,11 +5,15 @@ import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Edit
@@ -25,7 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
@@ -126,40 +135,39 @@ fun EquipoCard(
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
-            .padding(
-                start = 8.dp,
-                end = 8.dp,
-                top = 4.dp,
-                bottom = 4.dp
-            )
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(8.dp, 4.dp, 8.dp, 4.dp),
         elevation = CardDefaults.cardElevation() ,
         onClick = {
             navigateToUpdateEquipoScreen(equipo.id)
         }
-
     ){
-        Image(
-            painterResource(R.drawable.download),
-            contentDescription = "Imagen de prueba"
-        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ){
-            Column() {
-                Text("Nombre")
-                Text(text = equipo.nombre)
-            }
-            Spacer(
-                modifier = Modifier.weight(1f)
+            Image(
+                painterResource(R.drawable.balon_roto),
+                contentDescription = "Imagen de prueba",
+                modifier = Modifier.size(80.dp,60.dp)
             )
+            Spacer( modifier = Modifier.width(10.dp) )
+            Text(
+                text = equipo.nombre,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic,
+                    fontFamily = FontFamily.Serif
+                )
+            )
+            Spacer( modifier = Modifier.weight(1f) )
             IconButton(onClick = {navigateToUpdateEquipoScreen(equipo.id)}) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Agregar Torneo" )
             }
-            Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Equipo" )
+            //Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Equipo" )
 
             DeleteIcon2(
                 deleteEquipo = deleteEquipo

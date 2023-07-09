@@ -36,7 +36,7 @@ fun UpdateEquipoTopBar(
 ){
     TopAppBar(
         title = {
-            Text(text = "ACTUALIZAR EQUIPO")
+            Text(text = "Actualizar Equipo")
         },
         navigationIcon = {
             IconButton(onClick = navigateBack) {

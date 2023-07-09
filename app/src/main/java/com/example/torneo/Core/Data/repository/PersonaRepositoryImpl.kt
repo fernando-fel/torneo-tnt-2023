@@ -5,6 +5,7 @@ import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Entity.Persona
 
 import com.example.torneo.Core.Data.Jugador
+import kotlinx.coroutines.flow.Flow
 
 
 class PersonaRepositoryImpl(private val personaDao: PersonaDao
@@ -19,6 +20,8 @@ class PersonaRepositoryImpl(private val personaDao: PersonaDao
 
     override suspend fun getPersona(id:Int) = personaDao.getPersona(id)
 
-    //override fun getJugadoresPorEquipo (id: Int) = jugadorDao.getJugadoresByEquipo(id)
+    override suspend fun getPersonaList(): List<Persona> {
+        return personaDao.getPersonaList()
+    } //= personaDao.getPersonaList(rol)
 
 }

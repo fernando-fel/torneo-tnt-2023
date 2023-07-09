@@ -15,6 +15,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +61,7 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
         content = { padding ->
             Surface(
                 modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
             ) {
                 val golLocal = remember { mutableStateOf(0) }
                 val golVisitante = remember { mutableStateOf(0) }

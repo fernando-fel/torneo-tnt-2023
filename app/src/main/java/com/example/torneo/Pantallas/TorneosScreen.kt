@@ -1,5 +1,6 @@
 package com.example.torneo.Pantallas
 
+import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -36,10 +37,10 @@ fun TorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
-
+    navControllerBack: NavHostController
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navigateToFechaScreen)
+        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navigateToFechaScreen, navControllerBack)
     }
 
 }
@@ -50,8 +51,9 @@ fun ScaffoldWithTopBarTorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
-
+    navControllerBack: NavHostController,
 ){
+
     val torneos by viewModel.torneos.collectAsState(initial = emptyList() )
 
     var mostrarFinalizados = remember { mutableStateOf(false) }
@@ -60,13 +62,12 @@ fun ScaffoldWithTopBarTorneosScreen(
 
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(TORNEOS_SCREEN + "     ", modifier = Modifier.fillMaxWidth())
-                })
+            CustomTopAppBar(navControllerBack, "Torneos", true)
+            /*TopAppBar(
+                title = {Text(TORNEOS_SCREEN + "     ", modifier = Modifier.fillMaxWidth())})*/
             Spacer(modifier = Modifier.height(10.dp))
-            Row(modifier = Modifier
-                .fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically) {
                 Spacer(modifier = Modifier.height(10.dp))

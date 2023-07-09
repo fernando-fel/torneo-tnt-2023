@@ -22,7 +22,7 @@ interface PersonaRepository {
 
     suspend fun getPersona(id: Int): Persona
 
-    //fun getPersonasPorEquipo(id: Int): Flow<Personas>
+    suspend fun getPersonaList(): List<Persona>
 }
 
 

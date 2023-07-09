@@ -23,4 +23,6 @@ sealed class Routes(val route: String) {
 
     object PartidoScreen : Routes("PartidoScreen")
 
+    object ListadoDePersonas : Routes("ListadoDePersonas")
+
 }

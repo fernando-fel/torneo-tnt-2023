@@ -1,5 +1,6 @@
 package com.example.torneo.Pantallas
 
+import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.torneo.Components.AddFechaFlotingActionButton
 import com.example.torneo.Components.AddFechasAlertDialog
 import com.example.torneo.Components.FechasContent
@@ -22,10 +24,12 @@ fun FechasScreen(
     viewModel: FechasViewModel = hiltViewModel(),
     navController: (idFecha:  Int) -> Unit,
     torneoId: Int,
-    navigateToPartidoScreen: (fechaId: Int) -> Unit
+    navigateToPartidoScreen: (fechaId: Int) -> Unit,
+    navControllerBack: NavHostController
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarFechasScreen(torneoId,viewModel, navController, navigateToPartidoScreen)
+        ScaffoldWithTopBarFechasScreen(torneoId,viewModel, navController,
+            navigateToPartidoScreen, navControllerBack)
     //, navController2)
     }
 }
@@ -37,7 +41,7 @@ fun ScaffoldWithTopBarFechasScreen(
     viewModel: FechasViewModel = hiltViewModel(),
     navController: (fechasId: Int) -> Unit,
     navigateToPartidoScreen: (fechaId: Int) -> Unit,
-
+    navControllerBack: NavHostController
 ){
     val fechas by viewModel.fechas.collectAsState(initial = emptyList() )
 
@@ -45,10 +49,7 @@ fun ScaffoldWithTopBarFechasScreen(
 
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Fechas")
-                })
+            CustomTopAppBar(navControllerBack, "Fechas", true)
         },
         content = { padding->
             FechasContent(

@@ -47,7 +47,7 @@ fun Splash(){
         verticalArrangement = Arrangement.Center
     ){
         Image (
-            painter = painterResource(id = R.drawable.torneo2023),
+            painter = painterResource(id = R.drawable.tres_estrellas),
             contentDescription ="Logo",
             modifier = Modifier.size(250.dp,250.dp)
         )

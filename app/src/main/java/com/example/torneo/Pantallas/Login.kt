@@ -33,11 +33,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
@@ -45,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Dao.PersonaDao
+import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.R
 import kotlinx.coroutines.launch
 
@@ -65,19 +69,21 @@ fun LoginPage(
     val passwordVisibilityIcon = if (passwordVisible.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
 
+
     Column(
         //modifier = Modifier.padding(40.dp),
-        modifier = Modifier.fillMaxSize().padding(20.dp,60.dp,20.dp,0.dp),
+        modifier = Modifier.fillMaxSize().padding(20.dp,60.dp,20.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image (
-            modifier = Modifier.size(150.dp).clip(CircleShape),
-            painter = painterResource(id = R.drawable.logo_4),
-            contentDescription ="Logo"
+            painter = painterResource(id = R.drawable.logo_v4),
+            contentDescription ="Logo",
+            modifier = Modifier.size(200.dp, 200.dp)
         )
-        //Text(text = "Iniciar Sesion", style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Cursive))
+
         Spacer(modifier = Modifier.height(30.dp))
+
         TextField(
             label = { Text(text = "Nombre de Usuario") },
             value = username.value,
@@ -111,8 +117,7 @@ fun LoginPage(
             }
 
         )
-
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         val coroutineScope = rememberCoroutineScope()
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
@@ -120,25 +125,27 @@ fun LoginPage(
                 onClick = {
                     // Llamar a getPersona dentro de un bloque de coroutine
                     coroutineScope.launch {
-                        val admin = persona.getPersona(1)
-                        val juez = persona.getPersona(2)
+                        val listaDePersonas: List<Persona> = persona.getPersonaList()
+                        var esRol = false
 
-                        when {
-                            admin.username == username.value && admin.pass == password.value -> {
-                                // Inicio de sesión exitoso para el usuario "admin"
-                                inicioSesionOk.value = true
-                                navController.navigate(Routes.SesionOk.route)
+                        for(persona in listaDePersonas){
+                            when {
+                                persona.rol == "admin" && persona.username == username.value && persona.pass == password.value -> {
+                                    navController.navigate(Routes.SesionOk.route)
+                                    esRol = true
+                                }
+                                persona.rol == "juez" && persona.username == username.value && persona.pass == password.value -> {
+                                    navController.navigate(Routes.TorneosScreen.route)
+                                    esRol = true
+                                }
+                                persona.rol == "usuario" && persona.username == username.value && persona.pass == password.value -> {
+                                    navController.navigate(Routes.Fixture.route)
+                                    esRol = true
+                                }
                             }
-                            juez.username == username.value && juez.pass == password.value -> {
-                                // Inicio de sesión exitoso para el usuario "juez"
-                                inicioSesionOk.value = true
-                                navController.navigate(Routes.TorneosScreen.route)
-                            }
-                            else -> {
-                                // Inicio de sesión fallido
-                                showErrorDialog.value = true
-                                //error.value = "Usuario o contraseña inválidos"
-                            }
+                        }
+                        if (!esRol) {
+                            showErrorDialog.value = true
                         }
                     }
                 },
@@ -157,7 +164,6 @@ fun LoginPage(
                     confirmButton = {
                         Button(
                             onClick = { showErrorDialog.value = false },
-
                         ) {
                             Text(text = "Aceptar")
                         }
@@ -176,7 +182,6 @@ fun LoginPage(
                 fontFamily = FontFamily.Default,
                 textDecoration = TextDecoration.Underline,
                 color = MaterialTheme.colorScheme.primary
-                //fontFamily = FontFamily.Default
             )
         )
 

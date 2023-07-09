@@ -1,6 +1,7 @@
 
 package com.example.torneo.Pantallas
 
+import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.torneo.Components.AddEquipoFlotingActionButton
 import com.example.torneo.Components.AddEquiposAlertDialog
 import com.example.torneo.Components.EquipoContent
@@ -20,10 +22,11 @@ import com.example.torneo.TorneoViewModel.EquiposViewModel
 @Composable
 fun EquiposScreen(
     viewModel: EquiposViewModel = hiltViewModel(),
-    navController: (equipoId: Int) -> Unit
+    navController: (equipoId: Int) -> Unit,
+    navControllerBack: NavHostController
 ){
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarEquipoScreen(viewModel, navController)
+        ScaffoldWithTopBarEquipoScreen(viewModel, navController, navControllerBack)
     }
 }
 
@@ -31,16 +34,14 @@ fun EquiposScreen(
 @Composable
 fun ScaffoldWithTopBarEquipoScreen(
     viewModel: EquiposViewModel = hiltViewModel(),
-    navController: (EquipoId: Int) -> Unit
+    navController: (EquipoId: Int) -> Unit,
+    navControllerBack: NavHostController
 ){
     val equipos by viewModel.equipos.collectAsState(
         initial = emptyList() )
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Equipos")
-                })
+            CustomTopAppBar(navControllerBack, "Equipos", true)
         },
         content = { padding->
             EquipoContent(

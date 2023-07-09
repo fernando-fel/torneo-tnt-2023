@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -67,14 +68,18 @@ fun ScreenMain(database: TorneoDB){
         composable(Routes.SesionOk.route){
             SesionOk(navController)
         }
+        composable(Routes.Fixture.route){
+            Fixture(navController)
+        }
         composable(Routes.TorneosScreen.route){
             TorneosScreen(
                 navController = { torneoId ->
-                navController.navigate("${Routes.UpdateTorneoScreen.route}/${torneoId}")
-            },
+                    navController.navigate("${Routes.UpdateTorneoScreen.route}/${torneoId}")
+                },
                 navigateToFechaScreen = { torneoId ->
                     navController.navigate("${Routes.FechasScreen.route}/$torneoId")
                 },
+                navControllerBack = navController,
             )
         }
 
@@ -95,13 +100,12 @@ fun ScreenMain(database: TorneoDB){
                 }
             )
         }
-        composable(route = Routes.EquiposScreen.route) {
+        composable(Routes.EquiposScreen.route) {
             EquiposScreen(
                 navController = { equipoId ->
-                    navController.navigate(
-                        "${Routes.UpdateEquipoScreen.route}/${equipoId}"
-                    )
-                }
+                    navController.navigate("${Routes.UpdateEquipoScreen.route}/${equipoId}")
+                },
+                navControllerBack = navController
             )
         }
         composable(
@@ -123,10 +127,6 @@ fun ScreenMain(database: TorneoDB){
             )
         }
 
-        composable(Routes.Fixture.route){
-            Fixture(navController)
-        }
-
         composable(route = "${Routes.FechasScreen.route}/{$TORNEO_ID}",
             arguments = listOf(
                 navArgument(TORNEO_ID){
@@ -143,7 +143,7 @@ fun ScreenMain(database: TorneoDB){
                 navigateToPartidoScreen = { fechaId ->
                     navController.navigate("${Routes.PartidoScreen.route}/$fechaId")
                 },
-
+                navControllerBack = navController
             )
         }
         composable(route = "${Routes.PartidoScreen.route}/{$FECHA_ID}",
@@ -158,7 +158,8 @@ fun ScreenMain(database: TorneoDB){
                 navController = { partidoId ->
                     // Realiza la acción deseada con partidoId
                 },
-                fechaId = fechaId
+                fechaId = fechaId,
+                navControllerBack = navController
             )
         }
 
@@ -180,9 +181,6 @@ fun ScreenMain(database: TorneoDB){
             )
         }
 
-        composable(Routes.Fixture.route){
-            Fixture(navController)
-        }
         composable(
             route = "${Routes.UnPartido.route}/{equipoLocal}/{equipoVisitante}/{golLocal}/{golVisitante}",
             arguments = listOf(navArgument("equipoLocal") { type = NavType.StringType },
@@ -195,6 +193,12 @@ fun ScreenMain(database: TorneoDB){
             val golLocal = backStackEntry.arguments?.getInt("golLocal")
             val golVisitante = backStackEntry.arguments?.getInt("golVisitante")
             UnPartido(navController)
+        }
+
+        composable(Routes.ListadoDePersonas.route){
+            //val persona = getPersonaDao() // Obtén la instancia de tu PersonaDao
+
+            ListadoDePersonas(navController, persona)
         }
 
     }

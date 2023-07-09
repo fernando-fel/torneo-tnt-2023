@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PersonaDao{
 
-    @Query("SELECT * FROM persona_table WHERE id = :personaId")
-    fun getPersonaByEquipo(personaId: Int): Flow<List<Persona>>
+    @Query("SELECT * FROM persona_table")
+    suspend fun getPersonaList(): List<Persona>
 
     @Query("SELECT * FROM persona_table ORDER BY id ASC")
     fun getAlphabetizedPersona(): Flow<List<Persona>>

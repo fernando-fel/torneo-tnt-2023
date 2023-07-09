@@ -44,7 +44,9 @@ class MainActivity : AppCompatActivity() {
                 .fallbackToDestructiveMigration().build()
 
         setContent {
-            TorneoTheme {
+            TorneoTheme (
+                darkTheme = false
+            ){
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                     )*/
                     //Firebase.c
                     //Firebase.appCheck.installAppCheckProviderFactory(
-                      //  PlayIntegrityAppCheckProviderFactory.getInstance(),
+                    //  PlayIntegrityAppCheckProviderFactory.getInstance(),
                     //)
                     //myMarket()
 
