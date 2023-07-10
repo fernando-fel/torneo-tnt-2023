@@ -26,3 +26,6 @@ interface PersonaRepository {
 }
 
 
+//la idea es poder estar conectado los 3, uno es juez, el otro visualizar los resultados
+//
+

@@ -21,6 +21,9 @@ class PersonaRepositoryImpl(private val personaDao: PersonaDao
     override suspend fun getPersona(id:Int) = personaDao.getPersona(id)
 
     override suspend fun getPersonaList(): List<Persona> {
+        //declarar una persona de room y obtener personas de firestore y combinar
+        //Escuchar firebase con addSnapshotListener
+        // y ademas comentar la llamada a sicronizar_db del mainactivity
         return personaDao.getPersonaList()
     } //= personaDao.getPersonaList(rol)
 

@@ -2,7 +2,6 @@ package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,33 +17,24 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.TorneoViewModel.PartidosViewModel
+import kotlinx.coroutines.job
 
-@Composable
-fun UnPartido(navController: NavHostController){
-    val arguments = navController.currentBackStackEntry?.arguments
-    val equipoLocal = arguments?.getString("equipoLocal")
-    val equipoVisitante = arguments?.getString("equipoVisitante")
-    val golLocal = arguments?.getInt("golLocal")
-    val golVisitante = arguments?.getInt("golVisitante")
-    val partido = Partido(equipoLocal?: "", equipoVisitante?: "", golLocal?:0, golVisitante?:0)
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldUnPartido(navController, partido)
-        //ScaffoldUnPartido(navController)
-    }
-}
-
-enum class ButtonState3 {
+enum class ButtonState {
     Iniciar,
     PrimerTiempo,
     Entretiempo,
@@ -53,10 +43,18 @@ enum class ButtonState3 {
 }
 
 @Composable
-fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
+fun GestionarPartido(
+    viewModel: PartidosViewModel = hiltViewModel(),
+    navControllerBack: NavHostController,
+    partidoId: Int
+) {
+    val partidos by viewModel.partidos.collectAsState(initial = emptyList() )
+    val partido = partidos.first() { partido -> partido.id == partidoId }
+
+
     Scaffold(
         topBar = {
-            CustomTopAppBar(navController, "", true)
+            CustomTopAppBar(navControllerBack, "Gestion de Partido", true)
         },
         content = { padding ->
             Surface(
@@ -86,14 +84,14 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                             horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
                             Text(
-                                text = "${partido.equipoLocal}",
+                                text = "${partido.idLocal}",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                             )
                             Text(text = golLocal.value.toString(), fontSize = 30.sp)
                             Text(text = golVisitante.value.toString(), fontSize = 30.sp)
                             Text(
-                                text = "${partido.equipoVisitante}",
+                                text = "${partido.idLocal}",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp
                             )
@@ -102,7 +100,8 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth().padding(vertical = 5.dp),
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Button(
@@ -114,6 +113,9 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                     ButtonState.SegundoTiempo -> ButtonState.Fin
                                     ButtonState.Fin -> ButtonState.Fin
                                 }
+                                var partidoUpdate = partido.copy(estado= stateButton.value.toString())
+                                //partido.golLocal = golLocal.value
+                                //viewModel.updatepartido(partidoUpdate)
                             },
                             //enabled = stateButton.value != ButtonState.Fin,
                         ) {
@@ -122,19 +124,24 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                     }
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth().padding(vertical = 5.dp),
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                     ){
                         if (stateButton.value == ButtonState.PrimerTiempo || stateButton.value == ButtonState.SegundoTiempo) {
                             Row(
                                 modifier = Modifier
-                                    .fillMaxWidth().padding(vertical = 5.dp),
+                                    .fillMaxWidth()
+                                    .padding(vertical = 5.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                             ) {
                                 Button(
                                     onClick = {
                                         if (golLocal.value > 0) {
                                             golLocal.value -= 1
+                                            var partidoUpdate = partido.copy(golLocal= golLocal.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -144,6 +151,9 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                     onClick = {
                                         if (golLocal.value >= 0) {
                                             golLocal.value += 1
+                                            var partidoUpdate = partido.copy(golLocal= golLocal.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -154,6 +164,9 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                     onClick = {
                                         if (golVisitante.value >= 0) {
                                             golVisitante.value += 1
+                                            var partidoUpdate = partido.copy(golLocal= golVisitante.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -163,6 +176,9 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                     onClick = {
                                         if (golVisitante.value > 0) {
                                             golVisitante.value -= 1
+                                            var partidoUpdate = partido.copy(golVisitante= golVisitante.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -170,7 +186,7 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
                                 }
                             }
                         } else if (stateButton.value == ButtonState.Fin){
-                            navController.navigate(Routes.Fixture.route)
+                            navControllerBack
                         }
                     }
                 }
@@ -178,4 +194,3 @@ fun ScaffoldUnPartido(navController: NavHostController, partido: Partido){
         }
     )
 }
-

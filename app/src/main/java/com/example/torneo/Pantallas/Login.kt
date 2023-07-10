@@ -135,7 +135,7 @@ fun LoginPage(
                                     esRol = true
                                 }
                                 persona.rol == "juez" && persona.username == username.value && persona.pass == password.value -> {
-                                    navController.navigate(Routes.TorneosScreen.route)
+                                    navController.navigate("${Routes.PartidosDelJuezScreen.route}/${persona.id}")
                                     esRol = true
                                 }
                                 persona.rol == "usuario" && persona.username == username.value && persona.pass == password.value -> {

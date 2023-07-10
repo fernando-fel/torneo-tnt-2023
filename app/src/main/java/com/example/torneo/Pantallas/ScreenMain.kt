@@ -14,6 +14,8 @@ import androidx.navigation.navArgument
 import com.example.torneo.Core.BaseDeDatos.TorneoDB
 import com.example.torneo.Core.Constantes
 import com.example.torneo.Core.Constantes.Companion.FECHA_ID
+import com.example.torneo.Core.Constantes.Companion.PARTIDO_ID
+import com.example.torneo.Core.Constantes.Companion.PERSONA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Splash.SplashScreen
@@ -199,6 +201,36 @@ fun ScreenMain(database: TorneoDB){
             //val persona = getPersonaDao() // Obtén la instancia de tu PersonaDao
 
             ListadoDePersonas(navController, persona)
+        }
+
+        composable(route = "${Routes.PartidosDelJuezScreen.route}/{$PERSONA_ID}",
+            arguments = listOf(
+                navArgument(PERSONA_ID){
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val juezId = navBackStackEntry.arguments?.getInt(PERSONA_ID) ?: 0
+            PartidosDelJuezScreen(
+                navController = { partidoId ->
+                    // Realiza la acción deseada con partidoId
+                },
+                juez = juezId,
+                navControllerBack = navController
+            )
+        }
+        composable(route = "${Routes.GestionarPartido.route}/{$PARTIDO_ID}",
+            arguments = listOf(
+                navArgument(PARTIDO_ID){
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val partidoId = navBackStackEntry.arguments?.getInt(PARTIDO_ID) ?: 0
+            GestionarPartido(
+                navControllerBack = navController,
+                partidoId = partidoId
+            )
         }
 
     }

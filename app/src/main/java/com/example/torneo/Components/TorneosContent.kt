@@ -121,8 +121,7 @@ fun FechasContent (
             .fillMaxSize()
             .padding(padding)
     ){
-        items(fechas){
-                fecha->
+        items(fechas){ fecha->
             FechaCard(
                 fecha = fecha,
                 deleteFecha={

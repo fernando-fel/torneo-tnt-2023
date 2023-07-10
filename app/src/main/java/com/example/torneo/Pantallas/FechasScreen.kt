@@ -55,9 +55,8 @@ fun ScaffoldWithTopBarFechasScreen(
             FechasContent(
                 padding = padding,
                 fechas = fechasDeTorneo,
-                deleteFecha={
-                        fecha->
-                        viewModel.deleteFecha(fecha)
+                deleteFecha={ fecha->
+                    viewModel.deleteFecha(fecha)
                 },
                 navigateToUpdateFechaScreen =  navController,
                 navigateToPartidoScreen

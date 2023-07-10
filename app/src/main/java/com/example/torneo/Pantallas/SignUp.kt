@@ -68,12 +68,10 @@ fun SignUp(
 
 @Composable
 @ExperimentalMaterial3Api
-fun ScaffoldWithTopBar(
-    navController: NavHostController,
-    persona: PersonaDao
-) {
+fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
+{
     // Inicializar el siguiente idPersona a partir de 3
-    val personaId = remember { mutableStateOf(3) }
+    val idPersona = remember { mutableStateOf(0) }
 
     val nombre = remember { mutableStateOf("") }
     val username = remember { mutableStateOf("") }
@@ -185,10 +183,10 @@ fun ScaffoldWithTopBar(
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                val usuario = Persona(idPersona = personaId.value, nombre=nombre.value,
+                                val usuario = Persona(id = idPersona.value, idPersona=1, nombre=nombre.value,
                                     username = username.value, pass = password.value, rol = "usuario")
                                 persona.insertPersona(usuario)
-                                personaId.value++
+                                //personaId.value++
 
                                 if (nombre.value.isNotBlank() && username.value.isNotBlank() &&
                                     password.value.isNotBlank()) {

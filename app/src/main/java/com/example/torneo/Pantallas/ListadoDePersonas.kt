@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.TextButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -34,9 +35,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import com.example.torneo.Core.Constantes
 
 import com.example.torneo.Core.Data.Dao.PersonaDao
 
@@ -45,11 +48,11 @@ import com.example.torneo.Core.Data.Dao.PersonaDao
 @Composable
 fun ListadoDePersonas(
     navController: NavHostController,
+    //trabajar PersonaRepository
     personaDao: PersonaDao
 ) {
     val mostrarDialog = remember { mutableStateOf(false) }
     val personasList = remember { mutableStateListOf<Persona>() }
-    val nuevoRol = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
@@ -69,13 +72,17 @@ fun ListadoDePersonas(
                     .verticalScroll(rememberScrollState())
             ) {
                 personasList.forEachIndexed { index, persona ->
+
                     var nuevoRol = remember { mutableStateOf(persona.rol) }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp,4.dp),
                         elevation = CardDefaults.cardElevation(),
-                        onClick = {  nuevoRol.value = persona.rol }
+                        onClick = {
+                            //nuevoRol.value = persona.rol
+                            mostrarDialog.value= true
+                        }
                     ) {
                         Column(
                             modifier = Modifier.padding(10.dp)
@@ -88,9 +95,9 @@ fun ListadoDePersonas(
                             Text(text = "Usuario: ${persona.username}")
                             Text(text = "Contraseña: ${persona.pass}")
 
-                            Spacer(modifier = Modifier.height(8.dp))
-                            val coroutineScope = rememberCoroutineScope()
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            //Spacer(modifier = Modifier.height(8.dp))
+                            //val coroutineScope = rememberCoroutineScope()
+                            /*Row(verticalAlignment = Alignment.CenterVertically) {
                                 TextField(
                                     value = nuevoRol.value,
                                     onValueChange = { nuevoRol.value = it },
@@ -111,8 +118,48 @@ fun ListadoDePersonas(
                                 ) {
                                     Text("Guardar")
                                 }
-                            }
+                            }*/
                         }
+                    }
+                    if (mostrarDialog.value) {
+                        val coroutineScope = rememberCoroutineScope()
+                        AlertDialog(
+                            onDismissRequest = { mostrarDialog.value = false },
+                            title = { Text("Modificar rol") },
+                            text = {
+                                // Campo de texto editable para ingresar el nuevo rol
+                                TextField(
+                                    value = nuevoRol.value,
+                                    onValueChange = { nuevoRol.value = it },
+                                    label = { Text("Cambiar rol de "+persona.nombre ) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        mostrarDialog.value = false // Cerrar el cuadro de diálogo
+                                            // Crear una nueva instancia de Persona con el nuevo valor de rol
+                                        coroutineScope.launch {
+                                            val personaActualizada: Persona = persona.copy(rol = nuevoRol.value)
+                                            // Actualizar la persona en la lista
+                                            personasList[index] = personaActualizada
+
+                                            // Actualizar la persona en la base de datos
+                                            personaDao.updatePersona(personaActualizada)
+                                        }
+                                    }
+                                ) {
+                                    Text("Confirmar")
+                                }
+                            },
+                            dismissButton = {
+                                Button(onClick = { mostrarDialog.value=false }) {
+                                    Text(text = "Cancelar")
+                                }
+                            }
+
+                        )
                     }
                 }
             }

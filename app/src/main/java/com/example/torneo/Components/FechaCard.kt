@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -58,15 +59,19 @@ fun FechaCard(
             Column() {
                 Text("          FECHA       ")
                 Text( "******* "+fecha.numero.toString()+" **********")
-                Text("Estado de fecha" + fecha.estado)
+                Text("Estado de fecha: " + fecha.estado)
             }
             Spacer(
                 modifier = Modifier.weight(1f)
             )
             IconButton(onClick = {navigateToUpdateFechaScreen(fecha.id)}) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Agregar Torneo" )
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar Fecha" )
             }
-            Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Equipo" )
+            //Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Equipo" )
+
+            IconButton(onClick = deleteFecha ) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Equipo" )
+            }
 
         }
     }

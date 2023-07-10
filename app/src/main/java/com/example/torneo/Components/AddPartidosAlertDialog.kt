@@ -41,8 +41,8 @@ fun AddPartidosAlertDialog(
         var local by remember { mutableStateOf(NO_VALUE) }
         var visitante by remember { mutableStateOf(NO_VALUE) }
         var numeroCancha by remember { mutableStateOf(NO_VALUE) }
-        var golL by remember { mutableStateOf(NO_VALUE) }
-        var golV by remember { mutableStateOf(NO_VALUE) }
+        var golL by remember { mutableStateOf(0) }
+        var golV by remember { mutableStateOf(0) }
         var estado by remember { mutableStateOf(NO_VALUE) }
         var juez by remember { mutableStateOf(NO_VALUE) }
 
@@ -51,22 +51,11 @@ fun AddPartidosAlertDialog(
 
         AlertDialog(onDismissRequest = { closeDialog },
             title = {
-                Text("Agregar Fecha")
+                Text("Agregar Partido")
             },
             text = {
                 Column(){
-                    TextField(value = fecha,
-                        onValueChange = {fecha = it},
-                        placeholder = {
-                            Text("fecha")
-                        },
-                        modifier = Modifier.focusRequester(
-                            focusRequester
-                        )
-                    )
-                    Spacer(
-                        modifier = Modifier.height(16.dp)
-                    )
+
                     TextField(value = dia,
                         onValueChange = {dia = it},
                         placeholder = {
@@ -104,14 +93,6 @@ fun AddPartidosAlertDialog(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
-                        value = estado,
-                        onValueChange =  {estado = it},
-                        placeholder = {Text("Estado del partido") }
-                    )
-                    Spacer(
-                        modifier = Modifier.height(16.dp)
-                    )
-                    TextField(
                         value = numeroCancha,
                         onValueChange =  {numeroCancha = it},
                         placeholder = {Text("Nombre de cancha") }
@@ -137,7 +118,7 @@ fun AddPartidosAlertDialog(
                                         idVisitante = visitante.toInt(), idLocal = local.toInt(),
                                         idFecha = fechaId, hora = hora, dia = dia,
                                         golVisitante = 0, golLocal = 0,
-                                        estado = estado, id = 0, idPersona = juez)
+                                        estado = "Programado", id = 0, idPersona = juez)
                         addPartido(partido)
                     }) {
                     Text(text = ("Agregar Partido"))
