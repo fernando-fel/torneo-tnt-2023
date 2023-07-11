@@ -1,5 +1,6 @@
 package com.example.torneo.Pantallas
 
+import MenuUsuario
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +19,10 @@ import com.example.torneo.Core.Constantes.Companion.PARTIDO_ID
 import com.example.torneo.Core.Constantes.Companion.PERSONA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
 import com.example.torneo.Core.Data.Entity.Persona
+import com.example.torneo.Pantallas.Usuario.EquiposUsuarioScreen
+import com.example.torneo.Pantallas.Usuario.FechasUsuarioScreen
+import com.example.torneo.Pantallas.Usuario.PartidoUsuarioScreen
+import com.example.torneo.Pantallas.Usuario.TorneosUsuarioScreen
 import com.example.torneo.Splash.SplashScreen
 import com.example.torneo.TorneoViewModel.PersonasViewModel
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +75,9 @@ fun ScreenMain(database: TorneoDB){
         composable(Routes.SesionOk.route){
             SesionOk(navController)
         }
+        composable(Routes.MenuUsuario.route){
+            MenuUsuario(navController)
+        }
         composable(Routes.Fixture.route){
             Fixture(navController)
         }
@@ -80,6 +88,17 @@ fun ScreenMain(database: TorneoDB){
                 },
                 navigateToFechaScreen = { torneoId ->
                     navController.navigate("${Routes.FechasScreen.route}/$torneoId")
+                },
+                navControllerBack = navController,
+            )
+        }
+        composable(Routes.TorneosUsuarioScreen.route){
+            TorneosUsuarioScreen(
+                navController = { torneoId ->
+                    navController.navigate("${Routes.FechaUsuarioScreen.route}/${torneoId}")
+                },
+                navigateToFechaScreen = { torneoId ->
+                    navController.navigate("${Routes.FechaUsuarioScreen.route}/$torneoId")
                 },
                 navControllerBack = navController,
             )
@@ -104,6 +123,14 @@ fun ScreenMain(database: TorneoDB){
         }
         composable(Routes.EquiposScreen.route) {
             EquiposScreen(
+                navController = { equipoId ->
+                    navController.navigate("${Routes.UpdateEquipoScreen.route}/${equipoId}")
+                },
+                navControllerBack = navController
+            )
+        }
+        composable(Routes.EquipoUsuarioScreen.route) {
+            EquiposUsuarioScreen(
                 navController = { equipoId ->
                     navController.navigate("${Routes.UpdateEquipoScreen.route}/${equipoId}")
                 },
@@ -164,6 +191,43 @@ fun ScreenMain(database: TorneoDB){
                 navControllerBack = navController
             )
         }
+
+        composable(route = "${Routes.FechaUsuarioScreen.route}/{$TORNEO_ID}",
+            arguments = listOf(
+                navArgument(TORNEO_ID){
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val torneoId = navBackStackEntry.arguments?.getInt(TORNEO_ID) ?: 0
+            FechasUsuarioScreen(
+                navController = { idFecha ->
+                    // Realiza la acción deseada con idFecha
+                },
+                torneoId = torneoId,
+                navigateToPartidoScreen = { fechaId ->
+                    navController.navigate("${Routes.PartidoUsuarioScreen.route}/$fechaId")
+                },
+                navControllerBack = navController
+            )
+        }
+        composable(route = "${Routes.PartidoUsuarioScreen.route}/{$FECHA_ID}",
+            arguments = listOf(
+                navArgument(FECHA_ID){
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val fechaId = navBackStackEntry.arguments?.getInt(FECHA_ID) ?: 0
+            PartidoUsuarioScreen(
+                navController = { partidoId ->
+                    // Realiza la acción deseada con partidoId
+                },
+                fechaId = fechaId,
+                navControllerBack = navController
+            )
+        }
+
 
         composable(
             route = "${Routes.UpdateFechasScreen.route}/{${FECHA_ID}}",

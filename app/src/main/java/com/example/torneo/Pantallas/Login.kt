@@ -139,7 +139,7 @@ fun LoginPage(
                                     esRol = true
                                 }
                                 persona.rol == "usuario" && persona.username == username.value && persona.pass == password.value -> {
-                                    navController.navigate(Routes.Fixture.route)
+                                    navController.navigate(Routes.MenuUsuario.route)
                                     esRol = true
                                 }
                             }
