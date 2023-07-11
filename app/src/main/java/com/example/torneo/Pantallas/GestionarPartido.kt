@@ -46,145 +46,165 @@ fun GestionarPartido(
     val partido = partidos.firstOrNull { partido -> partido.id == partidoId }
 
     //if (partido != null) {
-        partido?.let {
-            Scaffold(
-                topBar = {
-                    CustomTopAppBar(navControllerBack, "Gestion de Partido", true)
-                },
-                content = { padding ->
+    partido?.let {
+        Scaffold(
+            topBar = {
+                CustomTopAppBar(navControllerBack, "Gestion de Partido", true)
+            },
+            content = { padding ->
 
-                    val golLocal = remember { mutableStateOf(0) }
-                    val golVisitante = remember { mutableStateOf(0) }
-                    val stateButton = remember { mutableStateOf(ButtonState.Iniciar) }
+                val golLocal = remember { mutableStateOf(0) }
+                val golVisitante = remember { mutableStateOf(0) }
+                val stateButton = remember { mutableStateOf(ButtonState.Iniciar) }
 
-                    Column(
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 25.dp),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Card(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 25.dp),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(0.dp),
                     ) {
-                        Card(
+                        Row(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(0.dp),
+                                .fillMaxWidth()
+                                .padding(vertical = 5.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
+                            Text(
+                                text = "${it.idLocal}",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp,
+                            )
+                            Text(text = golLocal.value.toString(), fontSize = 30.sp)
+                            Text(text = golVisitante.value.toString(), fontSize = 30.sp)
+                            Text(
+                                text = "${it.idVisitante}",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        Button(
+                            onClick = {
+                                stateButton.value = when (stateButton.value) {
+                                    ButtonState.Iniciar -> ButtonState.PrimerTiempo
+                                    ButtonState.PrimerTiempo -> ButtonState.Entretiempo
+                                    ButtonState.Entretiempo -> ButtonState.SegundoTiempo
+                                    ButtonState.SegundoTiempo -> ButtonState.Fin
+                                    ButtonState.Fin -> ButtonState.Fin
+                                }
+
+                                val partidoUpdate = it.copy(estado = stateButton.value.toString())
+                                viewModel.updatepartido(partidoUpdate)
+                            },
+                            enabled = stateButton.value != ButtonState.Fin,
+                        ) {
+                            Text(text = stateButton.value.name, fontSize = 25.sp)
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        if (stateButton.value == ButtonState.PrimerTiempo || stateButton.value == ButtonState.SegundoTiempo) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 5.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                             ) {
-                                Text(
-                                    text = "${it.idLocal}",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 30.sp,
-                                )
-                                Text(text = golLocal.value.toString(), fontSize = 30.sp)
-                                Text(text = golVisitante.value.toString(), fontSize = 30.sp)
-                                Text(
-                                    text = "${it.idVisitante}",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 30.sp
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 5.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                        ) {
-                            Button(
-                                onClick = {
-                                    stateButton.value = when (stateButton.value) {
-                                        ButtonState.Iniciar -> ButtonState.PrimerTiempo
-                                        ButtonState.PrimerTiempo -> ButtonState.Entretiempo
-                                        ButtonState.Entretiempo -> ButtonState.SegundoTiempo
-                                        ButtonState.SegundoTiempo -> ButtonState.Fin
-                                        ButtonState.Fin -> ButtonState.Fin
-                                    }
 
-                                    val partidoUpdate = it.copy(estado = stateButton.value.toString())
-                                    viewModel.updatepartido(partidoUpdate)
-                                },
-                                enabled = stateButton.value != ButtonState.Fin,
-                            ) {
-                                Text(text = stateButton.value.name, fontSize = 25.sp)
-                            }
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 5.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                        ){
-                            if (stateButton.value == ButtonState.PrimerTiempo || stateButton.value == ButtonState.SegundoTiempo) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 5.dp),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                Button(
+                                    onClick = {
+                                        if (golLocal.value > 0) {
+                                            golLocal.value -= 1
+                                            //var partidoUpdate = partido.copy(golLocal= golLocal.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
+                                            val partidoUpdate = it.copy(
+                                                golLocal = golLocal.value,
+                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+                                            )
+                                            viewModel.updatepartido(partidoUpdate)
+                                        }
+                                    },
                                 ) {
-                                    Button(
-                                        onClick = {
-                                            if (golLocal.value > 0) {
-                                                golLocal.value -= 1
-
-                                                val partidoUpdate = it.copy(golLocal = golLocal.value)
-                                                viewModel.updatepartido(partidoUpdate)
-                                            }
-                                        },
-                                    ) {
-                                        Text(text = "-", fontSize = 25.sp)
-                                    }
-                                    Button(
-                                        onClick = {
-                                            if (golLocal.value >= 0) {
-                                                golLocal.value += 1
-                                                val partidoUpdate = it.copy(golLocal = golLocal.value)
-                                                viewModel.updatepartido(partidoUpdate)
-                                            }
-                                        },
-                                    ) {
-                                        Text(text = "+", fontSize = 25.sp)
-                                    }
-
-                                    Button(
-                                        onClick = {
-                                            if (golVisitante.value >= 0) {
-                                                golVisitante.value += 1
-                                                val partidoUpdate = it.copy(golVisitante = golVisitante.value)
-                                                viewModel.updatepartido(partidoUpdate)
-                                            }
-                                        },
-                                    ) {
-                                        Text(text = "+", fontSize = 25.sp)
-                                    }
-                                    Button(
-                                        onClick = {
-                                            if (golVisitante.value > 0) {
-                                                golVisitante.value -= 1
-                                                val partidoUpdate = it.copy(golVisitante = golVisitante.value)
-                                                viewModel.updatepartido(partidoUpdate)
-                                            }
-                                        },
-                                    ) {
-                                        Text(text = "-", fontSize = 25.sp)
-                                    }
+                                    Text(text = "-", fontSize = 25.sp)
                                 }
-                            } else if (stateButton.value == ButtonState.Fin){
-                                // Vuelve a la pantalla anterior
-                                navControllerBack
+                                Button(
+                                    onClick = {
+                                        if (golLocal.value >= 0) {
+                                            golLocal.value += 1
+                                            //var partidoUpdate = partido.copy(golLocal= golLocal.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
+                                            val partidoUpdate = it.copy(
+                                                golLocal = golLocal.value,
+                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+                                            )
+                                            viewModel.updatepartido(partidoUpdate)
+                                        }
+                                    },
+                                ) {
+                                    Text(text = "+", fontSize = 25.sp)
+                                }
 
-
+                                Button(
+                                    onClick = {
+                                        if (golVisitante.value >= 0) {
+                                            golVisitante.value += 1
+                                            //var partidoUpdate = partido.copy(golLocal= golVisitante.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
+                                            val partidoUpdate = it.copy(
+                                                golVisitante = golVisitante.value,
+                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+                                            )
+                                            viewModel.updatepartido(partidoUpdate)
+                                        }
+                                    },
+                                ) {
+                                    Text(text = "+", fontSize = 25.sp)
+                                }
+                                Button(
+                                    onClick = {
+                                        if (golVisitante.value > 0) {
+                                            golVisitante.value -= 1
+                                            //var partidoUpdate = partido.copy(golVisitante= golVisitante.value)
+                                            //partido.golLocal = golLocal.value
+                                            //viewModel.updatepartido(partidoUpdate)
+                                            val partidoUpdate = it.copy(
+                                                golVisitante = golVisitante.value,
+                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+                                            )
+                                            viewModel.updatepartido(partidoUpdate)
+                                        }
+                                    },
+                                ) {
+                                    Text(text = "-", fontSize = 25.sp)
+                                }
                             }
+                        } else if (stateButton.value == ButtonState.Fin) {
+                            // Vuelve a la pantalla anterior
+                            navControllerBack
                         }
                     }
                 }
-            )
-        }
-
-
+            }
+        )
+    }
 }

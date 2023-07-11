@@ -63,7 +63,9 @@ fun PartidoCard(
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = "Horario : ${partido.hora} - ${partido.dia}")
-                Text(text = "Horario : ${partido.idPersona}")
+                Text(text = "Juez : ${partido.idPersona}")
+                Text(text = "Cancha : ${partido.numCancha}")
+                Text(text = "Resultado : ${partido.resultado}")
             }
             Spacer(
                 modifier = Modifier.weight(1f)

@@ -66,14 +66,16 @@ fun PartidosDelJuezScreen(
         topBar = {
             CustomTopAppBar(navControllerBack, "Listado de Partidos: " + juez, true)
         },
+
         content = { padding ->
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-            ){
+            ) {
+                if (partidosDelJuez.isNotEmpty()){
                 items(partidosDelJuez) { partido ->
-                    if(partido.estado == "Programado"){
+                    if (partido.estado == "Programado") {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -98,10 +100,14 @@ fun PartidosDelJuezScreen(
                         }
                     }
                 }
-            }
+            } else {
+              print("borrar")
+                }
+        }
         }
     )
 }
+
 
 
 
