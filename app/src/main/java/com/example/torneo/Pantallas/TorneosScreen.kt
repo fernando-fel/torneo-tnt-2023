@@ -69,7 +69,8 @@ fun ScaffoldWithTopBarTorneosScreen(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically) {
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = {
@@ -107,8 +108,7 @@ fun ScaffoldWithTopBarTorneosScreen(
             TorneosContent(
                 padding = padding,
                 torneos = torneos,
-                deleteTorneo={
-                    torneo->
+                deleteTorneo={ torneo->
                     viewModel.deleteTorneo(torneo)
                 },
                 navigateToUpdateTorneoScreen =  navController,

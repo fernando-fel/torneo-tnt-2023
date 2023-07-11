@@ -26,8 +26,7 @@ fun PartidosContent (
             .fillMaxSize()
             .padding(padding)
     ){
-        items(partidos){
-                partido->
+        items(partidos){ partido->
             PartidoCard(
                 partido = partido,
                 deletePartido={

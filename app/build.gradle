@@ -116,6 +116,10 @@ dependencies {
     //kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'com.google.android.gms:play-services-location:20.0.0'
 
+    //TABS
+    implementation("com.google.accompanist:accompanist-pager:0.17.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.17.0")
+
 
 }
 

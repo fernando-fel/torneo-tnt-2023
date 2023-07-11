@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,14 +54,7 @@ fun TorneoCard(
 
     Card(
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier
-            /*.padding(
-                start = 8.dp,
-                end = 8.dp,
-                top = 4.dp,
-                bottom = 4.dp
-            )*/
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation() ,
             onClick = {
                 navigateToFechasScreen(torneo.id)
@@ -93,7 +87,7 @@ fun TorneoCard(
                 Column() {
                     Text("Nombre del torneo " + torneo.nombre)
                     Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
-                    Text("El torneo Finaliza el:  " + torneo.fechaFin)
+                    Text("Finalización:  " + torneo.fechaFin)
                     Text("Estado del torneo: " + torneo.estado)
                 }
             }
@@ -101,25 +95,27 @@ fun TorneoCard(
                 Column() {
                     Text("Nombre del torneo " + torneo.nombre)
                     Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
-                    Text("El torneo Finalizo el:  " + torneo.fechaFin)
+                    Text("Finalización:  " + torneo.fechaFin)
                     Text("Estado del torneo: " + torneo.estado)
                 }
             }
             else{
-                    Column() {
-                    Text("Nombre del torneo " + torneo.nombre)
-                    Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
-                    Text("El torneo Finalizo el:  " + torneo.fechaFin)
+                Column() {
+                    Text("Nombre del torneo: " + torneo.nombre)
+                    Text("Ubicacion del torneo: " + (torneo.ubicacion).toString())
+                    Text("Finalizacion: " + torneo.fechaFin)
                     Text("Estado del torneo: " + torneo.estado)
-                    Text("Precio del torneo" + torneo.precio)
+                    Text("Precio del torneo: " + torneo.precio)
                 }
             }
 
             Spacer( modifier = Modifier.weight(1f) )
             IconButton(onClick = {navigateToUpdateTorneoScreen(torneo.id)}) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Agregar Torneo" )
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Modificar Torneo" )
             }
-            DeleteIcon(deleteTorneo = deleteTorneo)
+            IconButton(onClick = deleteTorneo ) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo" )
+            }
         }
     }
 }
@@ -163,15 +159,15 @@ fun EquipoCard(
                     fontFamily = FontFamily.Serif
                 )
             )
-            Spacer( modifier = Modifier.weight(1f) )
-            IconButton(onClick = {navigateToUpdateEquipoScreen(equipo.id)}) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Agregar Torneo" )
-            }
-            //Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Equipo" )
 
-            DeleteIcon2(
-                deleteEquipo = deleteEquipo
-            )
+            Spacer( modifier = Modifier.weight(1f) )
+
+            IconButton(onClick = {navigateToUpdateEquipoScreen(equipo.id)}) {
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Modificar Equipo" )
+            }
+            IconButton(onClick = deleteEquipo ) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Equipo" )
+            }
         }
     }
 }

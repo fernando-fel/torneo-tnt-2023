@@ -15,7 +15,7 @@ interface EquipoDao{
     @Query("SELECT * FROM equipo_table ORDER BY id ASC")
     fun getAlphabetizedEquipo(): Flow<List<Equipo>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertEquipo(equipo: Equipo)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)

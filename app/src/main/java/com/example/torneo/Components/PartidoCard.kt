@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
@@ -56,8 +58,12 @@ fun PartidoCard(
             verticalAlignment = Alignment.CenterVertically
         ){
             Column() {
-                Text("Dia del partido")
-                Text(text = partido.dia)
+                Text(
+                    text = "${partido.idLocal} - ${partido.idVisitante}",
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = "Horario : ${partido.hora} - ${partido.dia}")
+                Text(text = "Horario : ${partido.idPersona}")
             }
             Spacer(
                 modifier = Modifier.weight(1f)
@@ -65,7 +71,9 @@ fun PartidoCard(
             IconButton(onClick = {navigateToUpdatePartidoScreen(partido.id)}) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar Partido" )
             }
-            Icon(imageVector = Icons.Default.AddTask, contentDescription = "Agregar Partido" )
+            IconButton(onClick = deletePartido ) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Partido" )
+            }
 
         }
     }

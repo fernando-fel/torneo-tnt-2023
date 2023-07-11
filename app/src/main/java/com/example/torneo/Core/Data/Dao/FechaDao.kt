@@ -15,7 +15,7 @@ interface FechaDao {
     @Query("SELECT * FROM fecha_table WHERE id = :idFecha")
     suspend fun getFechaById(idFecha: Int): Fecha
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFecha(fecha: Fecha)
 
     @Update

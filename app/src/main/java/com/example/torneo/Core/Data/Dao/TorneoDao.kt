@@ -17,7 +17,7 @@ interface TorneoDao{
     @Query("SELECT * FROM $TORNEO_TABLE ORDER BY id DESC")
     fun getTorneos(): Flow<List<Torneo>>
 
-    @Insert(onConflict = IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTorneo(torneo: Torneo)
 
     @Query("DELETE FROM torneo_table")

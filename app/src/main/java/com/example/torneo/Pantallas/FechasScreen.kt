@@ -58,9 +58,9 @@ fun ScaffoldWithTopBarFechasScreen(
                 deleteFecha={ fecha->
                     viewModel.deleteFecha(fecha)
                 },
-                navigateToUpdateFechaScreen =  navController,
+                navigateToUpdateFechaScreen =
+                navController,
                 navigateToPartidoScreen
-                //navController2
             )
             AddFechasAlertDialog(
                 torneoId = torneoId,

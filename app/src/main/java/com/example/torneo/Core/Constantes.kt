@@ -6,7 +6,7 @@ class Constantes {
         const val TORNEO_TABLE = "torneo_table"
         //Pantallas
         const val TORNEOS_SCREEN = "Torneos"
-        const val UPDATE_TORNEO_SCREEN = "Update torneo"
+        const val UPDATE_TORNEO_SCREEN = "Actualizar torneo"
 
         //Arguments
         const val TORNEO_ID = "torneoId"

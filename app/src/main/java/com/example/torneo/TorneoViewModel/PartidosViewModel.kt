@@ -5,12 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.torneo.Core.Data.Entity.Equipo
-import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
 
 import com.example.torneo.Core.Data.repository.PartidoRepository
-import com.example.torneo.Core.Data.repository.Partidos
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -58,3 +55,4 @@ class PartidosViewModel @Inject constructor(
         partido = repo.getPartido(id)
     }
 }
+

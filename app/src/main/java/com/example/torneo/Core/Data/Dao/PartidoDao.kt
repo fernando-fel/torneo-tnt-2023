@@ -21,7 +21,7 @@ interface PartidoDao {
     @Query("SELECT * FROM partido_table WHERE id = :partidoId")
     fun getPartidoById(partidoId: Int): Partido
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPartido(partido: Partido)
 
     @Update

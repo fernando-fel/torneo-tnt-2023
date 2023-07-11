@@ -18,7 +18,7 @@ interface JugadorDao{
     @Query("SELECT * FROM jugador_table ORDER BY nombre ASC")
     fun getAlphabetizedJugador(): Flow<List<Jugador>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertJugador(jugador: Jugador)
 
     @Delete

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Torneo
@@ -37,71 +38,71 @@ fun TorneosContent (
     mostrarEnCurso : Boolean
 ){
 
-var torneosFinalizados = torneos.filter { torneo -> torneo.estado == "finalizado" }
-var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "en Curso" }
+    var torneosFinalizados = torneos.filter { torneo -> torneo.estado == "finalizado" }
+    var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "en Curso" }
 
-Row() {
-    if (mostrarTodos) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            items(torneos) { torneo ->
-                TorneoCard(
-                    torneo = torneo,
-                    deleteTorneo = {
-                        deleteTorneo(torneo)
-                    },
-                    navigateToUpdateTorneoScreen =
-                    navigateToUpdateTorneoScreen,
-                    navegarParaUnaFecha
-                )
+    Row() {
+        if (mostrarTodos) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                items(torneos) { torneo ->
+                    TorneoCard(
+                        torneo = torneo,
+                        deleteTorneo = {
+                            deleteTorneo(torneo)
+                        },
+                        navigateToUpdateTorneoScreen =
+                        navigateToUpdateTorneoScreen,
+                        navegarParaUnaFecha
+                    )
+                }
+            }
+        }
+        if (mostrarFinalizados) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                items(torneosFinalizados) { torneo ->
+                    TorneoCard(
+                        torneo = torneo,
+                        deleteTorneo = {
+                            deleteTorneo(torneo)
+                        },
+                        navigateToUpdateTorneoScreen =
+                        navigateToUpdateTorneoScreen,
+                        navegarParaUnaFecha
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+
+        if (mostrarEnCurso) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                items(torneosEnCurso) { torneo ->
+                    TorneoCard(
+                        torneo = torneo,
+                        deleteTorneo = {
+                            deleteTorneo(torneo)
+                        },
+                        navigateToUpdateTorneoScreen =
+                        navigateToUpdateTorneoScreen,
+                        navegarParaUnaFecha
+
+                    )
+                }
             }
         }
     }
-    if (mostrarFinalizados) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            items(torneosFinalizados) { torneo ->
-                TorneoCard(
-                    torneo = torneo,
-                    deleteTorneo = {
-                        deleteTorneo(torneo)
-                    },
-                    navigateToUpdateTorneoScreen =
-                    navigateToUpdateTorneoScreen,
-                    navegarParaUnaFecha
-                )
-            }
-        }
-    }
-    Spacer(modifier = Modifier.height(10.dp))
-
-    if (mostrarEnCurso) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            items(torneosEnCurso) { torneo ->
-                TorneoCard(
-                    torneo = torneo,
-                    deleteTorneo = {
-                        deleteTorneo(torneo)
-                    },
-                    navigateToUpdateTorneoScreen =
-                    navigateToUpdateTorneoScreen,
-                    navegarParaUnaFecha
-
-                )
-            }
-        }
-    }
-}
 
 }
 
