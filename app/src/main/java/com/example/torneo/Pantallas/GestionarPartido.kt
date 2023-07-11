@@ -135,7 +135,7 @@ fun GestionarPartido(
                                             //var partidoUpdate = partido.copy(golLocal= golLocal.value)
                                             //partido.golLocal = golLocal.value
                                             //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(golLocal = golLocal.value)
+                                            val partidoUpdate = it.copy(golLocal = golLocal.value,resultado = "${partido.golLocal} - ${partido.golVisitante}")
                                             viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
@@ -149,7 +149,7 @@ fun GestionarPartido(
                                             //var partidoUpdate = partido.copy(golLocal= golLocal.value)
                                             //partido.golLocal = golLocal.value
                                             //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(golLocal = golLocal.value)
+                                            val partidoUpdate = it.copy(golLocal = golLocal.value,resultado = "${partido.golLocal} - ${partido.golVisitante}")
                                             viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
@@ -164,7 +164,7 @@ fun GestionarPartido(
                                             //var partidoUpdate = partido.copy(golLocal= golVisitante.value)
                                             //partido.golLocal = golLocal.value
                                             //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(golVisitante = golVisitante.value)
+                                            val partidoUpdate = it.copy(golVisitante = golVisitante.value,resultado = "${partido.golLocal} - ${partido.golVisitante}")
                                             viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
@@ -178,7 +178,7 @@ fun GestionarPartido(
                                             //var partidoUpdate = partido.copy(golVisitante= golVisitante.value)
                                             //partido.golLocal = golLocal.value
                                             //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(golVisitante = golVisitante.value)
+                                            val partidoUpdate = it.copy(golVisitante = golVisitante.value,resultado = "${partido.golLocal} - ${partido.golVisitante}")
                                             viewModel.updatepartido(partidoUpdate)
                                         }
                                     },
@@ -188,6 +188,7 @@ fun GestionarPartido(
                             }
                         } else if (stateButton.value == ButtonState.Fin){
                             // Vuelve a la pantalla anterior
+
                             navControllerBack.navigateUp()
                         }
                     }

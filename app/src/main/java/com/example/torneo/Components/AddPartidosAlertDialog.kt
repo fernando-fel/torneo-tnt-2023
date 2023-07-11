@@ -114,7 +114,7 @@ fun AddPartidosAlertDialog(
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val partido = Partido(resultado = "", numCancha = numeroCancha,
+                        val partido = Partido(resultado = " -    -", numCancha = numeroCancha,
                                         idVisitante = visitante.toInt(), idLocal = local.toInt(),
                                         idFecha = fechaId, hora = hora, dia = dia,
                                         golVisitante = 0, golLocal = 0,

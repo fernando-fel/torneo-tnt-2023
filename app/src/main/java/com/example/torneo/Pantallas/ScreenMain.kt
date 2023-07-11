@@ -31,7 +31,7 @@ fun ScreenMain(database: TorneoDB){
     // Obtener instancia del DAO (carga de roles a mano en la base de datos)
     val persona = database.personaDao()
     LaunchedEffect(Unit) {
-        persona.deleteAll()
+        //persona.deleteAll()
         val admin = Persona(idPersona = 1, nombre = "admin", username = "admin", pass = "admin", rol = "admin")
         val juez = Persona(idPersona = 2, nombre = "juez", username = "juez", pass = "juez", rol = "juez")
         if (persona.getPersona(1) == null) {
