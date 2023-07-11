@@ -57,7 +57,7 @@ fun ScaffoldWithTopBarMenuUsuario(navController: NavHostController) {
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = { navController.navigate(Routes.TorneosScreen.route) },
+                        onClick = { navController.navigate(Routes.TorneosUsuarioScreen.route) },
                         shape = RoundedCornerShape(50.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -69,7 +69,7 @@ fun ScaffoldWithTopBarMenuUsuario(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
-                        onClick = { navController.navigate(Routes.EquiposScreen.route) },
+                        onClick = { navController.navigate(Routes.EquipoUsuarioScreen.route) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
