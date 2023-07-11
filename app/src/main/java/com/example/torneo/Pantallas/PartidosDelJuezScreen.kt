@@ -73,7 +73,7 @@ fun PartidosDelJuezScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                if (partidosDelJuez.isEmpty()){
+                if (partidosDelJuez.isNotEmpty()){
                 items(partidosDelJuez) { partido ->
                     if (partido.estado == "Programado") {
                         Card(
