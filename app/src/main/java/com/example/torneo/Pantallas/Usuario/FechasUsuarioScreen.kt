@@ -26,22 +26,7 @@ fun FechasUsuarioScreen(
     navigateToPartidoScreen: (fechaId: Int) -> Unit,
     navControllerBack: NavHostController
 ){
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarFechasUsuarioScreen(torneoId,viewModel, navController,
-            navigateToPartidoScreen, navControllerBack)
-    //, navController2)
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScaffoldWithTopBarFechasUsuarioScreen(
-    torneoId: Int,
-    viewModel: FechasViewModel = hiltViewModel(),
-    navController: (fechasId: Int) -> Unit,
-    navigateToPartidoScreen: (fechaId: Int) -> Unit,
-    navControllerBack: NavHostController
-){
     val fechas by viewModel.fechas.collectAsState(initial = emptyList() )
 
     val fechasDeTorneo: List<Fecha> = fechas.filter { fecha -> fecha.idTorneo == torneoId }

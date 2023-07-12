@@ -38,10 +38,10 @@ fun TorneosContent (
     mostrarEnCurso : Boolean
 ){
 
-    var torneosFinalizados = torneos.filter { torneo -> torneo.estado == "finalizado" }
-    var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "en Curso" }
+    var torneosFinalizados = torneos.filter { torneo -> torneo.estado == "finalizados" }
+    var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "en curso" }
 
-    Row() {
+    Row {
         if (mostrarTodos) {
             LazyColumn(
                 modifier = Modifier

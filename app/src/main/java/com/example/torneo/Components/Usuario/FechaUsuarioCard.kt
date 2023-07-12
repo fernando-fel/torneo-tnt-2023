@@ -40,7 +40,6 @@ fun FechaUsuarioCard(
         onClick = {
             navigateToPartidoScreen(fecha.id)
         }
-
     ){
         Row(
             modifier = Modifier

@@ -39,13 +39,12 @@ fun AddFechasAlertDialog(
                 Text("Agregar Fecha")
             },
             text = {
-                Column(){
+                Column{
                     TextField(
+                        label = { Text(text = "Numero de fecha") },
+                        singleLine = true,
                         value = numero,
                         onValueChange = {numero = it},
-                        placeholder = {
-                            Text("Numero de fecha")
-                        },
                         modifier = Modifier.focusRequester(focusRequester)
                     )
                     LaunchedEffect(Unit){
@@ -60,7 +59,8 @@ fun AddFechasAlertDialog(
                     onClick = { closeDialog()
                         val fecha = Fecha(0, idTorneo = torneoId, numero = numero.toInt(), estado=" Empezado")
                         addFecha(fecha)
-                    }
+                    },
+                    enabled = !(numero.isBlank())
                 ){
                     Text(text = ("Agregar Fecha"))
                 }

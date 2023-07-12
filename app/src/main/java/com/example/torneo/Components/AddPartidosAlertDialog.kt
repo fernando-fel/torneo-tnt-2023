@@ -56,11 +56,11 @@ fun AddPartidosAlertDialog(
             text = {
                 Column(){
 
-                    TextField(value = dia,
+                    TextField(
+                        label = { Text(text = "Día del partido") },
+                        singleLine = true,
+                        value = dia,
                         onValueChange = {dia = it},
-                        placeholder = {
-                            Text("dia del partido")
-                        },
                         modifier = Modifier.focusRequester(
                             focusRequester
                         )
@@ -69,41 +69,46 @@ fun AddPartidosAlertDialog(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Hora del partido") },
+                        singleLine = true,
                         value = hora,
-                        onValueChange =  {hora = it},
-                        placeholder = {Text("hora del Partido") }
+                        onValueChange =  {hora = it}
                     )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Equipo Local") },
+                        singleLine = true,
                         value = local,
-                        onValueChange =  {local = it},
-                        placeholder = {Text("Equipo local") }
+                        onValueChange =  {local = it}
                     )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Equipo Visitante") },
+                        singleLine = true,
                         value = visitante,
-                        onValueChange =  {visitante = it},
-                        placeholder = {Text("Equipo Visitante") }
+                        onValueChange =  {visitante = it}
                     )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Nombre de la Cancha") },
+                        singleLine = true,
                         value = numeroCancha,
-                        onValueChange =  {numeroCancha = it},
-                        placeholder = {Text("Nombre de cancha") }
+                        onValueChange =  {numeroCancha = it}
                     )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Nombre del Juez") },
+                        singleLine = true,
                         value = juez,
-                        onValueChange =  {juez = it},
-                        placeholder = {Text("Nombre de juez ") }
+                        onValueChange =  {juez = it}
                     )
                     LaunchedEffect(Unit ){
                         coroutineContext.job.invokeOnCompletion {
@@ -120,7 +125,10 @@ fun AddPartidosAlertDialog(
                                         golVisitante = 0, golLocal = 0,
                                         estado = "Programado", id = 0, idPersona = juez)
                         addPartido(partido)
-                    }) {
+                    },
+                    enabled = !(dia.isBlank() || hora.isBlank() || local.isBlank()
+                            || visitante.isBlank() || numeroCancha.isBlank() || juez.isBlank())
+                ) {
                     Text(text = ("Agregar Partido"))
                 }
             },

@@ -132,12 +132,10 @@ fun GestionarPartido(
                                     onClick = {
                                         if (golLocal.value > 0) {
                                             golLocal.value -= 1
-                                            //var partidoUpdate = partido.copy(golLocal= golLocal.value)
-                                            //partido.golLocal = golLocal.value
-                                            //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(
-                                                golLocal = golLocal.value,
-                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+
+                                            //resultado = "${partido.golLocal} - ${partido.golVisitante}"
+                                            val partidoUpdate = it.copy(golLocal = golLocal.value,
+                                                resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
                                             viewModel.updatepartido(partidoUpdate)
                                         }
@@ -149,12 +147,9 @@ fun GestionarPartido(
                                     onClick = {
                                         if (golLocal.value >= 0) {
                                             golLocal.value += 1
-                                            //var partidoUpdate = partido.copy(golLocal= golLocal.value)
-                                            //partido.golLocal = golLocal.value
-                                            //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(
-                                                golLocal = golLocal.value,
-                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+
+                                            val partidoUpdate = it.copy(golLocal = golLocal.value,
+                                                resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
                                             viewModel.updatepartido(partidoUpdate)
                                         }
@@ -167,12 +162,8 @@ fun GestionarPartido(
                                     onClick = {
                                         if (golVisitante.value >= 0) {
                                             golVisitante.value += 1
-                                            //var partidoUpdate = partido.copy(golLocal= golVisitante.value)
-                                            //partido.golLocal = golLocal.value
-                                            //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(
-                                                golVisitante = golVisitante.value,
-                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+                                            val partidoUpdate = it.copy(golVisitante = golVisitante.value,
+                                                resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
                                             viewModel.updatepartido(partidoUpdate)
                                         }
@@ -184,12 +175,9 @@ fun GestionarPartido(
                                     onClick = {
                                         if (golVisitante.value > 0) {
                                             golVisitante.value -= 1
-                                            //var partidoUpdate = partido.copy(golVisitante= golVisitante.value)
-                                            //partido.golLocal = golLocal.value
-                                            //viewModel.updatepartido(partidoUpdate)
-                                            val partidoUpdate = it.copy(
-                                                golVisitante = golVisitante.value,
-                                                resultado = "${partido.golLocal} - ${partido.golVisitante}"
+
+                                            val partidoUpdate = it.copy(golVisitante = golVisitante.value,
+                                                resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
                                             viewModel.updatepartido(partidoUpdate)
                                         }

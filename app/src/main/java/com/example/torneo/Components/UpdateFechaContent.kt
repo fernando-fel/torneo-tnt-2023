@@ -26,8 +26,6 @@ fun UpdateFechasContent(
     updateEstado: (estado: String) -> Unit,
     updateFecha: (fecha:Fecha) -> Unit,
     navigateBack: () -> Unit
-
-
 ){
     Column(
         modifier = Modifier
@@ -37,23 +35,21 @@ fun UpdateFechasContent(
         verticalArrangement = Arrangement.Center
     ) {
         TextField(
+            label = { Text(text = "Numero de Fecha") },
+            singleLine = true,
             value = fecha.numero.toString(),
             onValueChange = { numero->
                 updateNumero(numero.toString())
-            },
-            placeholder = {
-                Text("Numero de la Fecha")
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
         fecha.estado?.let {
             TextField(
+                label = { Text(text = "Estado") },
+                singleLine = true,
                 value = it,
                 onValueChange = { estado ->
                     updateEstado(estado)
-                },
-                placeholder = {
-                    Text("Estado de la Fecha")
                 }
             )
         }

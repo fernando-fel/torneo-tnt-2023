@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Partido
-import com.example.torneo.Pantallas.Routes
 import com.example.torneo.TorneoViewModel.PartidosViewModel
 
 @ExperimentalMaterial3Api
@@ -30,12 +29,12 @@ import com.example.torneo.TorneoViewModel.PartidosViewModel
 fun PartidosDeEquipoScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
     navController: (partidoId: Int) -> Unit,
-    equipo: Int,
+    equipoId: Int,
     navControllerBack: NavHostController
 ) {
 
     val partidos by viewModel.partidos.collectAsState(initial = emptyList() )
-    val partidosDeEquipo: List<Partido> = partidos.filter { partido -> ((partido.idLocal == equipo) or (partido.idVisitante == equipo)) }
+    val partidosDeEquipo: List<Partido> = partidos.filter { partido -> ((partido.idLocal == equipoId) or (partido.idVisitante == equipoId)) }
 
     Scaffold(
         topBar = {
@@ -50,29 +49,25 @@ fun PartidosDeEquipoScreen(
             ) {
                 if (partidosDeEquipo.isNotEmpty()){
                     items(partidosDeEquipo) { partido ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp, 4.dp),
-                                elevation = CardDefaults.cardElevation(),
-                                onClick = {
-                                    //navControllerBack.navigate("${Routes.GestionarPartido.route}/${partido.id}")
-                                    //nuevoRol.value = persona.rol
-                                    //mandar a un  partido para gestionar RESULTADOS
-                                }
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp, 4.dp),
+                            elevation = CardDefaults.cardElevation(),
+
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(10.dp)
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(10.dp)
-                                ) {
-                                    Text(
-                                        text = "Horario: ${partido.dia} - ${partido.hora}",
-                                        style = TextStyle(fontWeight = FontWeight.Bold)
-                                    )
-                                    Text(text = "Lugar: ${partido.numCancha}")
-                                    Text(text = "Resultado: ${partido.resultado}")
-                                    Text(text = "Estado: ${partido.estado}")
-                                }
+                                Text(
+                                    text = "Horario: ${partido.hora} - ${partido.dia}",
+                                    style = TextStyle(fontWeight = FontWeight.Bold)
+                                )
+                                Text(text = "Cancha: ${partido.numCancha}")
+                                Text(text = "Resultado: ${partido.resultado}")
+                                Text(text = "Estado: ${partido.estado}")
                             }
+                        }
                     }
                 } else {
                     print("borrar")

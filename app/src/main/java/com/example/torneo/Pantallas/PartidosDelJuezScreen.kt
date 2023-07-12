@@ -74,36 +74,37 @@ fun PartidosDelJuezScreen(
                     .padding(padding)
             ) {
                 if (partidosDelJuez.isNotEmpty()){
-                items(partidosDelJuez) { partido ->
-                    if (partido.estado == "Programado") {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp, 4.dp),
-                            elevation = CardDefaults.cardElevation(),
-                            onClick = {
-                                navControllerBack.navigate("${Routes.GestionarPartido.route}/${partido.id}")
-                                //nuevoRol.value = persona.rol
-                                //mandar a un  partido para gestionar RESULTADOS
-                            }
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(10.dp)
+                    items(partidosDelJuez) { partido ->
+                        if (partido.estado == "Programado") {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp, 4.dp),
+                                elevation = CardDefaults.cardElevation(),
+                                onClick = {
+                                    navControllerBack.navigate("${Routes.GestionarPartido.route}/${partido.id}")
+                                    //nuevoRol.value = persona.rol
+                                    //mandar a un  partido para gestionar RESULTADOS
+                                }
                             ) {
-                                Text(
-                                    text = "Horario: ${partido.dia} - ${partido.hora}",
-                                    style = TextStyle(fontWeight = FontWeight.Bold)
-                                )
-                                Text(text = "Lugar: ${partido.numCancha}")
-                                Text(text = "Estado: ${partido.estado}")
+                                Column(
+                                    modifier = Modifier.padding(10.dp)
+                                ) {
+                                    Text(
+                                        text = "PARTIDO: ${partido.idLocal} - ${partido.idVisitante}",
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(text = "Dia: ${partido.dia}  |  Hora: ${partido.hora}")
+                                    Text(text = "Lugar: ${partido.numCancha}")
+                                    Text(text = "Estado: ${partido.estado}")
+                                }
                             }
                         }
                     }
+                } else {
+                  print("borrar")
                 }
-            } else {
-              print("borrar")
-                }
-        }
+            }
         }
     )
 }

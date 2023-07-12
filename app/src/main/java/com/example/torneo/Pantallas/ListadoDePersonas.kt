@@ -78,8 +78,8 @@ fun ListadoDePersonas(
                             modifier = Modifier.padding(10.dp)
                         ) {
                             Text(
-                                text = "Nombre: ${persona.nombre}",
-                                style = TextStyle(fontWeight = FontWeight.Bold)
+                                text = "NOMBRE: ${persona.nombre}",
+                                fontWeight = FontWeight.Bold
                             )
                             Text(text = "Rol: ${persona.rol}")
                             Text(text = "Usuario: ${persona.username}")
@@ -94,9 +94,12 @@ fun ListadoDePersonas(
                             text = {
                                 // Campo de texto editable para ingresar el nuevo rol
                                 TextField(
+                                    label = {
+                                        Text(
+                                            text="Cambiar rol de "+persona.nombre )},
+                                    singleLine = true,
                                     value = nuevoRol.value,
                                     onValueChange = { nuevoRol.value = it },
-                                    label = { Text("Cambiar rol de "+persona.nombre ) },
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             },
@@ -109,7 +112,6 @@ fun ListadoDePersonas(
                                             val personaActualizada: Persona = persona.copy(rol = nuevoRol.value)
                                             // Actualizar la persona en la lista
                                             personasList[index] = personaActualizada
-
                                             // Actualizar la persona en la base de datos
                                             personaDao.updatePersona(personaActualizada)
                                         }

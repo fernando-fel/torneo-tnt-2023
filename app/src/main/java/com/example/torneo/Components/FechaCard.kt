@@ -66,9 +66,9 @@ fun FechaCard(
             Column() {
                 Text(
                     text="FECHA: "+fecha.numero.toString(),
-                    style= TextStyle(fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold
                 )
-                Text(text ="Estado de fecha: " + fecha.estado)
+                Text(text ="Estado: " + fecha.estado)
             }
             Spacer(modifier = Modifier.weight(1f))
 

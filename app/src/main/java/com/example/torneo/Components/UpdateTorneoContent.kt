@@ -38,24 +38,22 @@ fun UpdateTorneoContent(
         verticalArrangement = Arrangement.Center
     ) {
         TextField(
+            label = { Text(text = "Nombre del Torneo") },
+            singleLine = true,
             value = torneo.nombre,
             onValueChange = { nombre->
                 updateNombre(nombre)
-            },
-            placeholder = {
-                Text("Nombre del torneo")
             }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
         torneo.estado?.let {
             TextField(
+                label = { Text(text = "Estado") },
+                singleLine = true,
                 value = it,
                 onValueChange = { estado ->
                     updateUbicacion(estado)
-                },
-                placeholder = {
-                    Text("Estado del torneo")
                 }
             )
         }
@@ -88,12 +86,11 @@ fun UpdateEquipoContent(
         verticalArrangement = Arrangement.Center
     ) {
         TextField(
+            label = { Text(text = "Nombre del Equipo") },
+            singleLine = true,
             value = equipo.nombre,
             onValueChange = { nombre->
                 updateNombre(nombre)
-            },
-            placeholder = {
-                Text("Nombre del torneo")
             }
         )
 

@@ -8,30 +8,28 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Equipo
 
 @Composable
 fun EquipoUsuarioContent (
     padding: PaddingValues,
     equipos : Equipos,
-    deleteEquipo: (equipo: Equipo)->Unit,
-    navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
+    navegarAPartidosDeEquipo: (equipoId: Int) -> Unit
+    //deleteEquipo: (equipo: Equipo)->Unit,
+    //navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
 
 ){
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
     ){
-        items(equipos){
-                equipo->
+        items(equipos){ equipo->
             EquipoUsuarioCard(
                 equipo = equipo,
-                deleteEquipo={
-                    deleteEquipo(equipo)
-                },
-                navigateToUpdateEquipoScreen =
-                navigateToUpdateEquipoScreen
+                navegarAPartidosDeEquipo = navegarAPartidosDeEquipo
             )
         }
     }

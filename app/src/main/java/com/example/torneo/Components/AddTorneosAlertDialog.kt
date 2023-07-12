@@ -48,80 +48,88 @@ fun AddTorneosAlertDialog(
             Text(ADD_TORNEO)
         },
             text = {
-                Column(){
-                    TextField(value = nombre,
+                Column{
+                    TextField(
+                        label = { Text(text = "Nombre del Torneo") },
+                        singleLine = true,
+                        value = nombre,
                         onValueChange = {nombre = it},
-                        placeholder = {
-                        Text("Nombre del torneo")
-                    },
-                    modifier = Modifier.focusRequester(
-                        focusRequester
+                        modifier = Modifier.focusRequester(
+                            focusRequester
+                        )
                     )
-                )
-                LaunchedEffect(Unit ){
-                    coroutineContext.job.invokeOnCompletion {
-                        focusRequester .requestFocus()
+                    LaunchedEffect(Unit ){
+                        coroutineContext.job.invokeOnCompletion {
+                            focusRequester .requestFocus()
+                        }
                     }
-                }
-                Spacer(
-                    modifier = Modifier.height(16.dp)
-                )
-                TextField(
-                    value = ubicacion,
-                    onValueChange =  {ubicacion = it},
-                    placeholder = {Text("Ubicacion del torneo") }
-                )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Ubicación") },
+                        singleLine = true,
+                        value = ubicacion,
+                        onValueChange =  {ubicacion = it},
+                    )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    TextField(
+                        label = { Text(text = "Fecha de Inicio") },
+                        singleLine = true,
                         value = fechaInicio,
-                        onValueChange =  {fechaInicio = it},
-                        placeholder = {Text("Fecha de inicio del torneo") }
+                        onValueChange =  {fechaInicio = it}
                     )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Fecha de Finalización") },
+                        singleLine = true,
                         value = fechaFin,
-                        onValueChange =  {fechaFin = it},
-                        placeholder = {Text("Fecha de finalizacion del torneo") }
+                        onValueChange =  {fechaFin = it}
                     )
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Precio de Inscripción") },
+                        singleLine = true,
                         value = precio,
-                        onValueChange =  {precio = it},
-                        placeholder = {Text("Precio de inicio del torneo") }
+                        onValueChange =  {precio = it}
                     )
-                    Spacer(
+                    /*Spacer(
                         modifier = Modifier.height(16.dp)
                     )
                     TextField(
+                        label = { Text(text = "Estado") },
+                        singleLine = true,
                         value = estado,
-                        onValueChange =  {estado = it},
-                        placeholder = {Text("Estado del torneo") }
-                    )
+                        onValueChange =  {estado = it}
+                    )*/
 
                     //(nombre, fecha inicio, fecha fin, ubicacion, precio, estado)
                 }
 
             },
-    confirmButton = {
-        TextButton(
-            onClick = { closeDialog()
-            val torneo = Torneo(0, nombre = nombre, idTorneo = 1, estado = estado, fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio.toDouble(), ubicacion = ubicacion)
-            addTorneo(torneo)
-        }) {
-            Text(text = (ADD_TORNEO))
-        }
-    },
+            confirmButton = {
+                TextButton(
+                    onClick = { closeDialog()
+                        val torneo = Torneo(0, nombre = nombre, idTorneo = 1, estado = "Programado", fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio.toDouble(), ubicacion = ubicacion)
+                        addTorneo(torneo)
+                    },
+                    enabled = !(nombre.isBlank() || ubicacion.isBlank() || fechaInicio.isBlank()
+                            || fechaFin.isBlank() || precio.isBlank())
+                ) {
+                    Text(text = (ADD_TORNEO))
+                }
+            },
             dismissButton = {
                 TextButton(onClick = closeDialog) {
                     Text(text = DISMISS)
                 }
             }
-            )
+        )
     }
 }

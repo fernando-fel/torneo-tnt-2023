@@ -61,12 +61,12 @@ fun TorneoCard(
         }
 
     ){
-        val modifier = if (torneo.estado == "en Curso") {
+        val modifier = if (torneo.estado == "en curso") {
             Modifier
                 .border(2.dp, Color.Green)
                 .fillMaxWidth()
                 .padding(12.dp)
-        } else if(torneo.estado == "finalizado") {
+        } else if(torneo.estado == "finalizados") {
             Modifier
                 .border(2.dp, Color.Red)
                 .fillMaxWidth()
@@ -83,29 +83,33 @@ fun TorneoCard(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (torneo.estado == "en Curso") {
+            if (torneo.estado == "en curso") {
                 Column() {
-                    Text("Nombre del torneo " + torneo.nombre)
-                    Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
-                    Text("Finalización:  " + torneo.fechaFin)
-                    Text("Estado del torneo: " + torneo.estado)
+                    Text("NOMBRE DEL TORNEO: " + torneo.nombre,
+                        fontWeight = FontWeight.Bold)
+                    Text("Ubicacion: " + (torneo.ubicacion).toString())
+                    Text("Fecha de Finalización: " + torneo.fechaFin)
+                    Text("Estado: " + torneo.estado)
                 }
             }
-            else if(torneo.estado == "finalizado") {
+            else if(torneo.estado == "finalizados") {
                 Column() {
-                    Text("Nombre del torneo " + torneo.nombre)
-                    Text("Ubicacion del torneo " + (torneo.ubicacion).toString())
-                    Text("Finalización:  " + torneo.fechaFin)
-                    Text("Estado del torneo: " + torneo.estado)
+                    Text("NOMBRE DEL TORNEO: " + torneo.nombre,
+                        fontWeight = FontWeight.Bold)
+                    Text("Ubicación: " + (torneo.ubicacion).toString())
+                    Text("Fecha de Finalización: " + torneo.fechaFin)
+                    Text("Estado: " + torneo.estado)
                 }
             }
             else{
                 Column() {
-                    Text("Nombre del torneo: " + torneo.nombre)
-                    Text("Ubicacion del torneo: " + (torneo.ubicacion).toString())
-                    Text("Finalizacion: " + torneo.fechaFin)
-                    Text("Estado del torneo: " + torneo.estado)
+                    Text("NOMBRE DEL TORNEO: " + torneo.nombre,
+                        fontWeight = FontWeight.Bold)
+                    Text("Ubicación: " + (torneo.ubicacion).toString())
+                    Text("Fecha de Inicio: "+torneo.fechaInicio)
+                    Text("Fecha de Finalización: " + torneo.fechaFin)
                     Text("Precio del torneo: " + torneo.precio)
+                    Text("Estado: " + torneo.estado)
                 }
             }
 

@@ -1,4 +1,3 @@
-
 package com.example.torneo.Pantallas.Usuario
 
 import Component.CustomTopAppBar
@@ -16,28 +15,23 @@ import com.example.torneo.Components.AddEquipoFlotingActionButton
 import com.example.torneo.Components.AddEquiposAlertDialog
 import com.example.torneo.Components.EquipoContent
 import com.example.torneo.Components.Usuario.EquipoUsuarioContent
+import com.example.torneo.Core.Data.Entity.Equipo
+import com.example.torneo.Core.Data.Entity.Fecha
+import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 
 @Composable
 fun EquiposUsuarioScreen(
     viewModel: EquiposViewModel = hiltViewModel(),
-    navController: (equipoId: Int) -> Unit,
+    //navController: (equipoId:  Int) -> Unit,
+    //equipoId: Int,
+    navegarApartidosEquipo: (equipoId: Int) -> Unit,
     navControllerBack: NavHostController
 ){
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarEquipoUsuarioScreen(viewModel, navController, navControllerBack)
-    }
-}
+    val equipos by viewModel.equipos.collectAsState(initial = emptyList() )
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScaffoldWithTopBarEquipoUsuarioScreen(
-    viewModel: EquiposViewModel = hiltViewModel(),
-    navController: (EquipoId: Int) -> Unit,
-    navControllerBack: NavHostController
-){
-    val equipos by viewModel.equipos.collectAsState(
-        initial = emptyList() )
+    //val partidosDeEquipo: List<Equipo> = equipos.filter { equipo -> equipo.id == equipoId }
+
     Scaffold (
         topBar = {
             CustomTopAppBar(navControllerBack, "Equipos", true)
@@ -46,11 +40,13 @@ fun ScaffoldWithTopBarEquipoUsuarioScreen(
             EquipoUsuarioContent(
                 padding = padding,
                 equipos = equipos,
-                deleteEquipo={
+                navegarAPartidosDeEquipo =
+                navegarApartidosEquipo
+                /*deleteEquipo={
                         equipo->
                     viewModel.deleteEquipo(equipo)
                 },
-                navigateToUpdateEquipoScreen =  navController
+                navigateToUpdateEquipoScreen =  navController*/
             )
         }
     )

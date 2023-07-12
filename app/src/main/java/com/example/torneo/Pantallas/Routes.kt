@@ -27,11 +27,12 @@ sealed class Routes(val route: String) {
     object PartidosDelJuezScreen : Routes("PartidosDelJuezScreen")
     object GestionarPartido : Routes("GestionarPartido")
 
-    object EquipoUsuarioScreen : Routes("EquipoUsuarioScreen")
+    object EquiposUsuarioScreen : Routes("EquiposUsuarioScreen")
     object TorneosUsuarioScreen : Routes("TorneosUsuarioScreen")
     object FechaUsuarioScreen : Routes("FechaUsuarioScreen")
 
     object PartidoUsuarioScreen : Routes("PartidoUsuarioScreen")
+    object PartidosDeEquipoScreen : Routes("PartidosDeEquipoScreen")
 
     object MenuUsuario : Routes("MenuUsuario")
 

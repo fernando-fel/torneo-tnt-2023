@@ -97,7 +97,7 @@ fun ScaffoldWithTopBarTorneosScreen(
                         mostrarTodos.value = false
                     }
                 ) {
-                    androidx.compose.material.Text(text = "Finalizados")
+                    androidx.compose.material.Text(text = "finalizados")
                 }
 
             }

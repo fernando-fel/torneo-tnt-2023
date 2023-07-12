@@ -1,3 +1,5 @@
+package com.example.torneo.Pantallas
+
 import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,48 +42,44 @@ fun ScaffoldWithTopBarMenuUsuario(navController: NavHostController) {
             CustomTopAppBar(navController, "Bienvenido", true)
         },
         content = { padding ->
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(20.dp),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Spacer(modifier = Modifier.height(50.dp))
+                HorizontalScroll()
+                Spacer(modifier = Modifier.height(20.dp))
 
+                Button(
+                    onClick = { navController.navigate(Routes.TorneosUsuarioScreen.route) },
+                    shape = RoundedCornerShape(50.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Spacer(modifier = Modifier.height(50.dp))
-                    HorizontalScroll()
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Button(
-                        onClick = { navController.navigate(Routes.TorneosUsuarioScreen.route) },
-                        shape = RoundedCornerShape(50.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Torneos",
-                            fontSize = 30.sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Button(
-                        onClick = { navController.navigate(Routes.EquipoUsuarioScreen.route) },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Equipos",
-                            fontSize = 30.sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-                    myMarket()
-
+                    Text(
+                        text = "Torneos",
+                        fontSize = 30.sp
+                    )
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = { navController.navigate(Routes.EquiposUsuarioScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Equipos",
+                        fontSize = 30.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                myMarket()
+
             }
-        })
+        }
+    )
 }

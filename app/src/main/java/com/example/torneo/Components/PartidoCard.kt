@@ -59,13 +59,13 @@ fun PartidoCard(
         ){
             Column() {
                 Text(
-                    text = "${partido.idLocal} - ${partido.idVisitante}",
+                    text = "PARTIDO: ${partido.idLocal} - ${partido.idVisitante}",
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Horario : ${partido.hora} - ${partido.dia}")
-                Text(text = "Juez : ${partido.idPersona}")
-                Text(text = "Cancha : ${partido.numCancha}")
-                Text(text = "Resultado : ${partido.resultado}")
+                Text(text = "Dia: ${partido.dia}  |  Hora: ${partido.hora}")
+                Text(text = "Juez: ${partido.idPersona}")
+                Text(text = "Cancha: ${partido.numCancha}")
+                Text(text = "Resultado: ${partido.resultado}")
             }
             Spacer(
                 modifier = Modifier.weight(1f)

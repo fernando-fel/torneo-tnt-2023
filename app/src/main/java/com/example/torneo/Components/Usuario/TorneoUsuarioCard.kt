@@ -31,8 +31,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
+import com.example.torneo.Pantallas.Routes
 import com.example.torneo.R
 
 
@@ -112,18 +114,20 @@ fun TorneoUsuarioCard(
 @Composable
 fun EquipoUsuarioCard(
     equipo: Equipo,
-    deleteEquipo: ()-> Unit,
-    navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
+    navegarAPartidosDeEquipo: (equipoId: Int) -> Unit
+    //deleteEquipo: ()-> Unit,
+    //navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
 ){
 
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp, 4.dp, 8.dp, 4.dp),
+            .padding(8.dp, 4.dp),
         elevation = CardDefaults.cardElevation() ,
         onClick = {
-            navigateToUpdateEquipoScreen(equipo.id)
+            navegarAPartidosDeEquipo(equipo.id)
+            //navController.navigate("${Routes.PartidoUsuarioScreen.route}/${equipo.id}")
         }
     ){
         Row(
@@ -147,8 +151,6 @@ fun EquipoUsuarioCard(
                     fontFamily = FontFamily.Serif
                 )
             )
-
-            Spacer( modifier = Modifier.weight(1f) )
         }
     }
 }

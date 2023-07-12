@@ -37,12 +37,12 @@ fun AddEquiposAlertDialog(
                 Text("Agregar Equipo")
             },
             text = {
-                Column(){
-                    TextField(value = nombre,
+                Column{
+                    TextField(
+                        label = { Text(text = "Nombre del Equipo") },
+                        singleLine = true,
+                        value = nombre,
                         onValueChange = {nombre = it},
-                        placeholder = {
-                            Text("Nombre del Equipo")
-                        },
                         modifier = Modifier.focusRequester(
                             focusRequester
                         )
@@ -51,14 +51,17 @@ fun AddEquiposAlertDialog(
                         coroutineContext.job.invokeOnCompletion {
                             focusRequester .requestFocus()
                         }
-                    } }
+                    }
+                }
             },
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
                         val equipo = Equipo(0,nombre)
                         addEquipo(equipo)
-                    }) {
+                    },
+                    enabled = !(nombre.isBlank())
+                ) {
                     Text(text = ("Agregar Equipo"))
                 }
             },
