@@ -1,5 +1,7 @@
 package com.example.torneo.TorneoViewModel
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.torneo.Core.Data.Entity.Partido
 
 import com.example.torneo.Core.Data.repository.PartidoRepository
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +32,11 @@ class PartidosViewModel @Inject constructor(
     fun addPartido(partido: Partido) = viewModelScope.launch(Dispatchers.IO)
     {
         repo.addPartido(partido)
+        val db = Firebase.firestore
+        db.collection("Partido").document(partido.id.toString())
+            .set(partido)
+            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
     }
     fun closeDialog(){
         openDialog = false
@@ -48,7 +57,14 @@ class PartidosViewModel @Inject constructor(
 
     fun updatepartido(partido: Partido) {
         viewModelScope.launch(Dispatchers.IO) {
+            val db = Firebase.firestore
+            db.collection("Partido").document(partido.id.toString())
+                .set(partido)
+                .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+
             repo.updatePartido(partido)
+
         }
     }
     fun getPartido(id: Int) = viewModelScope.launch(Dispatchers.IO) {

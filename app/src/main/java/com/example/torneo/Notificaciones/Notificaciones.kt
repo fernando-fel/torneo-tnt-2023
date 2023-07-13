@@ -32,21 +32,21 @@ import com.example.torneo.R
 
 @Composable
 fun Notificaciones(){
+
     val context = LocalContext.current
     val idChanell = "idFechas"
     val idNotificacion = 0
     val textoLargo =
         "Estoy creando una notificacion de texto largo"+
-                "Debe aparecer u icono a la derecha." +
-                "Esto es para ver como expande"
+                "Debe aparecer u icono a la derecha." + "Esto es para ver como expande"
     val iconoGrande = BitmapFactory.decodeResource(context.resources, R.drawable.logo_v1)
 
     LaunchedEffect(Unit){
         crearCanalNotificacion(idChanell,context)
     }
-    val modifier = Modifier
-        .padding(18.dp)
-        .fillMaxWidth()
+
+    val modifier = Modifier.padding(18.dp).fillMaxWidth()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -83,7 +83,7 @@ fun Notificaciones(){
                           textoLargo,
                           iconoGrande
                       )
-                      },
+            },
             modifier = modifier
         ) {
             Text(text = "Notificacion con texto Largo")
@@ -106,7 +106,8 @@ fun notificacionTextoLargo(context: Context,
                            textTitle: String,
                            textoLargo: String,
                            iconoGrande: Bitmap?,
-                            priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
+                            priority: Int = NotificationCompat.PRIORITY_DEFAULT
+) {
     var builder = NotificationCompat.Builder(context,idChanell)
         .setSmallIcon(R.drawable.logo_v1)
         .setContentTitle(textTitle)
@@ -134,10 +135,12 @@ fun notificacionTextoLargo(context: Context,
         }
         notify(idNotificacion, builder.build())
     }
-    }
+}
 
-fun notificacionBasica(context: Context, idChanell: String, idNotificacion: Int, textTitle: String, textContent: String,
-priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
+fun notificacionBasica(context: Context, idChanell: String, idNotificacion: Int,
+                       textTitle: String, textContent: String,
+                       priority: Int = NotificationCompat.PRIORITY_DEFAULT
+) {
     val builder = NotificationCompat.Builder(context,idChanell)
         .setSmallIcon(R.drawable.logo_v2)
         .setContentTitle(textTitle)
@@ -159,19 +162,19 @@ priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
 fun crearCanalNotificacion(
         idChannel: String,
         context: Context
-    ){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val nombre = "TorneoNotification"
-            val descripcion = "Canal de notificacion para fechas"
-            val importancia = NotificationManager.IMPORTANCE_DEFAULT
-            val canal = NotificationChannel(idChannel,nombre,importancia)
-                .apply {
-                    descripcion
-                }
-            val notificationManager: NotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as
-                        NotificationManager
-            notificationManager.createNotificationChannel(canal)
+) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        val nombre = "TorneoNotification"
+        val descripcion = "Canal de notificacion para fechas"
+        val importancia = NotificationManager.IMPORTANCE_DEFAULT
+        val canal = NotificationChannel(idChannel,nombre,importancia)
+            .apply {
+                descripcion
+            }
+        val notificationManager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as
+                    NotificationManager
+        notificationManager.createNotificationChannel(canal)
 
-        }
     }
+}

@@ -112,7 +112,7 @@ fun sincronizar_fechas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
                 Log.d(TAG, "${document.id} => ${document.data}")
                 val fecha = Fecha(
                     id = 0,
-                    idTorneo = document.get("idTorneo") as Int,
+                    idTorneo = (document.get("idTorneo")) as Int,
                     estado = document.getString("estado") ?: "",
                     numero = document.get("numero") as Int,
                 )
@@ -172,3 +172,53 @@ fun sincronizar_db(db_remota: FirebaseFirestore, db_local: TorneoDB) {
     sincronizar_partidos(db_remota, db_local)
 
 }
+/*
+fun sincronizar_fireBase()
+{
+    val db = Firebase.firestore
+
+    *//*
+    //Este es el del ejemplo
+    val city = hashMapOf(
+        "name" to "Los Angeles",
+        "state" to "CA",
+        "country" to "USA",
+    )
+
+    db.collection("cities").document("LA")
+        .set(city)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+    *//*
+
+//Despues que se crea/modifica una instancia de la base de datos
+//Deberia actualizar la base de firebase
+
+//Yo probaria con Partido
+    db.collection("Partido").document(partido.id)
+        .set(partido)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+    db.collection("Torneo").document(torneo.id)
+        .set(torneo)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+    db.collection("Equipo").document(equipo.id)
+        .set(equipo)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+    db.collection("Persona").document(persona.id)
+        .set(persona)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+
+val db = Firebase.firestore
+    db.collection("Fecha").document(fecha.id)
+        .set(fecha)
+        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+}*/

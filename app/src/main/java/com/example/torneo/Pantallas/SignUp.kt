@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import Component.CustomTopAppBar
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -51,6 +53,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.material.ContentAlpha
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 //import Component.CustomTopAppBar
@@ -185,7 +189,13 @@ fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
                             coroutineScope.launch {
                                 val usuario = Persona(id = idPersona.value, idPersona=1, nombre=nombre.value,
                                     username = username.value, pass = password.value, rol = "usuario")
+                                val db = Firebase.firestore
+
                                 persona.insertPersona(usuario)
+                                db.collection("Persona").document(usuario.id.toString())
+                                    .set(usuario)
+                                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                                 //personaId.value++
 
                                 if (nombre.value.isNotBlank() && username.value.isNotBlank() &&

@@ -59,8 +59,10 @@ fun PartidosDeEquipoScreen(
                             Column(
                                 modifier = Modifier.padding(10.dp)
                             ) {
+                                Text(text = "Fecha del Torneo: ${partido.idFecha}",
+                                    fontWeight = FontWeight.Bold)
                                 Text(
-                                    text = "Horario: ${partido.hora} - ${partido.dia}",
+                                    text = "Hora: ${partido.hora}  |  Dia: ${partido.dia}",
                                     style = TextStyle(fontWeight = FontWeight.Bold)
                                 )
                                 Text(text = "Cancha: ${partido.numCancha}")
