@@ -16,19 +16,31 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.torneo.Core.Data.Entity.Equipo
+import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.TorneoViewModel.EquiposViewModel
+import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartidoUsuarioCard(
+    viewModel: EquiposViewModel = hiltViewModel(),
     partido: Partido,
     deletePartido: ()-> Unit,
     navigateToUpdatePartidoScreen: (partidoId: Int)-> Unit
 ){
+    val equipos by viewModel.equipos.collectAsState(initial = emptyList() )
+    val equipoLocal: Equipo? = equipos.firstOrNull{ equipo -> equipo.id == partido.idLocal }
+    val equipoVisitante: Equipo? = equipos.firstOrNull{ equipo -> equipo.id == partido.idVisitante }
+
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
@@ -53,7 +65,7 @@ fun PartidoUsuarioCard(
         ){
             Column() {
                 Text(
-                    text = "${partido.idLocal} - ${partido.idVisitante}",
+                    text = (equipoLocal?.nombre.toString() + "-" + equipoVisitante?.nombre.toString()),
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = "Horario : ${partido.hora} - ${partido.dia}")

@@ -1,13 +1,22 @@
 package com.example.torneo.Components
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DisplayMode
+import java.util.Calendar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,7 +33,10 @@ import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
 
+
 import kotlinx.coroutines.job
+import java.time.LocalDate
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,10 +58,14 @@ fun AddPartidosAlertDialog(
         var estado by remember { mutableStateOf(NO_VALUE) }
         var juez by remember { mutableStateOf(NO_VALUE) }
 
+        val date = remember { mutableStateOf(Date()) }
+        //var date by remember { mutableStateOf(Calendar.getInstance().time) }
+        //var selectedDate by remember { mutableStateOf(LocalDate.now()) }
 
         val focusRequester = FocusRequester()
 
         AlertDialog(onDismissRequest = { closeDialog },
+            modifier = Modifier.fillMaxWidth(),
             title = {
                 Text("Agregar Partido")
             },
@@ -66,7 +82,7 @@ fun AddPartidosAlertDialog(
                         )
                     )
                     Spacer(
-                        modifier = Modifier.height(16.dp)
+                        modifier = Modifier.height(20.dp)
                     )
                     TextField(
                         label = { Text(text = "Hora del partido") },
@@ -74,6 +90,15 @@ fun AddPartidosAlertDialog(
                         value = hora,
                         onValueChange =  {hora = it}
                     )
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+                    //Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                        val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
+                        DatePicker(state = state, modifier = Modifier.fillMaxWidth())
+
+                        Text("Entered date timestamp: ${state.selectedDateMillis ?: "no input"}")
+                    //}
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
