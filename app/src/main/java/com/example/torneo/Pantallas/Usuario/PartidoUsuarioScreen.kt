@@ -46,7 +46,7 @@ fun PartidoUsuarioScreen(
     navControllerBack: NavHostController
 ){
     val partidos by viewModel.partidos.collectAsState( initial = emptyList() )
-    val partidosDeFecha: List<Partido> = partidos.filter { partido -> partido.idFecha == fechaId }
+    val partidosDeFecha: List<Partido> = partidos.filter { partido -> partido.idFecha.toString() == fechaId.toString() }
 
 
     Scaffold (

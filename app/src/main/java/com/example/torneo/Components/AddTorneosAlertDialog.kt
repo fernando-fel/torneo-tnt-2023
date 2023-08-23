@@ -116,7 +116,7 @@ fun AddTorneosAlertDialog(
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val torneo = Torneo(0, nombre = nombre, idTorneo = 1, estado = "Programado", fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio.toDouble(), ubicacion = ubicacion)
+                        val torneo = Torneo(0, nombre = nombre, idTorneo = "1", estado = "Programado", fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio.toString(), ubicacion = ubicacion)
                         addTorneo(torneo)
                     },
                     enabled = !(nombre.isBlank() || ubicacion.isBlank() || fechaInicio.isBlank()

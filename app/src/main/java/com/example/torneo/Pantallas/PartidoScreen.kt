@@ -43,7 +43,7 @@ fun ScaffoldWithTopBarPartidosScreen(
     navControllerBack: NavHostController
 ){
     val partidos by viewModel.partidos.collectAsState( initial = emptyList() )
-    var partidosDeFecha = partidos.filter { partido -> partido.idFecha == fechaId }
+    var partidosDeFecha = partidos.filter { partido -> partido.idFecha.toString() == fechaId.toString() }
     Scaffold (
         topBar = {
             CustomTopAppBar(navControllerBack, "Partidos", true)

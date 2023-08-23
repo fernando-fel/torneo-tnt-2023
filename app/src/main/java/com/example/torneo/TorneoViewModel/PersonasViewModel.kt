@@ -19,7 +19,7 @@ class PersonasViewModel @Inject constructor(
     private val repo: PersonaRepository
 ): ViewModel()
 {
-    var persona by mutableStateOf(Persona(0, 0,"","","","" ))
+    var persona by mutableStateOf(Persona(0, "0","","","","" ))
     var openDialog by mutableStateOf(false)
     var personas = repo.getPersonaFromRoom()
 

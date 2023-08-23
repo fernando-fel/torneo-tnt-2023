@@ -34,7 +34,7 @@ fun PartidosDeEquipoScreen(
 ) {
 
     val partidos by viewModel.partidos.collectAsState(initial = emptyList() )
-    val partidosDeEquipo: List<Partido> = partidos.filter { partido -> ((partido.idLocal == equipoId) or (partido.idVisitante == equipoId)) }
+    val partidosDeEquipo: List<Partido> = partidos.filter { partido -> ((partido.idLocal.toString() == equipoId.toString()) or (partido.idVisitante.toString() == equipoId.toString())) }
 
     Scaffold(
         topBar = {

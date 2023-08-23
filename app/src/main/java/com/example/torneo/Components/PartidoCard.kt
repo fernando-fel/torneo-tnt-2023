@@ -38,8 +38,8 @@ fun PartidoCard(
     navigateToUpdatePartidoScreen: (partidoId: Int)-> Unit
 ){
     val equipos by viewModel.equipos.collectAsState(initial = emptyList() )
-    val equipoLocal: Equipo? = equipos.firstOrNull{ equipo -> equipo.id == partido.idLocal }
-    val equipoVisitante: Equipo? = equipos.firstOrNull{ equipo -> equipo.id == partido.idVisitante }
+    val equipoLocal: Equipo? = equipos.firstOrNull{ equipo -> equipo.id.toString() == partido.idLocal.toString() }
+    val equipoVisitante: Equipo? = equipos.firstOrNull{ equipo -> equipo.id.toString() == partido.idVisitante.toString() }
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier

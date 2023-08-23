@@ -38,8 +38,8 @@ fun ScreenMain(database: TorneoDB){
     val persona = database.personaDao()
     LaunchedEffect(Unit) {
         //persona.deleteAll()
-        val admin = Persona(idPersona = 1, nombre = "admin", username = "admin", pass = "admin", rol = "admin")
-        val juez = Persona(idPersona = 2, nombre = "juez", username = "juez", pass = "juez", rol = "juez")
+        val admin = Persona(idPersona = "1", nombre = "admin", username = "admin", pass = "admin", rol = "admin")
+        val juez = Persona(idPersona = "2", nombre = "juez", username = "juez", pass = "juez", rol = "juez")
         if (persona.getPersona(1) == null) {
             withContext(Dispatchers.IO) {
                 persona.insertPersona(admin)

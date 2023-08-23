@@ -24,7 +24,7 @@ class FechasViewModel @Inject constructor(
     private val repo: FechaRepository,
 ): ViewModel()
 {
-    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = 1, numero = 0,estado = "programado"))
+    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = "1", numero = "0",estado = "programado"))
     var openDialog by mutableStateOf(false)
     val fechas = repo.getAllFechas()
     fun addFecha(fecha: Fecha) = viewModelScope.launch(Dispatchers.IO)
@@ -57,7 +57,7 @@ class FechasViewModel @Inject constructor(
     }
     fun updateNumero(numero: String){
         fecha = fecha.copy(
-            numero = numero.toInt()
+            numero = numero
         )
     }
 

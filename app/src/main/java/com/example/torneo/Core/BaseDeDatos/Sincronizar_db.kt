@@ -30,8 +30,8 @@ fun sincronizar_torneos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
                     fechaInicio = document.getString("fechaInicio") ?: "",
                     fechaFin = document.getString("fechaFin") ?: "",
                     estado = document.getString("estado") ?:"",
-                    idTorneo = document.id.toInt(),
-                    precio = (document.getDouble("precio")?:"") as Double,
+                    idTorneo = document.getString("idTorneo")?:"",
+                    precio = (document.getString("precio")?:""),
                 )
                 scope.launch {
                     withContext(Dispatchers.IO) {
@@ -61,7 +61,7 @@ fun sincronizar_personas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
                     username = document.getString("username")?:"",
                     pass = document.getString("pass")?:"",
                     rol = document.getString("rol")?:"",
-                    idPersona = document.id.toInt()
+                    idPersona = document.id.toString()
                 )
                 scope.launch {
                     withContext(Dispatchers.IO) {
@@ -110,11 +110,13 @@ fun sincronizar_fechas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
         .addOnSuccessListener { result ->
             for (document in result) {
                 Log.d(TAG, "${document.id} => ${document.data}")
+                Log.d("a ver si saleee", ((document.get("idTorneo"))!!::class.toString()))
+
                 val fecha = Fecha(
                     id = 0,
-                    idTorneo = (document.get("idTorneo")) as Int,
+                    idTorneo = document.getString("idTorneo")?:"" ,
                     estado = document.getString("estado") ?: "",
-                    numero = document.get("numero") as Int,
+                    numero = document.getString("numero") ?:"",
                 )
                 scope.launch {
                     withContext(Dispatchers.IO) {
@@ -142,15 +144,15 @@ fun sincronizar_partidos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
                     id = 0,
                     dia= document.getString("dia") ?: "",
                     hora = document.getString("hora") ?: "",
-                    numCancha = document.getString("cacha") ?: "",
-                    estado = document.getString("cacha") ?: "",
-                    idLocal = document.get("idLocal") as Int,
-                    idVisitante = document.get("idVisitante") as Int,
+                    numCancha = document.getString("cancha") ?: "",
+                    estado = document.getString("estado") ?: "",
+                    idLocal = document.getString("idLocal") ?:"",
+                    idVisitante = document.getString("idVisitante")?:"",
                     golLocal = document.get("golLocal") as Int,
                     golVisitante = document.get("idLocal") as Int,
-                    resultado = document.getString("cacha") ?: "",
-                    idFecha = document.get("idFecha") as Int,
-                    idPersona = document.getString("cacha") ?: "",
+                    resultado = document.getString("resultado") ?: "",
+                    idFecha = document.getString("idFecha")?:"",
+                    idPersona = document.getString("persona") ?: "",
                 )
                 scope.launch {
                     withContext(Dispatchers.IO) {
@@ -168,7 +170,7 @@ fun sincronizar_db(db_remota: FirebaseFirestore, db_local: TorneoDB) {
     sincronizar_torneos(db_remota, db_local)
     sincronizar_personas(db_remota, db_local)
     sincronizar_equipos(db_remota, db_local)
-    //sincronizar_fechas(db_remota, db_local)
+    sincronizar_fechas(db_remota, db_local)
     sincronizar_partidos(db_remota, db_local)
 
 }

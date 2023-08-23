@@ -29,7 +29,7 @@ fun FechasUsuarioScreen(
 
     val fechas by viewModel.fechas.collectAsState(initial = emptyList() )
 
-    val fechasDeTorneo: List<Fecha> = fechas.filter { fecha -> fecha.idTorneo == torneoId }
+    val fechasDeTorneo: List<Fecha> = fechas.filter { fecha -> fecha.idTorneo.toString() == torneoId.toString() }
 
     Scaffold (
         topBar = {
