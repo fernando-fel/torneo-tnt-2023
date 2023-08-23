@@ -1,5 +1,6 @@
 package com.example.torneo.Components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -38,7 +39,9 @@ import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PersonasViewModel
 import kotlinx.coroutines.Job
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
@@ -72,26 +75,39 @@ fun AddPartidosAlertDialog(
         var estado by remember { mutableStateOf(NO_VALUE) }
         var juez by remember { mutableStateOf(NO_VALUE) }
 
-        val date = remember { mutableStateOf(Date()) }
+        var fechaDePrueba = rememberDatePickerState(initialDisplayMode = DisplayMode.Input, initialSelectedDateMillis = 1578096000000)
 
         val focusRequester = FocusRequester()
         val keyboardController = LocalSoftwareKeyboardController.current
-
+        var formattedDate  by remember {mutableStateOf("")}
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         AlertDialog(
             onDismissRequest = { closeDialog() },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(5.dp),
             title = {
                 Text("Agregar Partido")
             },
             text = {
                 Column() {
-                    TextField(
+                    /*TextField(
                         label = { Text(text = "Día del partido") },
                         singleLine = true,
                         value = dia,
                         onValueChange = { dia = it },
                         modifier = Modifier.focusRequester(focusRequester)
                     )
+                    */
+                    DatePicker(state = fechaDePrueba)
+                    Text("Entered date timestamp: ${fechaDePrueba.selectedDateMillis.toString() ?: "no selection"}")
+                    Log.d("Fecha deprueba", fechaDePrueba.toString())
+                    Spacer(modifier = Modifier.height(16.dp).focusRequester(focusRequester))
+                    fechaDePrueba.selectedDateMillis?.let { millis ->
+                        val dateF = Date(millis)
+                        formattedDate = dateFormat.format(dateF)}
+                    //val date = Date(fechaDePrueba.selectedDateMillis)
+                    // formattedDate = dateFormat.format(date)
+                    Log.d("fecha ***********", formattedDate.toString())
+
                     Spacer(modifier = Modifier.height(20.dp))
                     TextField(
                         label = { Text(text = "Hora del partido") },
@@ -102,16 +118,15 @@ fun AddPartidosAlertDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Agregando DatePicker
-                    val fechaDePrueba = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
-                    DatePicker(state = fechaDePrueba, modifier = Modifier.fillMaxWidth())
-
-                    Text("Entered date timestamp: ${fechaDePrueba.selectedDateMillis ?: "no input"}")
-
-                    Spacer(modifier = Modifier.height(16.dp))
+                    //var fechaDePrueba = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
 
                     local = EditableExposedDropdownMenuSample(equipos = equipos)
 
+                    Log.d("Local", local.toString())
+
                     visitante = EditableExposedDropdownMenuSample(equipos = equipos)
+
+                    Log.d("Visitante", visitante.toString())
 
 /*
                     Spacer(modifier = Modifier.height(16.dp))
@@ -144,6 +159,7 @@ fun AddPartidosAlertDialog(
                     }
                 }
             },
+
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -155,7 +171,7 @@ fun AddPartidosAlertDialog(
                             idLocal = local.toInt(),
                             idFecha = fechaId,
                             hora = hora,
-                            dia = dia,
+                            dia = formattedDate.toString(),
                             golVisitante = 0,
                             golLocal = 0,
                             estado = "Programado",
@@ -164,7 +180,8 @@ fun AddPartidosAlertDialog(
                         )
                         addPartido(partido)
                     },
-                    enabled = !(dia.isBlank() || hora.isBlank()  || numeroCancha.isBlank() || juez.isBlank())
+                    enabled = !(hora.isBlank()  || numeroCancha.isBlank() || juez.isBlank() ||
+                                local.isBlank() || visitante.isBlank() || formattedDate.toString().isBlank() )
                 ) {
                     Text(text = "Agregar Partido")
                 }
@@ -181,10 +198,10 @@ fun AddPartidosAlertDialog(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EditableExposedDropdownMenuSample(equipos: List<Equipo>): String {
-    val selectedOptionText by remember { mutableStateOf("") }
+    var selectedOptionText by remember { mutableStateOf("") }
     Column(modifier = Modifier.padding(16.dp)) {
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf("") }
+        //var selectedOptionText by remember { mutableStateOf("") }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -221,16 +238,17 @@ fun EditableExposedDropdownMenuSample(equipos: List<Equipo>): String {
             }
         }
     }
+    Log.d("Local aca adentro", selectedOptionText.toString())
     return selectedOptionText
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ObtenerJuez(jueces: List<Persona>): String {
-    val selectedOptionText by remember { mutableStateOf("") }
+    var selectedOptionText by remember { mutableStateOf("") }
     Column(modifier = Modifier.padding(16.dp)) {
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf("") }
+        //var selectedOptionText by remember { mutableStateOf("") }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
