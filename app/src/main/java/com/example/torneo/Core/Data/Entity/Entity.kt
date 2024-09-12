@@ -4,6 +4,7 @@ package com.example.torneo.Core.Data.Entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.torneo.Core.Data.Equipo
 
@@ -19,7 +20,7 @@ data class Persona(
 )
 @Entity(tableName = "torneo_table",)
 data class Torneo (
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "idTorneo") val idTorneo: String,
     @ColumnInfo(name = "nombre") val nombre: String,
     @ColumnInfo(name = "fechaInicio") val fechaInicio: String,
@@ -30,15 +31,37 @@ data class Torneo (
 )
 
 
+@Entity(tableName = "fecha_table",
+    foreignKeys =[
+        ForeignKey(entity = Torneo::class, parentColumns = ["id"], childColumns = ["idTorneo"], onDelete = ForeignKey.CASCADE)
+    ],
+    indices=[Index("idTorneo")]
+)
+data class Fecha(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name= "idTorneo") val idTorneo: String,
+    @ColumnInfo(name= "numeroFecha") val numero: String,
+    @ColumnInfo(name= "estado") val estado: String,
+
+)
+
+@Entity(tableName = "equipo_table",)
+data class Equipo(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "nombre") val nombre: String,
+)
+
 @Entity(tableName = "partido_table",
     foreignKeys = [
-    ForeignKey(entity = Fecha::class, parentColumns = ["id"], childColumns = ["idFecha"], onDelete = ForeignKey.CASCADE),
-    ForeignKey(entity = Equipo::class, parentColumns = ["id"], childColumns = ["idLocal"], onDelete = ForeignKey.CASCADE),
-    ForeignKey(entity = Equipo::class, parentColumns = ["id"], childColumns = ["idVisitante"], onDelete = ForeignKey.CASCADE),
-    ForeignKey(entity = Persona::class, parentColumns = ["id"], childColumns = ["idPersona"], onDelete = ForeignKey.CASCADE),
-    ])
+        ForeignKey(entity = Fecha::class, parentColumns = ["id"], childColumns = ["idFecha"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = Equipo::class, parentColumns = ["id"], childColumns = ["idLocal"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = Equipo::class, parentColumns = ["id"], childColumns = ["idVisitante"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = Persona::class, parentColumns = ["id"], childColumns = ["idPersona"], onDelete = ForeignKey.CASCADE),
+    ],
+    indices=[Index("idFecha"), Index("idLocal"), Index("idVisitante"), Index("idPersona")]
+)
 data class Partido(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "idFecha") val idFecha: String,
     @ColumnInfo(name = "hora") val hora: String,
     @ColumnInfo(name = "dia") val dia: String,
@@ -50,23 +73,4 @@ data class Partido(
     @ColumnInfo(name = "estado") val estado: String,
     @ColumnInfo(name = "resultado") val resultado: String,
     @ColumnInfo(name = "idPersona") val idPersona: String,
-)
-
-@Entity(tableName = "fecha_table",
-    foreignKeys =[
-        ForeignKey(entity = Torneo::class, parentColumns = ["id"], childColumns = ["idTorneo"], onDelete = ForeignKey.CASCADE),
-])
-
-data class Fecha(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
-    @ColumnInfo(name= "idTorneo") val idTorneo: String,
-    @ColumnInfo(name= "numeroFecha") val numero: String,
-    @ColumnInfo(name= "estado") val estado: String,
-
-)
-
-@Entity(tableName = "equipo_table",)
-data class Equipo(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
-    @ColumnInfo(name = "nombre") val nombre: String,
 )

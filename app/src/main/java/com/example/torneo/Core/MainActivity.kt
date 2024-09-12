@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 .fallbackToDestructiveMigration().build()
         val db = Firebase.firestore
         // Add a new document with a generated ID
-        sincronizar_db(db,database)
+        //sincronizar_db(db,database)
         setContent {
             TorneoTheme (
                 darkTheme = false
