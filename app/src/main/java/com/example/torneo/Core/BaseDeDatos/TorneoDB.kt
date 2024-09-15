@@ -17,7 +17,7 @@ import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.Jugador
 
 
-@Database(entities = [Torneo::class, Equipo::class, Jugador::class, Fecha::class, Partido::class, Persona::class], version=9, exportSchema = false)
+@Database(entities = [Torneo::class, Equipo::class, Jugador::class, Fecha::class, Partido::class, Persona::class], version=10, exportSchema = false)
 abstract class TorneoDB: RoomDatabase() {
     abstract fun torneoDao(): TorneoDao
 

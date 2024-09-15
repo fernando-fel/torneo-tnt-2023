@@ -13,7 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.torneo.Components.AddPartidosAlertDialog
+
+import com.example.torneo.Components.AddPartidosDialog
 import com.example.torneo.Components.AddTorneoFlotingActionButton
 import com.example.torneo.Components.AddTorneosAlertDialog
 import com.example.torneo.Components.PartidosContent
@@ -58,7 +59,7 @@ fun ScaffoldWithTopBarPartidosScreen(
                 },
                 navigateToUpdatePartidoScreen =  navController
             )
-            AddPartidosAlertDialog(
+            AddPartidosDialog(
                 fechaId = fechaId,
                 openDialog = viewModel.openDialog,
                 closeDialog = {
@@ -72,6 +73,7 @@ fun ScaffoldWithTopBarPartidosScreen(
         },
         floatingActionButton = {
             AddTorneoFlotingActionButton(
+
                 openDialog = {
                     viewModel.openDialog()
                 }

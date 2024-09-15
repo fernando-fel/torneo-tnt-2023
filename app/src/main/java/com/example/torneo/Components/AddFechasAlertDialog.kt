@@ -19,50 +19,57 @@ import com.example.torneo.Core.Constantes.Companion.DISMISS
 import com.example.torneo.Core.Constantes.Companion.NO_VALUE
 import com.example.torneo.Core.Data.Entity.Fecha
 
-import kotlinx.coroutines.job
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddFechasAlertDialog(
-    torneoId : Int,
+    torneoId: String,
     openDialog: Boolean,
-    closeDialog: ()->Unit,
+    closeDialog: () -> Unit,
     addFecha: (fecha: Fecha) -> Unit
-){
-    if (openDialog){
+) {
+    if (openDialog) {
         var numero by remember { mutableStateOf(NO_VALUE) }
-        val focusRequester = FocusRequester()
+        val focusRequester = remember { FocusRequester() }
 
         AlertDialog(
-            onDismissRequest = { closeDialog },
+            onDismissRequest = { closeDialog() },
             title = {
                 Text("Agregar Fecha")
             },
             text = {
-                Column{
+                Column {
                     TextField(
-                        label = { Text(text = "Numero de fecha") },
+                        label = { Text(text = "Número de fecha") },
                         singleLine = true,
                         value = numero,
-                        onValueChange = {numero = it},
+                        onValueChange = { numero = it },
                         modifier = Modifier.focusRequester(focusRequester)
                     )
-                    LaunchedEffect(Unit){
-                        coroutineContext.job.invokeOnCompletion {
-                            focusRequester .requestFocus()
+                    // Se puede usar LaunchedEffect para solicitar el enfoque si es necesario.
+                    LaunchedEffect(openDialog) {
+                        if (openDialog) {
+                            focusRequester.requestFocus()
                         }
                     }
                 }
             },
             confirmButton = {
                 TextButton(
-                    onClick = { closeDialog()
-                        val fecha = Fecha(0, idTorneo = torneoId.toString(), numero = numero, estado=" Empezado")
-                        addFecha(fecha)
+                    onClick = {
+                        if (numero.isNotBlank()) {
+                            val fecha = Fecha(
+                                id = 0, // Deberías manejar el ID adecuadamente
+                                idTorneo = torneoId,
+                                numero = numero,
+                                estado = "Empezado"
+                            )
+                            addFecha(fecha)
+                            closeDialog()
+                        }
                     },
-                    enabled = !(numero.isBlank())
-                ){
-                    Text(text = ("Agregar Fecha"))
+                    enabled = numero.isNotBlank()
+                ) {
+                    Text(text = "Agregar Fecha")
                 }
             },
             dismissButton = {

@@ -1,54 +1,57 @@
 package com.example.torneo.Components
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.torneo.Core.Constantes.Companion.DISMISS
 import com.example.torneo.Core.Constantes.Companion.NO_VALUE
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PersonasViewModel
-import kotlinx.coroutines.Job
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.reflect.typeOf
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterialApi::class
-)
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun AddPartidosAlertDialog(
+fun AddPartidosDialog(
     viewModel: EquiposViewModel = hiltViewModel(),
     viewModel2: PersonasViewModel = hiltViewModel(),
     fechaId: Int,
@@ -56,236 +59,372 @@ fun AddPartidosAlertDialog(
     closeDialog: () -> Unit,
     addPartido: (partido: Partido) -> Unit
 ) {
-
-    val personas by viewModel2.personas.collectAsState(initial = emptyList())
-    val jueces: List<Persona> = personas.filter{ juez -> juez.rol == "juez" }
-
-    val equipos by viewModel.equipos.collectAsState(initial = emptyList())
     if (openDialog) {
-        var filterText by remember { mutableStateOf("") }
-        var selectedOption by remember { mutableStateOf("") }
-        var fecha by remember { mutableStateOf(NO_VALUE) }
-        var hora by remember { mutableStateOf(NO_VALUE) }
-        var dia by remember { mutableStateOf(NO_VALUE) }
-        var local by remember { mutableStateOf(NO_VALUE) }
-        var visitante by remember { mutableStateOf(NO_VALUE) }
-        var numeroCancha by remember { mutableStateOf(NO_VALUE) }
-        var golL by remember { mutableStateOf(0) }
-        var golV by remember { mutableStateOf(0) }
-        var estado by remember { mutableStateOf(NO_VALUE) }
-        var juez by remember { mutableStateOf(NO_VALUE) }
+        var datePickerExpanded by remember { mutableStateOf(false) }
+        var timePickerExpanded by remember { mutableStateOf(false) }
+        var selectedDate by remember { mutableStateOf<Date?>(null) }
+        var selectedTime by remember { mutableStateOf("") }
+        var local by remember { mutableStateOf<Equipo?>(null) }
+        var visitante by remember { mutableStateOf<Equipo?>(null) }
+        var numeroCancha by remember { mutableStateOf("") }
+        var juez by remember { mutableStateOf<Persona?>(null) }
 
-        var fechaDePrueba = rememberDatePickerState(initialDisplayMode = DisplayMode.Input, initialSelectedDateMillis = 1578096000000)
-
-        val focusRequester = FocusRequester()
-        val keyboardController = LocalSoftwareKeyboardController.current
-        var formattedDate  by remember {mutableStateOf("")}
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         AlertDialog(
             onDismissRequest = { closeDialog() },
-            modifier = Modifier.fillMaxWidth().padding(5.dp),
-            title = {
-                Text("Agregar Partido")
-            },
-            text = {
-                Column() {
-                    /*TextField(
-                        label = { Text(text = "Día del partido") },
-                        singleLine = true,
-                        value = dia,
-                        onValueChange = { dia = it },
-                        modifier = Modifier.focusRequester(focusRequester)
-                    )
-                    */
-                    DatePicker(state = fechaDePrueba)
-                    Text("Entered date timestamp: ${fechaDePrueba.selectedDateMillis.toString() ?: "no selection"}")
-                    Log.d("Fecha deprueba", fechaDePrueba.toString())
-                    Spacer(modifier = Modifier.height(16.dp).focusRequester(focusRequester))
-                    fechaDePrueba.selectedDateMillis?.let { millis ->
-                        val dateF = Date(millis)
-                        formattedDate = dateFormat.format(dateF)}
-                    //val date = Date(fechaDePrueba.selectedDateMillis)
-                    // formattedDate = dateFormat.format(date)
-                    Log.d("fecha ***********", formattedDate.toString())
-
-                    Spacer(modifier = Modifier.height(20.dp))
-                    TextField(
-                        label = { Text(text = "Hora del partido") },
-                        singleLine = true,
-                        value = hora,
-                        onValueChange = { hora = it }
-                    )
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Surface(
+                modifier = Modifier
+                    .width(400.dp) // Ajusta el ancho del diálogo aquí
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                shape = MaterialTheme.shapes.medium,
+                elevation = 8.dp
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Agregar Partido", style = MaterialTheme.typography.h4)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Agregando DatePicker
-                    //var fechaDePrueba = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
+                    val personas by viewModel2.personas.collectAsState(initial = emptyList())
+                    val jueces = personas.filter { it.rol == "juez" }
+                    val equipos by viewModel.equipos.collectAsState(initial = emptyList())
 
-                    local = EditableExposedDropdownMenuSample(equipos = equipos)
+                    // Selector de cancha
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Nombre de la Cancha",
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        TextField(
+                            value = numeroCancha,
+                            onValueChange = { numeroCancha = it },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
-                    Log.d("Local", local.toString())
-
-                    visitante = EditableExposedDropdownMenuSample(equipos = equipos)
-
-                    Log.d("Visitante", visitante.toString())
-
-/*
                     Spacer(modifier = Modifier.height(16.dp))
-                    TextField(
-                        label = { Text(text = "Equipo Visitante") },
-                        singleLine = true,
-                        value = visitante,
-                        onValueChange = { visitante = it }
-                    )*/
-                    Spacer(modifier = Modifier.height(16.dp))
-                    TextField(
-                        label = { Text(text = "Nombre de la Cancha") },
-                        singleLine = true,
-                        value = numeroCancha,
-                        onValueChange = { numeroCancha = it }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    juez = ObtenerJuez(jueces = jueces)
 
-/*                    TextField(
-                        label = { Text(text = "Nombre del Juez") },
-                        singleLine = true,
-                        value = juez,
-                        onValueChange = { juez = it }
-                    )*/
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { datePickerExpanded = true }
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Fecha")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = selectedDate?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "Selecciona una fecha",
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
-                    LaunchedEffect(Unit) {
-                        focusRequester.requestFocus()
-                        keyboardController?.show()
+                    if (datePickerExpanded) {
+                        DatePickerDialog(
+                            onDismissRequest = { datePickerExpanded = false },
+                            onDateSelected = { date ->
+                                selectedDate = date
+                                datePickerExpanded = false
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { timePickerExpanded = true }
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(imageVector = Icons.Filled.AccessTime, contentDescription = "Hora")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (selectedTime.isNotEmpty()) selectedTime else "Selecciona una hora",
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    if (timePickerExpanded) {
+                        TimePickerDialog(
+                            onDismissRequest = { timePickerExpanded = false },
+                            onTimeSelected = { hour, minute ->
+                                selectedTime = String.format("%02d:%02d", hour, minute)
+                                timePickerExpanded = false
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Equipo Local*",
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        EditableExposedDropdownMenuSample(equipos = equipos) { selectedLocal ->
+                            local = selectedLocal
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Equipo Visitante*",
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        EditableExposedDropdownMenuSample(equipos = equipos) { selectedVisitante ->
+                            visitante = selectedVisitante
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Juez*",
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        ObtenerJuez(jueces = jueces) { selectedJuez ->
+                            juez = selectedJuez
+                        }
+                    }
+
+                    // Función de validación
+                    fun isFormValid(): Boolean {
+                        return local != null &&
+                                visitante != null &&
+                                numeroCancha.isNotEmpty() &&
+                                juez != null
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(
+                            onClick = {
+                                if (isFormValid()) {
+                                    closeDialog()
+                                    val partido = Partido(
+                                        resultado = " -    -",
+                                        numCancha = numeroCancha,
+                                        idVisitante = visitante!!.id.toString(),
+                                        idLocal = local!!.id.toString(),
+                                        idFecha = fechaId.toString(),
+                                        hora = selectedTime,
+                                        dia = selectedDate?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "",
+                                        golVisitante = 0,
+                                        golLocal = 0,
+                                        estado = "Programado",
+                                        id = 0,
+                                        idPersona = juez!!.id.toString()
+                                    )
+                                    addPartido(partido)
+                                }
+                            },
+                            enabled = isFormValid()
+                        ) {
+                            Text("Agregar Partido")
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextButton(onClick = closeDialog) {
+                            Text("Cancelar")
+                        }
                     }
                 }
-            },
-
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        closeDialog()
-                        val partido = Partido(
-                            resultado = " -    -",
-                            numCancha = numeroCancha,
-                            idVisitante = visitante,
-                            idLocal = local,
-                            idFecha = fechaId.toString(),
-                            hora = hora,
-                            dia = formattedDate,
-                            golVisitante = 0,
-                            golLocal = 0,
-                            estado = "Programado",
-                            id = 0,
-                            idPersona = juez
-                        )
-                        addPartido(partido)
-                    },
-                    enabled = !(hora.isBlank()  || numeroCancha.isBlank() || juez.isBlank() ||
-                                local.isBlank() || visitante.isBlank() || formattedDate.toString().isBlank() )
-                ) {
-                    Text(text = "Agregar Partido")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = closeDialog) {
-                    Text(text = DISMISS)
-                }
             }
-        )
+        }
     }
 }
 
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerDialog(
+    onDismissRequest: () -> Unit,
+    onDateSelected: (date: Date) -> Unit,
+    state: DatePickerState = rememberDatePickerState()
+) {
+    AlertDialog(
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        onDismissRequest = onDismissRequest,
+        title = { Text("Selecciona la fecha") },
+        text = {
+                DatePicker(
+                    state = state,
+                    modifier = Modifier.fillMaxWidth()
+                )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val selectedDateMillis = state.selectedDateMillis ?: return@TextButton
+                    onDateSelected(Date(selectedDateMillis))
+                    onDismissRequest()
+                }
+            ) {
+                Text("Aceptar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerDialog(
+    onDismissRequest: () -> Unit,
+    onTimeSelected: (hour: Int, minute: Int) -> Unit
+) {
+    val timePickerState = rememberTimePickerState()
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text("Selecciona la hora") },
+        text = {
+            TimePicker(
+                state = timePickerState,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val hour = timePickerState.hour
+                    val minute = timePickerState.minute
+                    onTimeSelected(hour, minute)
+                    onDismissRequest()
+                }
+            ) {
+                Text("Aceptar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun EditableExposedDropdownMenuSample(equipos: List<Equipo>): String {
-    var selectedOptionText by remember { mutableStateOf("") }
-    Column(modifier = Modifier.padding(16.dp)) {
-        var expanded by remember { mutableStateOf(false) }
-        //var selectedOptionText by remember { mutableStateOf("") }
+fun EditableExposedDropdownMenuSample(
+    equipos: List<Equipo>,
+    onEquipoSelected: (Equipo) -> Unit // Callback para devolver el objeto seleccionado
+) {
+    var selectedOption by remember { mutableStateOf<Equipo?>(null) }
+    var expanded by remember { mutableStateOf(false) }
 
+    Column(modifier = Modifier.padding(16.dp)) {
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
+            onExpandedChange = { expanded = !expanded }
         ) {
             TextField(
-                value = selectedOptionText,
+                value = selectedOption?.nombre ?: "",
                 singleLine = true,
-                onValueChange = { selectedOptionText = it },
+                onValueChange = { /* No se usa aquí */ },
                 label = { Text("Equipo") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier.fillMaxWidth()
             )
 
             val filteringOptions = equipos.filter {
-                it.nombre.contains(selectedOptionText, ignoreCase = true)
+                it.nombre.contains(selectedOption?.nombre ?: "", ignoreCase = true)
             }
 
             if (filteringOptions.isNotEmpty()) {
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                    onDismissRequest = { expanded = false }
                 ) {
-                    filteringOptions.forEach { selectionOption ->
+                    filteringOptions.forEach { equipo ->
                         DropdownMenuItem(
-                            content = { Text((selectionOption.id.toString()) + " - " + (selectionOption.nombre) ) },
                             onClick = {
-                                selectedOptionText = selectionOption.id.toString()
+                                selectedOption = equipo
+                                onEquipoSelected(equipo) // Devolver el objeto seleccionado
                                 expanded = false
-                            },
-                        )
+                            }
+                        ) {
+                            Text("${equipo.nombre}")
+                        }
                     }
                 }
             }
         }
     }
-    Log.d("Local aca adentro", selectedOptionText.toString())
-    return selectedOptionText
 }
+
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ObtenerJuez(jueces: List<Persona>): String {
-    var selectedOptionText by remember { mutableStateOf("") }
-    Column(modifier = Modifier.padding(16.dp)) {
-        var expanded by remember { mutableStateOf(false) }
-        //var selectedOptionText by remember { mutableStateOf("") }
+fun ObtenerJuez(
+    jueces: List<Persona>,
+    onJuezSelected: (Persona) -> Unit // Callback para devolver el objeto seleccionado
+) {
+    var selectedOption by remember { mutableStateOf<Persona?>(null) }
+    var expanded by remember { mutableStateOf(false) }
 
+    Column(modifier = Modifier.padding(16.dp)) {
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
+            onExpandedChange = { expanded = !expanded }
         ) {
             TextField(
-                value = selectedOptionText,
+                value = selectedOption?.nombre ?: "",
                 singleLine = true,
-                onValueChange = { selectedOptionText = it },
+                onValueChange = { /* No se usa aquí */ },
                 label = { Text("Juez") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier.fillMaxWidth()
             )
 
             val filteringOptions = jueces.filter {
-                it.nombre.contains(selectedOptionText, ignoreCase = true)
+                it.nombre.contains(selectedOption?.nombre ?: "", ignoreCase = true)
             }
 
             if (filteringOptions.isNotEmpty()) {
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                    onDismissRequest = { expanded = false }
                 ) {
-                    filteringOptions.forEach { selectionOption ->
+                    filteringOptions.forEach { juez ->
                         DropdownMenuItem(
-                            content = { Text((selectionOption.id.toString()) + " - " + (selectionOption.nombre) ) },
                             onClick = {
-                                selectedOptionText = selectionOption.id.toString()
+                                selectedOption = juez
+                                onJuezSelected(juez) // Devolver el objeto seleccionado
                                 expanded = false
-                            },
-                        )
+                            }
+                        ) {
+                            Text("${juez.nombre}")
+                        }
                     }
                 }
             }
         }
     }
-    print(selectedOptionText)
-
-    return selectedOptionText
 }

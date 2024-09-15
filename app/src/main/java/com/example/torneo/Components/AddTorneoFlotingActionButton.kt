@@ -16,7 +16,6 @@ fun AddTorneoFlotingActionButton(
 ){
     FloatingActionButton(
         onClick = openDialog,
-        modifier = Modifier.background(Color.Black)
     ) {
         Icon(imageVector = Icons.Default.Add , contentDescription = ADD_TORNEO )
     }
@@ -27,7 +26,6 @@ fun AddEquipoFlotingActionButton(
 ){
     FloatingActionButton(
         onClick = openDialog,
-        modifier = Modifier.background(Color.Black)
     ) {
         Icon(imageVector = Icons.Default.Add , contentDescription = "Equipo" )
     }
@@ -39,7 +37,6 @@ fun AddJugadorFlotingActionButton(
 ){
     FloatingActionButton(
         onClick = openDialog,
-        modifier = Modifier.background(Color.Black)
     ) {
         Icon(imageVector = Icons.Default.Add , contentDescription = "Alta Jugador" )
     }
@@ -51,7 +48,6 @@ fun AddFechaFlotingActionButton(
 ){
     FloatingActionButton(
         onClick = openDialog,
-        modifier = Modifier.background(Color.Black)
     ) {
         Icon(imageVector = Icons.Default.Add , contentDescription = "Alta Fecha" )
     }

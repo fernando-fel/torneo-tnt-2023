@@ -27,16 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.torneo.Components.AddPartidosAlertDialog
-import com.example.torneo.Components.AddTorneoFlotingActionButton
-import com.example.torneo.Components.AddTorneosAlertDialog
-import com.example.torneo.Components.PartidosContent
-import com.example.torneo.Components.TorneosContent
-import com.example.torneo.Components.Usuario.PartidosUsuarioContent
-import com.example.torneo.Core.Constantes.Companion.TORNEOS_SCREEN
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.TorneoViewModel.PartidosViewModel
-import com.example.torneo.TorneoViewModel.TorneosViewModel
+
 
 @Composable
 fun PartidoUsuarioScreen(
