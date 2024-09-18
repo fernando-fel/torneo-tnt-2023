@@ -26,6 +26,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -44,6 +49,10 @@ fun SesionOk(navController: NavHostController) {
 @Composable
 @ExperimentalMaterial3Api
 fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
+
+    var selectedItem by remember { mutableStateOf(0) }
+    val items = listOf("Inicio", "Torneo", "Búsqueda")
+
     Scaffold(
         topBar = {
             CustomTopAppBar(navController, "Bienvenido", true)
@@ -125,7 +134,11 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
 
                 }
             }
-        })
+        },
+        bottomBar = {
+
+        }
+    )
 }
 
 @Composable

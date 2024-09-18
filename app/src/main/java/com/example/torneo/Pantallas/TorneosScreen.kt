@@ -15,7 +15,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -69,57 +76,42 @@ fun ScaffoldWithTopBarTorneosScreen(
         topBar = {
             CustomTopAppBar(navControllerBack, "Torneos", true)
         },
+
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp), // Espacio arriba y abajo del LazyRow
-                    verticalAlignment = Alignment.CenterVertically // Centra verticalmente
+                var selectedTabIndex by remember { mutableStateOf(0) }
+                val tabs = listOf("Todos", "En curso", "Finalizados")
+
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                            height = 5.dp, // Altura del indicador
+                            color = MaterialTheme.colorScheme.primary // Color del indicador
+                        )
+                    }
                 ) {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        item {
-                            Button(
-                                onClick = { actualizarPestañas(true, false, false) },
-
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (mostrarTodos) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.surface
-                                )
-                            ) {
-                                Text("Todos")
-                            }
-                        }
-                        item {
-                            Button(
-                                onClick = { actualizarPestañas(false, true, false) },
-
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (mostrarEnCurso) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
-                                )
-                            ) {
-                                Text("En curso")
-                            }
-                        }
-                        item {
-                            Button(
-                                onClick = { actualizarPestañas(false, false, true) },
-
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (mostrarFinalizados) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
-                                )
-                            ) {
-                                Text("Finalizados")
-                            }
-                        }
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            text = { Text(title) },
+                            selected = selectedTabIndex == index,
+                            onClick = {
+                                selectedTabIndex = index
+                                when (index) {
+                                    0 -> actualizarPestañas(true, false, false)
+                                    1 -> actualizarPestañas(false, true, false)
+                                    2 -> actualizarPestañas(false, false, true)
+                                }
+                            },
+                            selectedContentColor = Color.Black,
+                            unselectedContentColor = Color.Black
+                        )
                     }
                 }
 
                 TorneosContent(
-                    padding = padding,
+                    //padding = padding,
                     torneos = torneos,
                     deleteTorneo = { torneo ->
                         viewModel.deleteTorneo(torneo)

@@ -28,7 +28,7 @@ import com.example.torneo.Core.Data.repository.Torneos
 
 @Composable
 fun TorneosContent (
-    padding: PaddingValues,
+    //padding: PaddingValues,
     torneos : Torneos,
     deleteTorneo: (torneo: Torneo)->Unit,
     navigateToUpdateTorneoScreen: (torneoId: Int)-> Unit,
@@ -46,7 +46,6 @@ fun TorneosContent (
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
             ) {
                 items(torneos) { torneo ->
                     TorneoCard(
@@ -65,7 +64,6 @@ fun TorneosContent (
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
             ) {
                 items(torneosFinalizados) { torneo ->
                     TorneoCard(
@@ -86,7 +84,6 @@ fun TorneosContent (
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
             ) {
                 items(torneosEnCurso) { torneo ->
                     TorneoCard(

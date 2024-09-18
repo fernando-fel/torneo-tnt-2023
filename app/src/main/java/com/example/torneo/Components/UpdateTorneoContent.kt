@@ -24,7 +24,7 @@ fun UpdateTorneoContent(
     padding: PaddingValues,
     torneo: Torneo,
     updateNombre: (nombre:String) ->Unit,
-    updateUbicacion: (ubicacion: String) -> Unit,
+    updateEstado: (estado: String) -> Unit,
     updateTorneo: (torneo:Torneo) -> Unit,
     navigateBack: () -> Unit
 
@@ -47,16 +47,15 @@ fun UpdateTorneoContent(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        torneo.estado?.let {
-            TextField(
-                label = { Text(text = "Estado") },
-                singleLine = true,
-                value = it,
-                onValueChange = { estado ->
-                    updateUbicacion(estado)
-                }
-            )
-        }
+        TextField(
+            label = { Text(text = "Estado") },
+            singleLine = true,
+            value = torneo.estado,
+            onValueChange = { nombre->
+                updateEstado(nombre)
+            }
+        )
+
 
         Button(
             onClick = {
