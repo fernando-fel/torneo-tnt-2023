@@ -167,7 +167,7 @@ fun ScreenMain(database: TorneoDB){
                 navController = { fechaId ->
                     navController.navigate("${Routes.UpdateFechasScreen.route}/${fechaId}")
                 },
-                torneoId = torneoId,
+                torneoId = torneoId.toString(),
                 navigateToPartidoScreen = { fechaId ->
                     navController.navigate("${Routes.PartidoScreen.route}/${fechaId}")
                 },

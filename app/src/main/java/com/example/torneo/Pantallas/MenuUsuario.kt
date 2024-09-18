@@ -77,6 +77,17 @@ fun ScaffoldWithTopBarMenuUsuario(navController: NavHostController) {
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = { navController.navigate(Routes.PartidosEnVivo.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "En Vivo",
+                        fontSize = 30.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
                 myMarket()
 
             }
