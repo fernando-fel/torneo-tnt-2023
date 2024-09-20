@@ -46,7 +46,14 @@ class MainActivity : AppCompatActivity() {
                 .fallbackToDestructiveMigration().build()
         val db = Firebase.firestore
         // Add a new document with a generated ID
-//        sincronizar_db(db,database)
+        // Start synchronization
+        lifecycleScope.launch {
+            try {
+                //sincronizar_db(db, database)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error sincronizando base de datos", e)
+            }
+        }
         setContent {
             TorneoTheme (
                 darkTheme = false

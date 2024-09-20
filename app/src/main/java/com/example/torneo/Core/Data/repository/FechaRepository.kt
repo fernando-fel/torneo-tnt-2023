@@ -4,33 +4,25 @@ import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.flow.Flow
 
+typealias Fechas = List<Fecha>
+
 interface FechaRepository {
+    fun getFechasFromRoom(): Flow<List<Fecha>>
 
-    /**
-     * Retrieve all the items from the the given data source.
-     */
-    fun getAllFechas(): Flow<List<Fecha>>
+    fun getFechasByTorneoIdFromRoom(idTorneo: Int): Flow<List<Fecha>>
 
-    /**
-     * Retrieve an item from the given data source that matches with the [id].
-     */
-    suspend fun getFecha(id: Int): Fecha
+    suspend fun getFechaById(idFecha: Int): Fecha
 
-    fun getFechasByTorneo(id: Int): Flow<List<Fecha>>
-    /**
-     * Insert item in the data source
-     */
-    suspend fun addFecha(fecha: Fecha)
+    fun addFechaToRoom(fecha: Fecha)
 
-    /**
-     * Delete item from the data source
-     */
     suspend fun deleteFecha(fecha: Fecha)
 
-    /**
-     * Update item in the data source
-     */
     suspend fun updateFecha(fecha: Fecha)
 
+    // Sync methods
+    fun syncFirebaseToRoom()
+    fun getAllFechas(): Flow<List<Fecha>>
+    suspend fun getFecha(id: Int): Fecha
+    suspend fun addFecha(fecha: Fecha)
+    fun getFechasByTorneo(id: Int): Flow<List<Fecha>>
 }
-

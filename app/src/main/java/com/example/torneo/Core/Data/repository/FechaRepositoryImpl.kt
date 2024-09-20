@@ -16,9 +16,28 @@ class FechaRepositoryImpl(private val fechaDao: FechaDao
 
     override fun getFechasByTorneo(id: Int) = fechaDao.getFechasByTorneoId(id)
 
+    override fun getFechasFromRoom(): Flow<List<Fecha>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFechasByTorneoIdFromRoom(idTorneo: Int): Flow<List<Fecha>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFechaById(idFecha: Int): Fecha {
+        TODO("Not yet implemented")
+    }
+
+    override fun addFechaToRoom(fecha: Fecha) {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun deleteFecha(fecha: Fecha) = fechaDao.deleteFecha(fecha)
 
     override suspend fun updateFecha(fecha: Fecha) = fechaDao.updateFecha(fecha)
+    override fun syncFirebaseToRoom() {
+        TODO("Not yet implemented")
+    }
 
 }

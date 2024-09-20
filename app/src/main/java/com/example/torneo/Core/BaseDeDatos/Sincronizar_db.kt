@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 fun sincronizar_torneos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
-
     val scope = CoroutineScope(Dispatchers.IO)
     val dao = db_local.torneoDao()
 
@@ -22,20 +21,45 @@ fun sincronizar_torneos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
         .get()
         .addOnSuccessListener { result ->
             for (document in result) {
-                Log.d(TAG, "${document.id} => ${document.data}")
                 val torneo = Torneo(
                     id = document.id.toInt(),
                     nombre = document.getString("nombre") ?: "",
                     ubicacion = document.getString("ubicacion") ?: "",
                     fechaInicio = document.getString("fechaInicio") ?: "",
                     fechaFin = document.getString("fechaFin") ?: "",
-                    estado = document.getString("estado") ?:"",
-                    idTorneo = document.getString("idTorneo")?:"",
-                    precio = (document.getString("precio")?:""),
+                    estado = document.getString("estado") ?: "",
+                    idTorneo = document.getString("idTorneo") ?: "",
+                    precio = document.getString("precio") ?: ""
                 )
                 scope.launch {
                     withContext(Dispatchers.IO) {
                         dao.insertTorneo(torneo)
+                    }
+                }
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w(TAG, "Error getting documents.", exception)
+        }
+}
+
+fun sincronizar_fechas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
+    val scope = CoroutineScope(Dispatchers.IO)
+    val dao = db_local.fechaDao()
+
+    db_firebase.collection("Fecha")
+        .get()
+        .addOnSuccessListener { result ->
+            for (document in result) {
+                val fecha = Fecha(
+                    id = 0,
+                    idTorneo = document.getString("idTorneo") ?: "",
+                    estado = document.getString("estado") ?: "",
+                    numero = document.getString("numero") ?: ""
+                )
+                scope.launch {
+                    withContext(Dispatchers.IO) {
+                        dao.insertFecha(fecha)
                     }
                 }
             }
@@ -100,35 +124,7 @@ fun sincronizar_equipos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
             Log.w(TAG, "Error getting documents.", exception)
         }
 }
-fun sincronizar_fechas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
 
-    val scope = CoroutineScope(Dispatchers.IO)
-    val dao = db_local.fechaDao()
-
-    db_firebase.collection("Fecha")
-        .get()
-        .addOnSuccessListener { result ->
-            for (document in result) {
-                Log.d(TAG, "${document.id} => ${document.data}")
-                Log.d("a ver si saleee", ((document.get("idTorneo"))!!::class.toString()))
-
-                val fecha = Fecha(
-                    id = 0,
-                    idTorneo = document.getString("idTorneo")?:"" ,
-                    estado = document.getString("estado") ?: "",
-                    numero = document.getString("numero") ?:"",
-                )
-                scope.launch {
-                    withContext(Dispatchers.IO) {
-                        dao.insertFecha(fecha)
-                    }
-                }
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.w(TAG, "Error getting documents.", exception)
-        }
-}
 
 fun sincronizar_partidos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
 
@@ -166,13 +162,14 @@ fun sincronizar_partidos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
         }
 }
 
-fun sincronizar_db(db_remota: FirebaseFirestore, db_local: TorneoDB) {
-    sincronizar_torneos(db_remota, db_local)
-    sincronizar_personas(db_remota, db_local)
-    sincronizar_equipos(db_remota, db_local)
-    sincronizar_fechas(db_remota, db_local)
-    sincronizar_partidos(db_remota, db_local)
 
+// Llama a las funciones en el orden correcto
+fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
+    sincronizar_torneos(db_firebase, db_local)
+    sincronizar_personas(db_firebase, db_local)
+    sincronizar_equipos(db_firebase, db_local)
+    sincronizar_fechas(db_firebase, db_local)
+    sincronizar_partidos(db_firebase, db_local)
 }
 /*
 fun sincronizar_fireBase()

@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 typealias Equipos = List<Equipo>
 interface EquipoRepository {
+
     fun getEquipoFromRoom() : Flow<Equipos>
 
     fun addEquipoToRoom(equipo: Equipo)

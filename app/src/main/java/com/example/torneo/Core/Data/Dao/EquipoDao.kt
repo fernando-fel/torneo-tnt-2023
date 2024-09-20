@@ -10,8 +10,7 @@ import com.example.torneo.Core.Data.Entity.Equipo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface EquipoDao{
-
+interface EquipoDao {
     @Query("SELECT * FROM equipo_table ORDER BY id ASC")
     fun getAlphabetizedEquipo(): Flow<List<Equipo>>
 
@@ -26,6 +25,9 @@ interface EquipoDao{
 
     @Query("DELETE FROM equipo_table")
     suspend fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(equipos: List<Equipo>)
 
     @Query("SELECT * from equipo_table WHERE id = :id")
     fun getEquipo(id: Int): Equipo

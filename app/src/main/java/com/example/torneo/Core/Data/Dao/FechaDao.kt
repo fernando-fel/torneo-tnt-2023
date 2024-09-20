@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FechaDao {
+
     @Query("SELECT * FROM fecha_table")
     fun getFechas(): Flow<List<Fecha>>
 
@@ -18,9 +19,15 @@ interface FechaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFecha(fecha: Fecha)
 
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(fechas: List<Fecha>)
+
     @Update
     suspend fun updateFecha(fecha: Fecha)
-
     @Delete
     suspend fun deleteFecha(fecha: Fecha)
+
+    @Query("DELETE FROM fecha_table")
+    suspend fun deleteAll()
 }

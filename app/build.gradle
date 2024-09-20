@@ -123,7 +123,7 @@ dependencies {
 
     //implementation "io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc"
     //coreLibraryDesugaring"com.android.tools:desugar_jdk_libs:2.0.3"
-
+    implementation 'com.google.android.gms:play-services-base:18.0.0' // Usa la última versión estable
 
 }
 
