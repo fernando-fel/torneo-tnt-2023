@@ -2,7 +2,9 @@ package com.example.torneo.Pantallas.Usuario
 
 import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -37,6 +39,9 @@ fun EquiposUsuarioScreen(
             CustomTopAppBar(navControllerBack, "Equipos", true)
         },
         content = { padding->
+            Column(modifier = Modifier.padding(padding)) {
+            }
+
             EquipoUsuarioContent(
                 padding = padding,
                 equipos = equipos,

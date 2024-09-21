@@ -1,36 +1,51 @@
 package com.example.torneo.Components.Usuario
 
 import com.example.torneo.Core.Data.repository.Equipos
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.TextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.compose.ui.unit.dp
 import com.example.torneo.Core.Data.Entity.Equipo
 
 @Composable
-fun EquipoUsuarioContent (
+fun EquipoUsuarioContent(
     padding: PaddingValues,
-    equipos : Equipos,
+    equipos: Equipos,
     navegarAPartidosDeEquipo: (equipoId: Int) -> Unit
-    //deleteEquipo: (equipo: Equipo)->Unit,
-    //navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
+) {
+    val searchQuery = remember { mutableStateOf("") }
 
-){
-
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-    ){
-        items(equipos){ equipo->
-            EquipoUsuarioCard(
-                equipo = equipo,
-                navegarAPartidosDeEquipo = navegarAPartidosDeEquipo
-            )
+    ) {
+        TextField(
+            value = searchQuery.value,
+            onValueChange = { searchQuery.value = it },
+            label = { Text("Buscar Equipos") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        )
+
+        val filteredEquipos = equipos.filter {
+            it.nombre.contains(searchQuery.value, ignoreCase = true)
+        }
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(filteredEquipos) { equipo ->
+                EquipoUsuarioCard(
+                    equipo = equipo,
+                    navegarAPartidosDeEquipo = navegarAPartidosDeEquipo
+                )
+            }
         }
     }
 }

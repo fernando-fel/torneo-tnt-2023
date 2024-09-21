@@ -1,135 +1,131 @@
 package com.example.torneo.Components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.repository.Torneos
 
 @Composable
-fun TorneosContent (
-    //padding: PaddingValues,
-    torneos : Torneos,
-    deleteTorneo: (torneo: Torneo)->Unit,
-    navigateToUpdateTorneoScreen: (torneoId: Int)-> Unit,
-    navegarParaUnaFecha: (torneoId: Int)-> Unit,
-    mostrarTodos : Boolean,
-    mostrarFinalizados :  Boolean,
-    mostrarEnCurso : Boolean
-){
+fun TorneosContent(
+    torneos: Torneos,
+    deleteTorneo: (torneo: Torneo) -> Unit,
+    navigateToUpdateTorneoScreen: (torneoId: Int) -> Unit,
+    navegarParaUnaFecha: (torneoId: Int) -> Unit,
+    mostrarTodos: Boolean,
+    mostrarFinalizados: Boolean,
+    mostrarEnCurso: Boolean
+) {
+    val searchQueryTodos = remember { mutableStateOf("") }
+    val searchQueryFinalizados = remember { mutableStateOf("") }
+    val searchQueryEnCurso = remember { mutableStateOf("") }
 
-    var torneosFinalizados = torneos.filter { torneo -> torneo.estado == "finalizados" }
-    var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "en curso" }
-
-    Row {
-        if (mostrarTodos) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(torneos) { torneo ->
-                    TorneoCard(
-                        torneo = torneo,
-                        deleteTorneo = {
-                            deleteTorneo(torneo)
-                        },
-                        navigateToUpdateTorneoScreen =
-                        navigateToUpdateTorneoScreen,
-                        navegarParaUnaFecha
-                    )
-                }
+    if (mostrarTodos) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            TextField(
+                value = searchQueryTodos.value,
+                onValueChange = { searchQueryTodos.value = it },
+                label = { Text("Buscar Todos") },
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            )
+            val filteredTorneos = torneos.filter {
+                it.nombre.contains(searchQueryTodos.value, ignoreCase = true)
             }
-        }
-        if (mostrarFinalizados) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(torneosFinalizados) { torneo ->
+
+            LazyColumn {
+                items(filteredTorneos) { torneo ->
                     TorneoCard(
                         torneo = torneo,
-                        deleteTorneo = {
-                            deleteTorneo(torneo)
-                        },
-                        navigateToUpdateTorneoScreen =
-                        navigateToUpdateTorneoScreen,
+                        deleteTorneo = { deleteTorneo(torneo) },
+                        navigateToUpdateTorneoScreen = navigateToUpdateTorneoScreen,
                         navegarParaUnaFecha
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        if (mostrarEnCurso) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(torneosEnCurso) { torneo ->
-                    TorneoCard(
-                        torneo = torneo,
-                        deleteTorneo = {
-                            deleteTorneo(torneo)
-                        },
-                        navigateToUpdateTorneoScreen =
-                        navigateToUpdateTorneoScreen,
-                        navegarParaUnaFecha
-
                     )
                 }
             }
         }
     }
 
+    if (mostrarFinalizados) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            TextField(
+                value = searchQueryFinalizados.value,
+                onValueChange = { searchQueryFinalizados.value = it },
+                label = { Text("Buscar Finalizados") },
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            )
+            val filteredFinalizados = torneos.filter {
+                it.estado == "finalizados" &&
+                        it.nombre.contains(searchQueryFinalizados.value, ignoreCase = true)
+            }
+
+            LazyColumn {
+                items(filteredFinalizados) { torneo ->
+                    TorneoCard(
+                        torneo = torneo,
+                        deleteTorneo = { deleteTorneo(torneo) },
+                        navigateToUpdateTorneoScreen = navigateToUpdateTorneoScreen,
+                        navegarParaUnaFecha
+                    )
+                }
+            }
+        }
+    }
+
+    if (mostrarEnCurso) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            TextField(
+                value = searchQueryEnCurso.value,
+                onValueChange = { searchQueryEnCurso.value = it },
+                label = { Text("Buscar En Curso") },
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            )
+            val filteredEnCurso = torneos.filter {
+                it.estado == "en curso" &&
+                        it.nombre.contains(searchQueryEnCurso.value, ignoreCase = true)
+            }
+
+            LazyColumn {
+                items(filteredEnCurso) { torneo ->
+                    TorneoCard(
+                        torneo = torneo,
+                        deleteTorneo = { deleteTorneo(torneo) },
+                        navigateToUpdateTorneoScreen = navigateToUpdateTorneoScreen,
+                        navegarParaUnaFecha
+                    )
+                }
+            }
+        }
+    }
 }
 
-
 @Composable
-fun FechasContent (
+fun FechasContent(
     padding: PaddingValues,
-    fechas : List<Fecha>,
-    deleteFecha: (fecha: Fecha)->Unit,
-    navigateToUpdateFechaScreen: (fechaId: Int)-> Unit,
-    navegarParaPartidos: (fechaId: Int)-> Unit
-
-){
-
+    fechas: List<Fecha>,
+    deleteFecha: (fecha: Fecha) -> Unit,
+    navigateToUpdateFechaScreen: (fechaId: Int) -> Unit,
+    navegarParaPartidos: (fechaId: Int) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-    ){
-        items(fechas){ fecha->
+    ) {
+        items(fechas) { fecha ->
             FechaCard(
                 fecha = fecha,
-                deleteFecha={
-                    deleteFecha(fecha)
-                },
-                navigateToUpdateFechaScreen =
-                navigateToUpdateFechaScreen,
+                deleteFecha = { deleteFecha(fecha) },
+                navigateToUpdateFechaScreen = navigateToUpdateFechaScreen,
                 navegarParaPartidos
             )
         }
     }
 }
-

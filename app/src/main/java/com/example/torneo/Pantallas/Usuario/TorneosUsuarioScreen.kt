@@ -3,27 +3,34 @@ package com.example.torneo.Pantallas.Usuario
 import Component.CustomTopAppBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.torneo.Components.AddTorneoFlotingActionButton
-import com.example.torneo.Components.AddTorneosAlertDialog
-import com.example.torneo.Components.TorneosContent
 import com.example.torneo.Components.Usuario.TorneosUsuarioContent
 import com.example.torneo.TorneoViewModel.TorneosViewModel
 
@@ -51,53 +58,52 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
 
     val torneos by viewModel.torneos.collectAsState(initial = emptyList() )
 
-    var mostrarFinalizados = remember { mutableStateOf(false) }
-    var mostrarEnCurso = remember { mutableStateOf(false) }
-    var mostrarTodos = remember { mutableStateOf(false) }
+    var mostrarFinalizados by remember { mutableStateOf(false) }
+    var mostrarEnCurso by remember { mutableStateOf(false) }
+    var mostrarTodos by remember { mutableStateOf(false) }
+
+    fun actualizarPestañas(todos: Boolean, enCurso: Boolean, finalizados: Boolean) {
+        mostrarTodos = todos
+        mostrarEnCurso = enCurso
+        mostrarFinalizados = finalizados
+    }
 
     Scaffold (
         topBar = {
             CustomTopAppBar(navControllerBack, "Torneos", true)
-            /*TopAppBar(
-                title = {Text(TORNEOS_SCREEN + "     ", modifier = Modifier.fillMaxWidth())})*/
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(
-                    onClick = {
-                        mostrarFinalizados.value = false
-                        mostrarEnCurso.value = false
-                        mostrarTodos.value = true
-                    }
-                ) {
-                    androidx.compose.material.Text(text = "Todos")
-                }
-                Button(
-                    onClick = {
-                        mostrarFinalizados.value = false
-                        mostrarEnCurso.value = true
-                        mostrarTodos.value = false
-                    }
-                ) {
-                    androidx.compose.material.Text(text = "en curso")
-                }
-                Button(
-                    onClick = {
-                        mostrarFinalizados.value = true
-                        mostrarEnCurso.value = false
-                        mostrarTodos.value = false
-                    }
-                ) {
-                    androidx.compose.material.Text(text = "Finalizados")
-                }
-
-            }
         },
         content = { padding ->
+            Column(modifier = Modifier.padding(padding)) {
+                var selectedTabIndex by remember { mutableStateOf(0) }
+                val tabs = listOf("Todos", "En curso", "Finalizados")
+
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                            height = 5.dp, // Altura del indicador
+                            color = MaterialTheme.colorScheme.primary // Color del indicador
+                        )
+                    }
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            text = { Text(title) },
+                            selected = selectedTabIndex == index,
+                            onClick = {
+                                selectedTabIndex = index
+                                when (index) {
+                                    0 -> actualizarPestañas(true, false, false)
+                                    1 -> actualizarPestañas(false, true, false)
+                                    2 -> actualizarPestañas(false, false, true)
+                                }
+                            },
+                            selectedContentColor = Color.Black,
+                            unselectedContentColor = Color.Black
+                        )
+                    }
+                }
             TorneosUsuarioContent(
                 padding = padding,
                 torneos = torneos,
@@ -105,9 +111,13 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
                     viewModel.deleteTorneo(torneo)
                 },
                 navigateToUpdateTorneoScreen = navController,
-                navigateToFechaScreen, mostrarTodos.value, mostrarFinalizados.value,
-                mostrarEnCurso.value
-        )})
+                navigateToFechaScreen, mostrarTodos, mostrarFinalizados,
+                mostrarEnCurso
+            )
+            }
+        }
+    )
 }
+
 
 
