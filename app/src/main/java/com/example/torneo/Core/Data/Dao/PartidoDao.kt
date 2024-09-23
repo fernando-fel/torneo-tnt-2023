@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Jugador
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface PartidoDao {
@@ -29,4 +30,48 @@ interface PartidoDao {
 
     @Delete
     suspend fun deletePartido(partido: Partido)
+/*
+    @Query(
+        """
+        SELECT p.* FROM partido_table p
+        WHERE p.dia = :date
+        ORDER BY p.hora
+    """
+    )
+    fun getPartidosByDate(date: String): Flow<List<Partido>>
+*/
+@Query("""
+    SELECT p.id, p.idFecha, p.hora, p.dia, p.numCancha, 
+           eLocal.nombre AS nombreLocal, 
+           eVisitante.nombre AS nombreVisitante, 
+           p.golLocal, p.golVisitante, p.estado, 
+           p.resultado, p.idPersona, 
+           f.numeroFecha, t.nombre AS nombreTorneo 
+    FROM partido_table p 
+    JOIN fecha_table f ON p.idFecha = f.id 
+    JOIN torneo_table t ON f.idTorneo = t.id 
+    JOIN equipo_table eLocal ON p.idLocal = eLocal.id
+    JOIN equipo_table eVisitante ON p.idVisitante = eVisitante.id
+    WHERE p.dia = :date
+    ORDER BY p.hora
+""")
+fun getPartidosByDate(date: String): Flow<List<PartidoConDetalles>>
+
+    data class PartidoConDetalles(
+        val id: Int,
+        val idFecha: String,
+        val hora: String,
+        val dia: String,
+        val numCancha: String,
+        val nombreLocal: String,
+        val nombreVisitante: String,
+        val golLocal: Int,
+        val golVisitante: Int,
+        val estado: String,
+        val resultado: String,
+        val idPersona: String,
+        val numeroFecha: String,
+        val nombreTorneo: String
+    )
+
 }

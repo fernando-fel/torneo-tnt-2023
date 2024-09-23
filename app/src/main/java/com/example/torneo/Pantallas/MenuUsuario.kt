@@ -78,7 +78,7 @@ fun ScaffoldWithTopBarMenuUsuario(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = { navController.navigate(Routes.PartidosEnVivo.route) },
+                    onClick = { navController.navigate(Routes.PartidosEnVivoScreen.route) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(

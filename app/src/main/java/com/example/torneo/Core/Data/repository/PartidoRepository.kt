@@ -1,5 +1,6 @@
 package com.example.torneo.Core.Data.repository
 
+import com.example.torneo.Core.Data.Dao.PartidoDao
 import com.example.torneo.Core.Data.Entity.Partido
 
 import com.example.torneo.Core.Data.Entity.Torneo
@@ -33,5 +34,10 @@ interface PartidoRepository {
      * Update item in the data source
      */
     suspend fun updatePartido(partido: Partido)
+
+    //este andaaa
+    //fun getPartidosDeHoy(): Flow<List<Partido>>
+
+    fun getPartidosDeHoyDetalle(): Flow<List<PartidoDao.PartidoConDetalles>>
 
 }

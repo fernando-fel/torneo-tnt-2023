@@ -79,6 +79,9 @@ fun ScreenMain(database: TorneoDB){
         composable(Routes.MenuUsuario.route){
             MenuUsuario(navController)
         }
+        composable(Routes.PartidosEnVivoScreen.route) {
+            PartidosEnVivoScreen(viewModel = hiltViewModel())
+        }
         composable(Routes.Fixture.route){
             Fixture(navController)
         }
@@ -279,6 +282,8 @@ fun ScreenMain(database: TorneoDB){
             val golVisitante = backStackEntry.arguments?.getInt("golVisitante")
             UnPartido(navController)
         }
+
+
 
         composable(Routes.ListadoDePersonas.route){
             //val persona = getPersonaDao() // Obtén la instancia de tu PersonaDao
