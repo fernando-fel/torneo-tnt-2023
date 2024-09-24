@@ -35,51 +35,39 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    companion object{
+    companion object {
         const val MY_CHANNEL_ID = "my_channel"
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database =
-            Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
-                .fallbackToDestructiveMigration().build()
+
+        // Inicializar Firebase
+        Firebase.initialize(this)
+
+        val database = Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
+            .fallbackToDestructiveMigration()
+            .build()
+
         val db = Firebase.firestore
-        // Add a new document with a generated ID
-        // Start synchronization
+
+        // Iniciar sincronización
         lifecycleScope.launch {
             try {
-                //sincronizar_db(db, database)
+                sincronizar_db(db, database)
             } catch (e: Exception) {
-                Log.e("MainActivity", "Error sincronizando base de datos", e)
+                Log.e(TAG, "Error sincronizando base de datos", e)
             }
         }
+
         setContent {
-            TorneoTheme (
-                darkTheme = false
-            ){
-                // A surface container using the 'background' color from the theme
+            TorneoTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-                    /*val fb_db = Firebase.firestore
-                    sincronizar_db(fb_db, database)
-
-                    Firebase.initialize(context = this)
-                    Firebase.appCheck.installAppCheckProviderFactory(
-                        PlayIntegrityAppCheckProviderFactory.getInstance(),
-                    )*/
-                    //Firebase.c
-                    //Firebase.appCheck.installAppCheckProviderFactory(
-                    //  PlayIntegrityAppCheckProviderFactory.getInstance(),
-                    //)
-                    //myMarket()
-
                     ScreenMain(database = database)
-                    //Notificaciones()
-                    //AppNavigation()
                 }
             }
         }

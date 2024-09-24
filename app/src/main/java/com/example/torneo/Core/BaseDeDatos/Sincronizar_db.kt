@@ -13,6 +13,102 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
+fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
+    val scope = CoroutineScope(Dispatchers.IO)
+
+    val collections = listOf("Torneo", "Persona", "Equipo", "Fecha", "Partidos")
+    collections.forEach { collection ->
+        db_firebase.collection(collection)
+            .get()
+            .addOnSuccessListener { result ->
+                when (collection) {
+                    "Torneo" -> {
+                        val dao = db_local.torneoDao()
+                        result.forEach { document ->
+                            val torneo = Torneo(
+                                id = document.id.toInt(),
+                                nombre = document.getString("nombre") ?: "",
+                                ubicacion = document.getString("ubicacion") ?: "",
+                                fechaInicio = document.getString("fechaInicio") ?: "",
+                                fechaFin = document.getString("fechaFin") ?: "",
+                                estado = document.getString("estado") ?: "",
+                                idTorneo = document.getString("idTorneo") ?: "",
+                                precio = document.getString("precio") ?: ""
+                            )
+                            scope.launch { dao.insertTorneo(torneo) }
+                        }
+                    }
+                    "Fecha" -> {
+                        val dao = db_local.fechaDao()
+                        result.forEach { document ->
+                            val fecha = Fecha(
+                                id = document.id.toInt(),
+                                idTorneo = document.getString("idTorneo") ?: "",
+                                estado = document.getString("estado") ?: "",
+                                numero = document.getString("numero") ?: ""
+                            )
+                            scope.launch { dao.insertFecha(fecha) }
+                        }
+                    }
+                    "Persona" -> {
+                        val dao = db_local.personaDao()
+                        result.forEach { document ->
+                            val persona = Persona(
+                                id = document.id.toInt(),
+                                nombre = document.getString("nombre") ?: "",
+                                username = document.getString("username") ?: "",
+                                pass = document.getString("pass") ?: "",
+                                rol = document.getString("rol") ?: "",
+                                idPersona = document.id.toString()
+                            )
+                            scope.launch { dao.insertPersona(persona) }
+                        }
+                    }
+
+
+                    "Partidos" -> {
+                        val dao = db_local.partidoDao()
+                        result.forEach { document ->
+                            val partido = Partido(
+                                id = document.id.toInt(),
+                                dia = document.getString("dia") ?: "",
+                                hora = document.getString("hora") ?: "",
+                                numCancha = document.getString("cancha") ?: "",
+                                estado = document.getString("estado") ?: "",
+                                idLocal = document.getString("idLocal") ?: "",
+                                idVisitante = document.getString("idVisitante") ?: "",
+                                golLocal = document.get("golLocal") as Int,
+                                golVisitante = document.get("golVisitante") as Int,
+                                resultado = document.getString("resultado") ?: "",
+                                idFecha = document.getString("idFecha") ?: "",
+                                idPersona = document.getString("persona") ?: ""
+                            )
+                            scope.launch { dao.insertPartido(partido) }
+                        }
+                    }
+                    "Equipo" -> {
+                        val dao = db_local.equipoDao()
+                        result.forEach { document ->
+                            val equipo = Equipo(
+                                id = document.id.toInt(),
+                                nombre = document.getString("nombre") ?: "",
+                            )
+                            scope.launch { dao.insertEquipo(equipo) }
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents from $collection.", exception)
+            }
+    }
+}
+
+
+
+
+/*
 fun sincronizar_torneos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
     val scope = CoroutineScope(Dispatchers.IO)
     val dao = db_local.torneoDao()
@@ -171,6 +267,8 @@ fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
     sincronizar_fechas(db_firebase, db_local)
     sincronizar_partidos(db_firebase, db_local)
 }
+*/
+
 /*
 fun sincronizar_fireBase()
 {
