@@ -9,6 +9,7 @@ import com.example.torneo.Core.Data.Dao.FechaDao
 import com.example.torneo.Core.Data.Dao.PartidoDao
 import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Dao.TorneoDao
+import com.example.torneo.Core.Data.Dao.TorneoEquipoDao
 
 import com.example.torneo.Core.Data.repository.EquipoRepository
 import com.example.torneo.Core.Data.repository.EquipoRepositoryImpl
@@ -53,7 +54,8 @@ class AppModule {
     @Provides
     @JvmSuppressWildcards
     fun provideTorneoRepository(
-        torneoDao: TorneoDao
+        torneoDao: TorneoDao,
+        torneoEquipoDao: TorneoEquipoDao
     ): TorneoRepository {
         return TorneoRepositoryImpl(
         torneoDao = torneoDao)}
@@ -108,7 +110,11 @@ class AppModule {
         return PartidoRepositoryImpl(
             partidoDao = partidoDao)
     }
-
+    @Singleton
+    @Provides
+    fun provideTorneoEquipoDao(torneoDB: TorneoDB): TorneoEquipoDao {
+        return torneoDB.torneoEquipoDao()
+    }
     //PERSONA
     @Singleton
     @Provides
@@ -125,4 +131,5 @@ class AppModule {
         return PersonaRepositoryImpl(
             personaDao = personaDao)
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.torneo.Pantallas
 
+import FechasUsuarioScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -85,18 +86,33 @@ fun ScreenMain(database: TorneoDB){
         composable(Routes.Fixture.route){
             Fixture(navController)
         }
-        composable(Routes.TorneosScreen.route){
+        composable(Routes.TorneosScreen.route) {
             TorneosScreen(
                 navController = { torneoId ->
-                    navController.navigate("${Routes.UpdateTorneoScreen.route}/${torneoId}")
+                    navController.navigate("${Routes.UpdateTorneoScreen.route}/$torneoId")
                 },
                 navigateToFechaScreen = { torneoId ->
-                    navController.navigate("${Routes.FechasScreen.route}/${torneoId}")
+                    navController.navigate("${Routes.FechasScreen.route}/$torneoId")
                 },
-                navControllerBack = navController,
+                navigateToInscripcionTorneoScreen = { torneoId ->
+                    navController.navigate("${Routes.InscripcionScreen.route}/$torneoId")
+                },
+                navControllerBack = navController
             )
         }
-
+        composable(
+            route = "${Routes.InscripcionScreen.route}/{torneoId}",
+            arguments = listOf(navArgument("torneoId") { type = NavType.IntType })
+        ) { navBackStackEntry ->
+            val torneoId = navBackStackEntry.arguments?.getInt("torneoId") ?: 0
+            InscripcionScreen(
+                torneoId = torneoId,
+                navController = {
+                    navController.navigate("${Routes.FechasScreen.route}/$torneoId")
+                },
+                navControllerBack = navController
+            )
+        }
 
         composable("${Routes.UpdateTorneoScreen.route}/{$TORNEO_ID}",
             arguments = listOf(

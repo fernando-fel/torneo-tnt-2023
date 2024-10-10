@@ -40,10 +40,11 @@ fun TorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
+    navigateToInscripcionTorneoScreen: (torneoId: Int) -> Unit,
     navControllerBack: NavHostController
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navigateToFechaScreen, navControllerBack)
+        ScaffoldWithTopBarTorneosScreen(viewModel, navController, navigateToFechaScreen,navigateToInscripcionTorneoScreen, navControllerBack)
     }
 }
 
@@ -53,6 +54,7 @@ fun ScaffoldWithTopBarTorneosScreen(
     viewModel: TorneosViewModel = hiltViewModel(),
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
+    navigateToInscripcionTorneoScreen: (torneoId: Int) -> Unit,
     navControllerBack: NavHostController
 ) {
     val torneos by viewModel.torneos.collectAsState(initial = emptyList())
@@ -113,7 +115,8 @@ fun ScaffoldWithTopBarTorneosScreen(
                     },
                     navigateToUpdateTorneoScreen = navController,
                     navigateToFechaScreen,
-                    mostrarTodos, mostrarFinalizados, mostrarEnCurso
+                    navigateToInscripcionTorneoScreen,
+                    mostrarTodos, mostrarFinalizados, mostrarEnCurso,
                 )
                 AddTorneosAlertDialog(
                     openDialog = viewModel.openDialog,

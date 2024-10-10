@@ -20,6 +20,7 @@ fun TorneosContent(
     deleteTorneo: (torneo: Torneo) -> Unit,
     navigateToUpdateTorneoScreen: (torneoId: Int) -> Unit,
     navegarParaUnaFecha: (torneoId: Int) -> Unit,
+    navegarParaUnaInscripcion: (torneoId: Int) -> Unit,
     mostrarTodos: Boolean,
     mostrarFinalizados: Boolean,
     mostrarEnCurso: Boolean
@@ -46,7 +47,7 @@ fun TorneosContent(
                         torneo = torneo,
                         deleteTorneo = { deleteTorneo(torneo) },
                         navigateToUpdateTorneoScreen = navigateToUpdateTorneoScreen,
-                        navegarParaUnaFecha
+                        navegarParaUnaFecha, navegarParaUnaInscripcion
                     )
                 }
             }
@@ -72,7 +73,7 @@ fun TorneosContent(
                         torneo = torneo,
                         deleteTorneo = { deleteTorneo(torneo) },
                         navigateToUpdateTorneoScreen = navigateToUpdateTorneoScreen,
-                        navegarParaUnaFecha
+                        navegarParaUnaFecha, navegarParaUnaInscripcion
                     )
                 }
             }
@@ -98,7 +99,7 @@ fun TorneosContent(
                         torneo = torneo,
                         deleteTorneo = { deleteTorneo(torneo) },
                         navigateToUpdateTorneoScreen = navigateToUpdateTorneoScreen,
-                        navegarParaUnaFecha
+                        navegarParaUnaFecha, navegarParaUnaInscripcion
                     )
                 }
             }

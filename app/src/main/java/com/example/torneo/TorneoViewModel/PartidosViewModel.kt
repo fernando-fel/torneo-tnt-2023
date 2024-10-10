@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.torneo.Core.Data.Dao.PartidoDao
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.repository.FechaRepository
 
 import com.example.torneo.Core.Data.repository.PartidoRepository
 import com.google.firebase.firestore.ktx.firestore
@@ -27,7 +28,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PartidosViewModel @Inject constructor(
-    private val repo: PartidoRepository
+    private val repo: PartidoRepository,
+    private val repo2 : FechaRepository
 ): ViewModel() {
 
     var partido by mutableStateOf(
@@ -101,6 +103,10 @@ class PartidosViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun loadPartidosDeHoy(): Flow<List<PartidoDao.PartidoConDetalles>> {
         return repo.getPartidosDeHoyDetalle()
+    }
+    suspend fun getTorneoIdByFecha(fechaId: Int): String? {
+        val fecha = repo2.getFecha(fechaId) // Asegúrate de que esta función devuelva un objeto Fecha
+        return fecha?.idTorneo // Cambia `idTorneo` por `torneoId` si es necesario
     }
 }
 

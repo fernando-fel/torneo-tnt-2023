@@ -9,27 +9,29 @@ import com.example.torneo.Core.Data.Dao.JugadorDao
 import com.example.torneo.Core.Data.Dao.PartidoDao
 import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Dao.TorneoDao
+import com.example.torneo.Core.Data.Dao.TorneoEquipoDao
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Core.Data.Entity.Torneo
+import com.example.torneo.Core.Data.Entity.TorneoEquipo
 import com.example.torneo.Core.Data.Jugador
 
 
-@Database(entities = [Torneo::class, Equipo::class, Jugador::class, Fecha::class, Partido::class, Persona::class], version=10, exportSchema = false)
+@Database(
+    entities = [Torneo::class, Equipo::class, Jugador::class,Fecha::class, Partido::class, Persona::class, TorneoEquipo::class], // Agrega TorneoEquipo aquí
+    version = 12,
+    exportSchema = false
+)
 abstract class TorneoDB: RoomDatabase() {
     abstract fun torneoDao(): TorneoDao
-
     abstract fun equipoDao(): EquipoDao
-
-    abstract fun jugadorDao() : JugadorDao
-
+    abstract fun jugadorDao(): JugadorDao
     abstract fun fechaDao(): FechaDao
-
     abstract fun partidoDao(): PartidoDao
-
     abstract fun personaDao(): PersonaDao
+    abstract fun torneoEquipoDao(): TorneoEquipoDao
 
 }
 

@@ -27,7 +27,7 @@ data class Torneo (
     @ColumnInfo(name = "fechaFin") val fechaFin: String,
     @ColumnInfo(name = "ubicacion") val ubicacion: String,
     @ColumnInfo(name = "precio") val precio: String,
-    @ColumnInfo(name = "estado") val estado: String,
+    @ColumnInfo(name = "estado") var estado: String,
 )
 
 
@@ -73,4 +73,10 @@ data class Partido(
     @ColumnInfo(name = "estado") val estado: String,
     @ColumnInfo(name = "resultado") val resultado: String,
     @ColumnInfo(name = "idPersona") val idPersona: String,
+)
+@Entity(tableName = "torneo_equipo")
+data class TorneoEquipo(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "torneoId") val torneoId: Int,  // Este sigue siendo Int ya que se genera automáticamente
+    @ColumnInfo(name = "equipoId") val equipoId: Int  // Este también sigue siendo Int
 )

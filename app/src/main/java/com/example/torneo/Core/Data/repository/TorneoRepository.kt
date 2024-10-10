@@ -1,7 +1,9 @@
 package com.example.torneo.Core.Data.repository
 
-import com.example.torneo.Core.Data.Entity.Fecha
+
+import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
+
 import kotlinx.coroutines.flow.Flow
 
 typealias Torneos = List<Torneo>
@@ -16,7 +18,7 @@ interface TorneoRepository {
     /**
      * Retrieve an item from the given data source that matches with the [id].
      */
-    fun getTorneo(id: Int): Torneo
+    suspend fun getTorneo(id: Int): Torneo
 
     /**
      * Insert item in the data source
@@ -33,5 +35,7 @@ interface TorneoRepository {
      */
     suspend fun updateTorneo(torneo: Torneo)
 
+    suspend fun inscribirEquipos(torneoId: Int, equipos: List<Equipo>)
+    suspend fun getEquiposEnTorneo(torneoId: Int): List<Equipo>
 
 }

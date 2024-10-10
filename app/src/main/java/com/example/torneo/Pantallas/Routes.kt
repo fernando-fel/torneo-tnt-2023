@@ -1,8 +1,5 @@
 package com.example.torneo.Pantallas
 
-import com.example.torneo.Core.Constantes.Companion.TORNEOS_SCREEN
-import com.example.torneo.Core.Constantes.Companion.UPDATE_TORNEO_SCREEN
-
 sealed class Routes(val route: String) {
     object SplashScreen: Routes("SplashScreen")
     object Login : Routes("Login")
@@ -12,6 +9,7 @@ sealed class Routes(val route: String) {
     object SesionOk : Routes("SesionOK")
     object TorneosScreen : Routes("TorneosScreen")
     object FechasScreen : Routes("FechasScreen")
+    object InscripcionScreen : Routes("InscripcionScreen-")
     object UpdateFechasScreen : Routes("UpdateFechasScreen")
     object UpdateTorneoScreen : Routes("UpdateTorneoScreen")
 

@@ -43,7 +43,7 @@ fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
                         val dao = db_local.fechaDao()
                         result.forEach { document ->
                             val fecha = Fecha(
-                                id = document.id.toInt(),
+                                id = document.id.toIntOrNull() ?: 0,
                                 idTorneo = document.getString("idTorneo") ?: "",
                                 estado = document.getString("estado") ?: "",
                                 numero = document.getString("numero") ?: ""

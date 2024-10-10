@@ -36,10 +36,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
-import com.example.torneo.Pantallas.Routes
 import com.example.torneo.R
 
 
@@ -49,7 +47,8 @@ fun TorneoCard(
     torneo: Torneo,
     deleteTorneo: ()-> Unit,
     navigateToUpdateTorneoScreen: (torneoId: Int)-> Unit,
-    navigateToFechasScreen: (torneoId: Int) -> Unit
+    navigateToFechasScreen: (torneoId: Int) -> Unit,
+    navigateToInscripcionTorneoScreen: (torneoId: Int) -> Unit
 ){
 
     Card(
@@ -57,7 +56,12 @@ fun TorneoCard(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation() ,
             onClick = {
-                navigateToFechasScreen(torneo.id)
+                if (torneo.estado== "En Inscripcion"){
+                    navigateToInscripcionTorneoScreen(torneo.id)
+                }
+                else{
+                    navigateToFechasScreen(torneo.id)
+                }
         }
 
     ){

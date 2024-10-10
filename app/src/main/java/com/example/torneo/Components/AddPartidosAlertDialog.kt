@@ -44,6 +44,7 @@ import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PersonasViewModel
+import com.example.torneo.TorneoViewModel.TorneosViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -53,6 +54,7 @@ import java.util.Locale
 @Composable
 fun AddPartidosDialog(
     viewModel: EquiposViewModel = hiltViewModel(),
+    viewModel3: TorneosViewModel = hiltViewModel(),
     viewModel2: PersonasViewModel = hiltViewModel(),
     fechaId: Int,
     openDialog: Boolean,
@@ -88,8 +90,8 @@ fun AddPartidosDialog(
 
                     val personas by viewModel2.personas.collectAsState(initial = emptyList())
                     val jueces = personas.filter { it.rol == "juez" }
-                    val equipos by viewModel.equipos.collectAsState(initial = emptyList())
-
+                    //val equipos by viewModel.equipos.collectAsState(initial = emptyList())
+                    val equipos by viewModel.recuperarEquiposTorneo(fechaId).collectAsState(initial = emptyList())
                     // Selector de cancha
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
