@@ -71,8 +71,8 @@ class TorneosViewModel @Inject constructor(
         }
     }
 
-    fun getTorneo(id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        torneo = repo.getTorneo(id)
+    suspend fun getTorneo(id: Int): Torneo? {
+        return repo.getTorneo(id) // Suponiendo que esto devuelve el Torneo
     }
 
     suspend fun inscribirEquipos(torneoId: Int, equipos: List<Equipo>) {
