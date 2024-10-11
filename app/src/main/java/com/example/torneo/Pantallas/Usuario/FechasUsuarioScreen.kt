@@ -85,7 +85,7 @@ fun FechasUsuarioScreen(
                                     navigateToUpdateFechaScreen = navController,
                                     navigateToPartidoScreen = navigateToPartidoScreen,
                                 )
-                                MatchCard(teamA = "EQUIPO A", teamB = "EQUIPO B", field = "CANCHA N1", time = "11:00hs") // Reemplaza con los datos de 'fecha'
+                                //MatchCard(teamA = "EQUIPO A", teamB = "EQUIPO B", field = "CANCHA N1", time = "11:00hs") // Reemplaza con los datos de 'fecha'
                             }
                         } else {
                             Text("No hay fechas programadas", color = Color.Gray)
@@ -95,7 +95,12 @@ fun FechasUsuarioScreen(
                         Text(text = "Fechas anteriores", fontWeight = FontWeight.Bold)
                         if (fechasFinalizadas.isNotEmpty()) {
                             fechasFinalizadas.forEach { fecha ->
-                                MatchCard(teamA = "EQUIPO C", teamB = "EQUIPO D", field = "CANCHA N2", time = "12:00hs") // Reemplaza con los datos de 'fecha'
+                                FechaUsuarioCard(
+                                    fecha = fecha,
+                                    deleteFecha = { viewModel.deleteFecha(fecha) },
+                                    navigateToUpdateFechaScreen = navController,
+                                    navigateToPartidoScreen = navigateToPartidoScreen,
+                                )
                             }
                         } else {
                             Text("No hay fechas finalizadas", color = Color.Gray)
