@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.torneo.Components.FechaCard
+import com.example.torneo.Components.Usuario.FechaUsuarioCard
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.TorneoViewModel.FechasViewModel
 import com.example.torneo.TorneoViewModel.TorneosViewModel
@@ -77,6 +79,12 @@ fun FechasUsuarioScreen(
                         Text(text = "Próxima fecha", fontWeight = FontWeight.Bold)
                         if (fechasProgramadas.isNotEmpty()) {
                             fechasProgramadas.forEach { fecha ->
+                                FechaUsuarioCard(
+                                    fecha = fecha,
+                                    deleteFecha = { viewModel.deleteFecha(fecha) },
+                                    navigateToUpdateFechaScreen = navController,
+                                    navigateToPartidoScreen = navigateToPartidoScreen,
+                                )
                                 MatchCard(teamA = "EQUIPO A", teamB = "EQUIPO B", field = "CANCHA N1", time = "11:00hs") // Reemplaza con los datos de 'fecha'
                             }
                         } else {
