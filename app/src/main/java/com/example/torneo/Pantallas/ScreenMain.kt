@@ -1,11 +1,12 @@
 package com.example.torneo.Pantallas
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.torneo.Pantallas.Usuario.FechasUsuarioScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,14 +22,13 @@ import com.example.torneo.Core.Constantes.Companion.PERSONA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Pantallas.Usuario.EquiposUsuarioScreen
-import com.example.torneo.Pantallas.Usuario.FechasUsuarioScreen
 import com.example.torneo.Pantallas.Usuario.PartidoUsuarioScreen
 import com.example.torneo.Pantallas.Usuario.TorneosUsuarioScreen
 import com.example.torneo.Splash.SplashScreen
-import com.example.torneo.TorneoViewModel.PersonasViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun ScreenMain(database: TorneoDB){
@@ -148,14 +148,14 @@ fun ScreenMain(database: TorneoDB){
         }
 
         composable(
-            route = "${Routes.UpdateEquipoScreen.route}/{${Constantes.EQUIPO_ID}}",
+            route = "${Routes.UpdateEquipoScreen.route}/{$EQUIPO_ID}",
             arguments = listOf(
                 navArgument("equipoId"){
                     type = NavType.IntType
                 }
             )
         ){ navBackStackEntry ->
-            val equipoId = navBackStackEntry.arguments?.getInt(Constantes.EQUIPO_ID) ?:0
+            val equipoId = navBackStackEntry.arguments?.getInt(EQUIPO_ID) ?:0
             UpdateEquipoScreen(
                 equipoId = equipoId,
                 navigateBack = {

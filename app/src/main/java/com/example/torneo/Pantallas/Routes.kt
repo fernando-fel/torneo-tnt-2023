@@ -20,7 +20,7 @@ sealed class Routes(val route: String) {
     object ScreenMain: Routes("ScreenMain")
 
     object PartidoScreen : Routes("PartidoScreen")
-    object PartidosEnVivoScreen : Routes("PartidosHoyScreen")
+    object PartidosEnVivoScreen : Routes("PartidosEnVivoScreen")
 
     object ListadoDePersonas : Routes("ListadoDePersonas")
     object PartidosDelJuezScreen : Routes("PartidosDelJuezScreen")

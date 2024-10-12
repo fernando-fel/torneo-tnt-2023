@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -25,7 +24,6 @@ import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.job
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTorneosAlertDialog(
     openDialog: Boolean,
@@ -43,10 +41,9 @@ fun AddTorneosAlertDialog(
 
         val focusRequester = FocusRequester()
 
-        AlertDialog(onDismissRequest = { closeDialog },
-        title = {
-            Text(ADD_TORNEO)
-        },
+        AlertDialog(
+            onDismissRequest = { closeDialog },
+            title = { Text(ADD_TORNEO) },
             text = {
                 Column{
                     TextField(
@@ -116,7 +113,7 @@ fun AddTorneosAlertDialog(
             confirmButton = {
                 TextButton(
                     onClick = { closeDialog()
-                        val torneo = Torneo(nombre = nombre, idTorneo = "1", estado = "En Inscripcion", fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio.toString(), ubicacion = ubicacion)
+                        val torneo = Torneo(nombre = nombre, idTorneo = "1", estado = "En Inscripción", fechaFin = fechaFin, fechaInicio = fechaInicio, precio = precio, ubicacion = ubicacion)
                         addTorneo(torneo)
                     },
                     enabled = !(nombre.isBlank() || ubicacion.isBlank() || fechaInicio.isBlank()

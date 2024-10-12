@@ -63,7 +63,7 @@ fun TorneosContent(
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             )
             val filteredFinalizados = torneos.filter {
-                it.estado == "finalizados" &&
+                it.estado == "Finalizados" &&
                         it.nombre.contains(searchQueryFinalizados.value, ignoreCase = true)
             }
 
@@ -89,7 +89,7 @@ fun TorneosContent(
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             )
             val filteredEnCurso = torneos.filter {
-                it.estado == "en curso" &&
+                it.estado == "En Curso" &&
                         it.nombre.contains(searchQueryEnCurso.value, ignoreCase = true)
             }
 
