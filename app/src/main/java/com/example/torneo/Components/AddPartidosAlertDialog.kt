@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -46,6 +47,7 @@ import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PersonasViewModel
 import com.example.torneo.TorneoViewModel.TorneosViewModel
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -62,6 +64,15 @@ fun AddPartidosDialog(
     addPartido: (partido: Partido) -> Unit
 ) {
     if (openDialog) {
+        var datePickerExpanded by rememberSaveable { mutableStateOf(false) }
+        var timePickerExpanded by rememberSaveable { mutableStateOf(false) }
+        var selectedDate by rememberSaveable { mutableStateOf<Date?>(null) }
+        var selectedTime by rememberSaveable { mutableStateOf("") }
+        var local by rememberSaveable { mutableStateOf<Equipo?>(null) }
+        var visitante by rememberSaveable { mutableStateOf<Equipo?>(null) }
+        var numeroCancha by rememberSaveable { mutableStateOf("") }
+        var juez by rememberSaveable { mutableStateOf<Persona?>(null) }
+        /*
         var datePickerExpanded by remember { mutableStateOf(false) }
         var timePickerExpanded by remember { mutableStateOf(false) }
         var selectedDate by remember { mutableStateOf<Date?>(null) }
@@ -70,6 +81,7 @@ fun AddPartidosDialog(
         var visitante by remember { mutableStateOf<Equipo?>(null) }
         var numeroCancha by remember { mutableStateOf("") }
         var juez by remember { mutableStateOf<Persona?>(null) }
+        */
 
         AlertDialog(
             onDismissRequest = { closeDialog() },
@@ -92,6 +104,9 @@ fun AddPartidosDialog(
                     val jueces = personas.filter { it.rol == "juez" }
                     //val equipos by viewModel.equipos.collectAsState(initial = emptyList())
                     val equipos by viewModel.recuperarEquiposTorneo(fechaId).collectAsState(initial = emptyList())
+                    // Filtra los equipos para que el equipo seleccionado no aparezca en la otra lista
+                    val equiposDisponiblesParaLocal = equipos.filter { it != visitante }
+                    val equiposDisponiblesParaVisitante = equipos.filter { it != local }
                     // Selector de cancha
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
@@ -171,7 +186,7 @@ fun AddPartidosDialog(
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        EditableExposedDropdownMenuSample(equipos = equipos) { selectedLocal ->
+                        EditableExposedDropdownMenuSample(equipos = equiposDisponiblesParaLocal) { selectedLocal ->
                             local = selectedLocal
                         }
                     }
@@ -185,7 +200,7 @@ fun AddPartidosDialog(
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        EditableExposedDropdownMenuSample(equipos = equipos) { selectedVisitante ->
+                        EditableExposedDropdownMenuSample(equipos = equiposDisponiblesParaVisitante) { selectedVisitante ->
                             visitante = selectedVisitante
                         }
                     }
@@ -216,6 +231,10 @@ fun AddPartidosDialog(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
+                        TextButton(onClick = closeDialog) {
+                            Text("Cancelar")
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
                         TextButton(
                             onClick = {
                                 if (isFormValid()) {
@@ -239,11 +258,8 @@ fun AddPartidosDialog(
                             },
                             enabled = isFormValid()
                         ) {
+
                             Text("Agregar Partido")
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        TextButton(onClick = closeDialog) {
-                            Text("Cancelar")
                         }
                     }
                 }
@@ -275,9 +291,16 @@ fun DatePickerDialog(
             TextButton(
                 onClick = {
                     val selectedDateMillis = state.selectedDateMillis ?: return@TextButton
-                    onDateSelected(Date(selectedDateMillis))
+                    // Utiliza Calendar para ajustar la fecha
+                    val calendar = Calendar.getInstance().apply {
+                        timeInMillis = selectedDateMillis
+                    }
+                    // Asegúrate de que estás trabajando con la fecha correcta
+                    val selectedDate = calendar.time
+                    onDateSelected(selectedDate)
                     onDismissRequest()
                 }
+
             ) {
                 Text("Aceptar")
             }

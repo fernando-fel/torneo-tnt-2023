@@ -16,6 +16,8 @@ interface PartidoDao {
     @Query("SELECT * FROM partido_table")
     fun getPartidos(): Flow<List<Partido>>
 
+    @Query("SELECT * FROM partido_table WHERE id = :idPartido" )
+    fun getPartido(idPartido: Int): Partido
     @Query("SELECT * FROM partido_table WHERE idFecha = :fechaId")
     fun getPartidosByFechaId(fechaId: Int): Flow<List<Partido>>
 

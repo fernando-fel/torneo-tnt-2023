@@ -3,35 +3,34 @@ package com.example.torneo.Core
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
+
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+
 import androidx.room.Room
 import com.example.torneo.Core.BaseDeDatos.TorneoDB
-import com.example.torneo.Core.BaseDeDatos.sincronizar_db
+
 import com.example.torneo.Core.Constantes.Companion.TORNEO_TABLE
-import com.example.torneo.Core.Data.Dao.PersonaDao
-import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Pantallas.ScreenMain
 
 import com.example.torneo.ui.theme.TorneoTheme
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.app
+
 import com.google.firebase.ktx.initialize
 
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+
+import sincronizar_db
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

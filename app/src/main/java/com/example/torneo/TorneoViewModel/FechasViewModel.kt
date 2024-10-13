@@ -65,7 +65,7 @@ class FechasViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val db = Firebase.firestore
             repo.updateFecha(fecha)
-            db.collection("Fecha").document(fecha.id.toString())
+            db.collection("fechas").document(fecha.id.toString())
                 .set(fecha)
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                 .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
@@ -90,7 +90,7 @@ class FechasViewModel @Inject constructor(
         try {
             val db = Firebase.firestore
             repo.addFecha(fecha)
-            db.collection("Fecha").document(fecha.id.toString())
+            db.collection("fechas").document(fecha.id.toString())
                 .set(fecha)
                 .addOnSuccessListener {
                     Log.d(

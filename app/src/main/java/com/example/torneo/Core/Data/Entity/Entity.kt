@@ -61,7 +61,7 @@ data class Equipo(
     indices=[Index("idFecha"), Index("idLocal"), Index("idVisitante"), Index("idPersona")]
 )
 data class Partido(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "idFecha") val idFecha: String,
     @ColumnInfo(name = "hora") val hora: String,
     @ColumnInfo(name = "dia") val dia: String,

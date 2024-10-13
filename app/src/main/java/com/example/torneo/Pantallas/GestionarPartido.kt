@@ -107,7 +107,7 @@ fun GestionarPartido(
                                 }
 
                                 val partidoUpdate = it.copy(estado = stateButton.value.toString())
-                                viewModel.updatepartido(partidoUpdate)
+                                viewModel.updatePartido(partidoUpdate)
                             },
                             enabled = stateButton.value != ButtonState.Fin,
                         ) {
@@ -137,7 +137,7 @@ fun GestionarPartido(
                                             val partidoUpdate = it.copy(golLocal = golLocal.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
-                                            viewModel.updatepartido(partidoUpdate)
+                                            viewModel.updatePartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -151,7 +151,7 @@ fun GestionarPartido(
                                             val partidoUpdate = it.copy(golLocal = golLocal.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
-                                            viewModel.updatepartido(partidoUpdate)
+                                            viewModel.updatePartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -165,7 +165,7 @@ fun GestionarPartido(
                                             val partidoUpdate = it.copy(golVisitante = golVisitante.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
-                                            viewModel.updatepartido(partidoUpdate)
+                                            viewModel.updatePartido(partidoUpdate)
                                         }
                                     },
                                 ) {
@@ -179,7 +179,7 @@ fun GestionarPartido(
                                             val partidoUpdate = it.copy(golVisitante = golVisitante.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
-                                            viewModel.updatepartido(partidoUpdate)
+                                            viewModel.updatePartido(partidoUpdate)
                                         }
                                     },
                                 ) {

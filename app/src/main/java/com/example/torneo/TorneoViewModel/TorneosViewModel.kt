@@ -31,7 +31,7 @@ class TorneosViewModel @Inject constructor(
     fun addTorneo(torneo: Torneo) = viewModelScope.launch(Dispatchers.IO) {
         val db = Firebase.firestore
         repo.addTorneo(torneo)
-        db.collection("Torneo").document(torneo.id.toString())
+        db.collection("torneos").document(torneo.id.toString())
             .set(torneo)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
@@ -64,7 +64,7 @@ class TorneosViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val db = Firebase.firestore
             repo.updateTorneo(torneo)
-            db.collection("Torneo").document(torneo.id.toString())
+            db.collection("torneos").document(torneo.id.toString())
                 .set(torneo)
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                 .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }

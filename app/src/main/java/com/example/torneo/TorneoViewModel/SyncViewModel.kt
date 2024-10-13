@@ -2,7 +2,6 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.torneo.Core.BaseDeDatos.TorneoDB
-import com.example.torneo.Core.BaseDeDatos.sincronizar_db
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SyncViewModel(private val db: FirebaseFirestore, private val localDb: TorneoDB) : ViewModel() {
@@ -12,7 +11,7 @@ class SyncViewModel(private val db: FirebaseFirestore, private val localDb: Torn
     }
 
     private fun startListeningForUpdates() {
-        db.collection("Torneo").addSnapshotListener { snapshot, e ->
+        db.collection("torneos").addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -23,7 +22,7 @@ class SyncViewModel(private val db: FirebaseFirestore, private val localDb: Torn
                 }
             }
         }
-        db.collection("Fecha").addSnapshotListener { snapshot, e ->
+        db.collection("fechas").addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -34,7 +33,7 @@ class SyncViewModel(private val db: FirebaseFirestore, private val localDb: Torn
                 }
             }
         }
-        db.collection("Partido").addSnapshotListener { snapshot, e ->
+        db.collection("partidos").addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -45,7 +44,7 @@ class SyncViewModel(private val db: FirebaseFirestore, private val localDb: Torn
                 }
             }
         }
-        db.collection("Equipo").addSnapshotListener { snapshot, e ->
+        db.collection("equipos").addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener

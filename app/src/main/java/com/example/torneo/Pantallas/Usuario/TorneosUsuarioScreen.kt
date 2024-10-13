@@ -61,7 +61,7 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
 
     var mostrarFinalizados by remember { mutableStateOf(false) }
     var mostrarEnCurso by remember { mutableStateOf(false) }
-    var mostrarTodos by remember { mutableStateOf(false) }
+    var mostrarTodos by remember { mutableStateOf(true) }
 
     fun actualizarPestañas(todos: Boolean, enCurso: Boolean, finalizados: Boolean) {
         mostrarTodos = todos
