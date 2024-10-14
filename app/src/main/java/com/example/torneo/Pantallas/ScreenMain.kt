@@ -1,6 +1,7 @@
 package com.example.torneo.Pantallas
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.torneo.Pantallas.Usuario.FechasUsuarioScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +32,7 @@ import kotlinx.coroutines.withContext
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
-fun ScreenMain(database: TorneoDB){
+fun ScreenMain(database: TorneoDB, torneoId: Int){
     val navController = rememberNavController()
 
     // Obtener instancia del DAO (carga de roles a mano en la base de datos)
@@ -40,6 +41,7 @@ fun ScreenMain(database: TorneoDB){
         //persona.deleteAll()
         val admin = Persona(idPersona = "1", nombre = "admin", username = "admin", pass = "admin", rol = "admin")
         val juez = Persona(idPersona = "2", nombre = "juez", username = "juez", pass = "juez", rol = "juez")
+
         if (persona.getPersona(1) == null) {
             withContext(Dispatchers.IO) {
                 persona.insertPersona(admin)
@@ -49,6 +51,13 @@ fun ScreenMain(database: TorneoDB){
             withContext(Dispatchers.IO) {
                 persona.insertPersona(juez)
             }
+        }
+        if (torneoId != -1) {
+            Log.d("ScreenMain", "Navegando a FechaUsuarioScreen con torneoId: $torneoId")
+            navController.navigate("${Routes.FechaUsuarioScreen.route}/$torneoId")
+        }
+        else {
+            Log.d("ScreenMain", "torneoId es inválido: $torneoId")
         }
     }
 
@@ -60,6 +69,7 @@ fun ScreenMain(database: TorneoDB){
         composable(Routes.SplashScreen.route) {
             SplashScreen(navController)
         }
+
         composable(Routes.Login.route) {
             //val persona = database.personaDao()
             LoginPage(navController, persona)
@@ -76,6 +86,7 @@ fun ScreenMain(database: TorneoDB){
         composable(Routes.SesionOk.route){
             SesionOk(navController)
         }
+
         composable(Routes.MenuUsuario.route){
             MenuUsuario(navController)
         }
@@ -84,6 +95,20 @@ fun ScreenMain(database: TorneoDB){
         }
         composable(Routes.Fixture.route){
             Fixture(navController)
+        }
+
+        composable(
+            route = "${Routes.FechaUsuarioScreen.route}/{torneoId}",
+            arguments = listOf(navArgument("torneoId") { type = NavType.IntType })
+        ) { navBackStackEntry ->
+            val torneoId = navBackStackEntry.arguments?.getInt("torneoId") ?: 0
+            Log.d("ScreenMain", "Llegando a FechaUsuarioScreen con torneoId: $torneoId")
+            FechasUsuarioScreen(
+                navController = { idFecha -> /* lógica de navegación */ },
+                torneoId = torneoId,
+                navigateToPartidoScreen = { fechaId -> /* lógica de navegación */ },
+                navControllerBack = navController
+            )
         }
         composable(Routes.TorneosScreen.route) {
             TorneosScreen(
@@ -99,6 +124,7 @@ fun ScreenMain(database: TorneoDB){
                 navControllerBack = navController
             )
         }
+
         composable(
             route = "${Routes.InscripcionScreen.route}/{torneoId}",
             arguments = listOf(navArgument("torneoId") { type = NavType.IntType })

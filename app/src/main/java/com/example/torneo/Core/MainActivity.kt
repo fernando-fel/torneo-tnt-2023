@@ -1,10 +1,12 @@
 package com.example.torneo.Core
 
 import android.content.ContentValues.TAG
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,11 +15,13 @@ import androidx.compose.material3.Surface
 
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.rememberNavController
 
 import androidx.room.Room
 import com.example.torneo.Core.BaseDeDatos.TorneoDB
 
 import com.example.torneo.Core.Constantes.Companion.TORNEO_TABLE
+import com.example.torneo.Pantallas.Routes
 import com.example.torneo.Pantallas.ScreenMain
 
 import com.example.torneo.ui.theme.TorneoTheme
@@ -38,9 +42,14 @@ class MainActivity : AppCompatActivity() {
         const val MY_CHANNEL_ID = "my_channel"
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //val torneoId = intent.getIntExtra("TORNEO_ID", -1) // Obtén el torneoId
+        //Log.d(TAG, "torneoId: $torneoId")
+        val torneoId = 2
 
         // Inicializar Firebase
         Firebase.initialize(this)
@@ -60,13 +69,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
         setContent {
             TorneoTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScreenMain(database = database)
+                    if (intent.getBooleanExtra("fromNotification", false)) {
+                        Log.d("Entreeeee", "Adentrooooo")
+                        // Lógica para navegar a la pantalla correspondiente
+                        if (torneoId != -1) {
+                            val navController = rememberNavController()
+                            // Navegar a la pantalla que necesites, por ejemplo:
+                            navController.navigate("${Routes.FechaUsuarioScreen.route}/$torneoId")
+                        }
+                    }
+                    ScreenMain(database = database,torneoId)
                 }
             }
         }

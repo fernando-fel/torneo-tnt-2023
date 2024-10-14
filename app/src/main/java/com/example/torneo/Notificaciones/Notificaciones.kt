@@ -5,11 +5,14 @@ package com.example.torneo.Notificaciones
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Bundle
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -23,6 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.navigation.NavDeepLinkBuilder
+import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
+import com.example.torneo.Core.MainActivity
+import com.example.torneo.Pantallas.Routes
 import com.example.torneo.R
 
 @Composable
@@ -59,7 +66,8 @@ fun Notificaciones() {
                     idChannel,
                     idNotificationBase,
                     "Notificación Simple",
-                    "Soy una Notificación"
+                    "Soy una Notificación",
+                    1
                 )
             },
             modifier = modifier
@@ -119,15 +127,29 @@ fun notificacionTextoLargo(context: Context,
     }
 }
 
-fun notificacionBasica(context: Context, idChannel: String, idNotification: Int,
-                       textTitle: String, textContent: String,
-                       priority: Int = NotificationCompat.PRIORITY_DEFAULT
+fun notificacionBasica(
+    context: Context,
+    idChannel: String,
+    idNotification: Int,
+    textTitle: String,
+    textContent: String,
+    torneoId: Int,  // Asegúrate de que esto se pase correctamente
+    priority: Int = NotificationCompat.PRIORITY_DEFAULT
 ) {
+    val intent = Intent(context, MainActivity::class.java).apply {
+        putExtra("fromNotification", true) // Añade esta línea
+        putExtra(TORNEO_ID, torneoId) // Añadir el torneoId aquí
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
     val builder = NotificationCompat.Builder(context, idChannel)
         .setSmallIcon(R.drawable.logo_v2)
         .setContentTitle(textTitle)
-        .setContentText(textContent)  // Cambiado de setContentTitle a setContentText
+        .setContentText(textContent)
         .setPriority(priority)
+        .setContentIntent(pendingIntent)  // Asegúrate de añadir el PendingIntent
+        .setAutoCancel(true)  // Esto hará que la notificación se cancele al hacer clic
 
     with(NotificationManagerCompat.from(context)) {
         if (ActivityCompat.checkSelfPermission(
@@ -141,6 +163,7 @@ fun notificacionBasica(context: Context, idChannel: String, idNotification: Int,
         notify(idNotification, builder.build())
     }
 }
+
 
 fun crearCanalNotificacion(idChannel: String, context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

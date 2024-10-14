@@ -52,7 +52,7 @@ fun Splash(){
             modifier = Modifier.size(250.dp,250.dp)
         )
         Text(
-            text = "TNT 2023",
+            text = "TNT 2024",
             modifier = Modifier.padding(vertical = 40.dp),
             style = TextStyle(
                 fontSize = 40.sp,

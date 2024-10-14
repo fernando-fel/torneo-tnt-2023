@@ -15,7 +15,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,6 +55,10 @@ class FechasViewModel @Inject constructor(
     fun deleteFecha(fecha: Fecha) = viewModelScope.launch(Dispatchers.IO) {
         repo.deleteFecha(fecha)
     }
+    fun getFecha2(id: Int): Flow<Fecha> = flow {
+        val result = repo.getFecha(id)
+        emit(result)
+    }.flowOn(Dispatchers.IO)
 
     fun updateEstado(estado: String) {
         fecha = fecha.copy(estado = estado)
