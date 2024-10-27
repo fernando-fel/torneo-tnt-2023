@@ -137,11 +137,15 @@ fun notificacionBasica(
     priority: Int = NotificationCompat.PRIORITY_DEFAULT
 ) {
     val intent = Intent(context, MainActivity::class.java).apply {
-        putExtra("fromNotification", true) // Añade esta línea
-        putExtra(TORNEO_ID, torneoId) // Añadir el torneoId aquí
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra("fromNotification", true) // Añade esta línea
+        putExtra("TORNEO_ID", torneoId) // Añadir el torneoId aquí
+
     }
-    val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val pendingIntent: PendingIntent = PendingIntent.getActivity(context,
+        0,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
     val builder = NotificationCompat.Builder(context, idChannel)
         .setSmallIcon(R.drawable.logo_v2)
@@ -150,7 +154,9 @@ fun notificacionBasica(
         .setPriority(priority)
         .setContentIntent(pendingIntent)  // Asegúrate de añadir el PendingIntent
         .setAutoCancel(true)  // Esto hará que la notificación se cancele al hacer clic
-
+    val notificationManager: NotificationManager=
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.notify(idNotification,builder.build())
     with(NotificationManagerCompat.from(context)) {
         if (ActivityCompat.checkSelfPermission(
                 context,

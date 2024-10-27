@@ -39,7 +39,7 @@ class EquipoRepositoryImpl(
         equipoRef.child(equipo.id.toString()).setValue(equipo)
     }
 
-    override suspend fun getEquipo(id: Int): Equipo {
+    override fun getEquipo(id: Int): Equipo {
         // Try to get from Room
         val equipo = equipoDao.getEquipo(id)
         // Ensure the data is in Firebase

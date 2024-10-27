@@ -37,7 +37,7 @@ fun TorneosUsuarioContent (
     val searchQueryFinalizados = remember { mutableStateOf("") }
     val searchQueryEnCurso = remember { mutableStateOf("") }
     var torneosFinalizados = torneos.filter { torneo -> torneo.estado == "finalizado" }
-    var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "en Curso" }
+    var torneosEnCurso = torneos.filter { torneo -> torneo.estado == "EN CURSO" }
 
     if (mostrarTodos) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -95,11 +95,11 @@ fun TorneosUsuarioContent (
             TextField(
                 value = searchQueryEnCurso.value,
                 onValueChange = { searchQueryEnCurso.value = it },
-                label = { Text("Buscar En Curso") },
+                label = { Text("Buscar EN CURSO") },
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             )
             val filteredEnCurso = torneos.filter {
-                it.estado == "en curso" &&
+                it.estado == "EN CURSO" &&
                         it.nombre.contains(searchQueryEnCurso.value, ignoreCase = true)
             }
 

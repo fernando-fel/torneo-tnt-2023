@@ -56,7 +56,7 @@ fun TorneoUsuarioCard(
         }
 
     ){
-        val modifier = if (torneo.estado == "en Curso") {
+        val modifier = if (torneo.estado == "EN CURSO") {
             Modifier
                 .border(2.dp, Color.Green)
                 .fillMaxWidth()
@@ -78,7 +78,7 @@ fun TorneoUsuarioCard(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (torneo.estado == "en Curso") {
+            if (torneo.estado == "EN CURSO") {
                 Column() {
                     Text("Nombre del torneo " + torneo.nombre)
                     Text("Ubicacion del torneo " + (torneo.ubicacion).toString())

@@ -15,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.torneo.Components.PartidosDeEquipoScreen
 import com.example.torneo.Core.BaseDeDatos.TorneoDB
-import com.example.torneo.Core.Constantes
 import com.example.torneo.Core.Constantes.Companion.EQUIPO_ID
 import com.example.torneo.Core.Constantes.Companion.FECHA_ID
 import com.example.torneo.Core.Constantes.Companion.PARTIDO_ID
@@ -91,7 +90,10 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
             MenuUsuario(navController)
         }
         composable(Routes.PartidosEnVivoScreen.route) {
-            PartidosEnVivoScreen(viewModel = hiltViewModel())
+            PartidosEnVivoScreen(
+                viewModel = hiltViewModel()
+                //onBackPressed = navController.popBackStack()
+            )
         }
         composable(Routes.Fixture.route){
             Fixture(navController)

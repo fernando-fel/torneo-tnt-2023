@@ -32,6 +32,7 @@ class PartidosViewModel @Inject constructor(
     private val fechaRepo: FechaRepository
 ) : ViewModel() {
 
+
     //var partido by mutableStateOf(Partido())
     var openDialog by mutableStateOf(false)
 
