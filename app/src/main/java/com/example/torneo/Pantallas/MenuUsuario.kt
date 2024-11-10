@@ -1,6 +1,8 @@
 package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,8 +20,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.Mapas.myMarket
+import com.example.torneo.TorneoViewModel.EquiposViewModel
+import com.example.torneo.TorneoViewModel.FechasViewModel
+import com.example.torneo.TorneoViewModel.PartidosViewModel
+import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 data class MenuItem(
     val title: String,
@@ -28,14 +35,16 @@ data class MenuItem(
     val badge: Int? = null
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuUsuario(navController: NavHostController) {
     val scrollState = rememberScrollState()
 
+
     Scaffold(
         topBar = {
-            CustomTopAppBar(navController, "Mi Perfil", true)
+            CustomTopAppBar(navController, "Menu Principal", true)
         }
     ) { padding ->
         Column(
@@ -60,6 +69,13 @@ fun MenuUsuario(navController: NavHostController) {
 
 @Composable
 fun UserProfileCard() {
+    val viewModel: PartidosViewModel = hiltViewModel()
+    val viewModel2 : TorneosViewModel = hiltViewModel()
+    val viewModel3 : EquiposViewModel = hiltViewModel()
+    val cantEquipos = (viewModel3.equipos.collectAsState(initial = emptyList()).value).count()
+    val cantTorneos = (viewModel2.torneos.collectAsState(initial = emptyList()).value).count()
+    val cantPartidos = (viewModel.partidos.collectAsState(initial = emptyList()).value).count()
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -93,9 +109,9 @@ fun UserProfileCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatItem("Torneos", "2")
-                StatItem("Equipos", "3")
-                StatItem("Partidos", "5")
+                StatItem("Torneos", cantTorneos.toString())
+                StatItem("Equipos", cantEquipos.toString())
+                StatItem("Partidos", cantPartidos.toString())
             }
         }
     }
@@ -119,8 +135,11 @@ fun StatItem(label: String, value: String) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainMenuSection(navController: NavHostController) {
+    val viewModel: PartidosViewModel = hiltViewModel()
+    val cantPartidosHoy = (viewModel.loadPartidosDeHoy().collectAsState(initial = emptyList()).value).count()
     val menuItems = listOf(
         MenuItem(
             title = "Torneos",
@@ -136,7 +155,7 @@ fun MainMenuSection(navController: NavHostController) {
             title = "En Vivo",
             icon = Icons.Default.LiveTv,
             route = Routes.PartidosEnVivoScreen.route,
-            badge = 2
+            badge = cantPartidosHoy
         )
     )
 
