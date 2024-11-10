@@ -152,14 +152,14 @@ fun MostrarDialogoConfirmacionEliminar(
 
     AlertDialog(
         onDismissRequest = { showDialog.value = false },
-        text = { Text("¿Deseas eliminar este torneo?") },
+        text = { Text("¿Deseas eliminar?") },
         confirmButton = {
             Button(onClick = {
                 onConfirmar()
                 showDialog.value = false // Cierra el diálogo después de confirmar
                 CoroutineScope(Dispatchers.Main).launch {
                     snackbarHostState.showSnackbar(
-                        message = "Torneo eliminado",
+                        message = "Eliminado",
                         actionLabel = "Deshacer", // Opcional: botón para deshacer
                         duration = SnackbarDuration.Indefinite
                     )
@@ -182,7 +182,9 @@ fun MostrarDialogoConfirmacionEliminar(
 fun EquipoCard(
     equipo: Equipo,
     deleteEquipo: ()-> Unit,
-    navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit
+    navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit,
+    showDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
+
 ){
 
     Card(
@@ -222,8 +224,14 @@ fun EquipoCard(
             IconButton(onClick = {navigateToUpdateEquipoScreen(equipo.id)}) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Modificar Equipo" )
             }
-            IconButton(onClick = deleteEquipo ) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Equipo" )
+            IconButton(onClick = { showDialog.value = true }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo" )
+            }
+            if (showDialog.value) {
+                MostrarDialogoConfirmacionEliminar(
+                    onConfirmar = deleteEquipo,
+                    showDialog = showDialog
+                )
             }
         }
     }
