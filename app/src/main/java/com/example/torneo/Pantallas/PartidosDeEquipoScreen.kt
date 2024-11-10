@@ -45,7 +45,7 @@ fun PartidosDeEquipoScreen(
         },
         content = { padding ->
             if (partidosDeEquipo.isEmpty()) {
-                EstadoVacío(padding)
+                EstadoVacio(padding)
             } else {
                 LazyColumn(
                     modifier = Modifier
@@ -66,7 +66,7 @@ fun PartidosDeEquipoScreen(
 }
 
 @Composable
-fun EstadoVacío(padding: PaddingValues) {
+fun EstadoVacio(padding: PaddingValues) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +85,7 @@ fun EstadoVacío(padding: PaddingValues) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "No hay partidos programados",
+                text = "El equipo no tiene partidos ",
                 style = MaterialTheme.typography.titleMedium
             )
         }

@@ -3,51 +3,47 @@ package com.example.torneo.Pantallas
 import Component.CustomTopAppBar
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Persona
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
-
 import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @ExperimentalMaterial3Api
 @Composable
 fun ListadoDePersonas(
     navController: NavHostController,
-    //trabajar PersonaRepository
     personaDao: PersonaDao
 ) {
     val mostrarDialog = remember { mutableStateOf(false) }
     val personasList = remember { mutableStateListOf<Persona>() }
+    val searchQuery = remember { mutableStateOf("") }
+    val selectedPersona = remember { mutableStateOf<Persona?>(null) }
+    val scope = rememberCoroutineScope()
 
+    // Lista de roles disponibles
+    val roles = listOf("admin", "usuario", "juez")
+
+    // Cargar datos
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             val personas: List<Persona> = personaDao.getPersonaList()
@@ -57,88 +53,213 @@ fun ListadoDePersonas(
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(navController, "Listado de Personas Inscriptas", true)
-        },
-        content = { padding ->
-            Column (
+            CustomTopAppBar(navController, "Gestión de Usuarios", true)
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            // Barra de búsqueda
+            OutlinedTextField(
+                value = searchQuery.value,
+                onValueChange = { searchQuery.value = it },
                 modifier = Modifier
-                    .padding(padding)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = { Text("Buscar usuario...") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+                singleLine = true
+            )
+
+            // Lista de usuarios
+            Column(
+                modifier = Modifier
+                    .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
-                personasList.forEachIndexed { index, persona ->
-
-                    var nuevoRol = remember { mutableStateOf(persona.rol) }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp,4.dp),
-                        elevation = CardDefaults.cardElevation(),
-                        onClick = {
-                            //nuevoRol.value = persona.rol
-                            mostrarDialog.value= true
-                        }
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(10.dp)
-                        ) {
-                            Text(
-                                text = "NOMBRE: ${persona.nombre}",
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(text = "Rol: ${persona.rol}")
-                            Text(text = "Usuario: ${persona.username}")
-                            Text(text = "Contraseña: ${persona.pass}")
-                        }
+                personasList
+                    .filter {
+                        it.nombre.contains(searchQuery.value, ignoreCase = true) ||
+                                it.username.contains(searchQuery.value, ignoreCase = true)
                     }
-                    if (mostrarDialog.value) {
-                        val coroutineScope = rememberCoroutineScope()
-                        AlertDialog(
-                            onDismissRequest = { mostrarDialog.value = false },
-                            title = { Text("Modificar rol") },
-                            text = {
-                                // Campo de texto editable para ingresar el nuevo rol
-                                TextField(
-                                    label = {
+                    .forEach { persona ->
+                        ElevatedCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            elevation = CardDefaults.elevatedCardElevation(),
+                            onClick = {
+                                selectedPersona.value = persona
+                                mostrarDialog.value = true
+                            }
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // Información del usuario
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        Icons.Default.Person,
+                                        contentDescription = "Usuario",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                    Column {
                                         Text(
-                                            text="Cambiar rol de "+persona.nombre )},
-                                    singleLine = true,
-                                    value = nuevoRol.value,
-                                    onValueChange = { nuevoRol.value = it },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            },
-                            confirmButton = {
-                                Button(
-                                    onClick = {
-                                        mostrarDialog.value = false // Cerrar el cuadro de diálogo
-                                            // Crear una nueva instancia de Persona con el nuevo valor de rol
-                                        coroutineScope.launch {
-                                            val personaActualizada: Persona = persona.copy(rol = nuevoRol.value)
-                                            // Actualizar la persona en la lista
-                                            personasList[index] = personaActualizada
-                                            // Actualizar la persona en la base de datos
-                                            val db = Firebase.firestore
-                                            personaDao.updatePersona(personaActualizada)
-                                            db.collection("Persona").document(personaActualizada.id.toString())
-                                                .set(personaActualizada)
-                                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                                                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                                            text = persona.nombre,
+                                            fontSize = 18.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = "@${persona.username}",
+                                            fontSize = 14.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Surface(
+                                            shape = MaterialTheme.shapes.small,
+                                            color = MaterialTheme.colorScheme.secondaryContainer
+                                        ) {
+                                            Text(
+                                                text = "Rol: " + persona.rol,
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                                fontSize = 12.sp,
+                                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                                            )
                                         }
                                     }
-                                ) {
-                                    Text("Confirmar")
                                 }
-                            },
-                            dismissButton = {
-                                Button(onClick = { mostrarDialog.value=false }) {
-                                    Text(text = "Cancelar")
+
+                                // Botón de edición
+                                IconButton(onClick = {
+                                    selectedPersona.value = persona
+                                    mostrarDialog.value = true
+                                }) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = "Editar",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
                                 }
                             }
-
-                        )
+                        }
                     }
-                }
             }
         }
-    )
+
+        // Diálogo de edición
+        if (mostrarDialog.value && selectedPersona.value != null) {
+            var expanded by remember { mutableStateOf(false) }
+            var selectedRole by remember { mutableStateOf(selectedPersona.value?.rol ?: roles[0]) }
+
+            AlertDialog(
+                onDismissRequest = {
+                    mostrarDialog.value = false
+                    selectedPersona.value = null
+                },
+                title = {
+                    Text(
+                        "Modificar Rol de Usuario",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                text = {
+                    Column {
+                        Text(
+                            "Usuario: ${selectedPersona.value?.nombre}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // ExposedDropdownMenuBox para selección de rol
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }
+                        ) {
+                            OutlinedTextField(
+                                value = selectedRole,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                                },
+                                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                label = { Text("Seleccionar Rol") }
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                roles.forEach { rol ->
+                                    DropdownMenuItem(
+                                        text = { Text(rol) },
+                                        onClick = {
+                                            selectedRole = rol
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                selectedPersona.value?.let { persona ->
+                                    val personaActualizada = persona.copy(rol = selectedRole)
+                                    val index = personasList.indexOf(persona)
+                                    if (index != -1) {
+                                        personasList[index] = personaActualizada
+                                    }
+
+                                    // Actualizar en Firebase y base de datos local
+                                    val db = Firebase.firestore
+                                    personaDao.updatePersona(personaActualizada)
+                                    db.collection("Persona")
+                                        .document(personaActualizada.id.toString())
+                                        .set(personaActualizada)
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Usuario actualizado correctamente")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w(TAG, "Error al actualizar usuario", e)
+                                        }
+                                }
+                                mostrarDialog.value = false
+                                selectedPersona.value = null
+                            }
+                        }
+                    ) {
+                        Text("Guardar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            mostrarDialog.value = false
+                            selectedPersona.value = null
+                        }
+                    ) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
+    }
 }

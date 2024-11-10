@@ -37,7 +37,7 @@ fun PartidoUsuarioScreen(
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(navControllerBack, "Calendario de Partidos", true)
+            CustomTopAppBar(navControllerBack, "Programacion  de Partidos", true)
         }
     ) { padding ->
         if (partidosDeFecha.isEmpty()) {
