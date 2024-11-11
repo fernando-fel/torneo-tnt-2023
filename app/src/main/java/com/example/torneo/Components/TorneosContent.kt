@@ -85,11 +85,11 @@ fun TorneosContent(
             TextField(
                 value = searchQueryEnCurso.value,
                 onValueChange = { searchQueryEnCurso.value = it },
-                label = { Text("Buscar En Curso") },
+                label = { Text("Buscar EN CURSO") },
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             )
             val filteredEnCurso = torneos.filter {
-                it.estado == "En Curso" &&
+                it.estado == "EN CURSO" &&
                         it.nombre.contains(searchQueryEnCurso.value, ignoreCase = true)
             }
 

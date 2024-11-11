@@ -24,7 +24,7 @@ class TorneosViewModel @Inject constructor(
     private val repo: TorneoRepository
 ) : ViewModel() {
 
-    var torneo by mutableStateOf(Torneo(0, ubicacion = "", idTorneo = "1", precio = "1.0000", fechaInicio = "hoy", fechaFin = "mañaa", estado = "", nombre = "nombre"))
+    var torneo by mutableStateOf(Torneo(0, ubicacion = "", idTorneo = "", precio = "", fechaInicio = "", fechaFin = "", estado = "", nombre = ""))
     var openDialog by mutableStateOf(false)
     val torneos = repo.getAllTorneos()
 

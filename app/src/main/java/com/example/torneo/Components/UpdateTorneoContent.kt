@@ -28,20 +28,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateTorneoContent(
     padding: PaddingValues,
     torneo: Torneo,
-    updateNombre: (nombre:String) ->Unit,
+    updateNombre: (nombre: String) -> Unit,
     updateEstado: (estado: String) -> Unit,
-    updateTorneo: (torneo:Torneo) -> Unit,
+    updateTorneo: (torneo: Torneo) -> Unit,
     navigateBack: () -> Unit
-){
+) {
     var expanded by remember { mutableStateOf(false) }
+    var nombre by remember { mutableStateOf(torneo.nombre) }
+    // Inicializa el texto seleccionado con el estado actual del torneo
     var selectedOptionText by remember { mutableStateOf(torneo.estado) }
-    val options = listOf("En Curso", "Finalizados")
+    val options = listOf("EN CURSO", "Finalizados")
 
     Column(
         modifier = Modifier
@@ -53,25 +54,26 @@ fun UpdateTorneoContent(
         TextField(
             label = { Text(text = "Nombre del Torneo") },
             singleLine = true,
-            value = torneo.nombre,
-            onValueChange = { nombre->
-                updateNombre(nombre)
-            }
-        )
+            value = nombre,
+            onValueChange = { nuevoNombre ->
+                nombre = nuevoNombre // Actualiza el estado local
+                updateNombre(nuevoNombre) // Actualiza el ViewModel
+            }        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Box {
             TextField(
                 value = selectedOptionText,
-                onValueChange = { estado->
-                updateEstado(estado) },
+                onValueChange = { /* No se puede editar directamente */ },
                 readOnly = true,
                 label = { Text("Estado") },
                 trailingIcon = {
                     Icon(
-                        Icons.Filled.ArrowDropDown, "contentDescription",
-                        Modifier.clickable { expanded = !expanded })
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = "Menu",
+                        Modifier.clickable { expanded = !expanded }
+                    )
                 }
             )
             DropdownMenu(
@@ -82,8 +84,8 @@ fun UpdateTorneoContent(
                     DropdownMenuItem(
                         text = { Text(text) },
                         onClick = {
-                            selectedOptionText = text
-                            updateEstado(text)
+                            selectedOptionText = text // Actualiza el texto seleccionado
+                            updateEstado(text) // Actualiza el estado en el ViewModel
                             expanded = false
                         }
                     )
@@ -91,20 +93,12 @@ fun UpdateTorneoContent(
             }
         }
 
-        /*TextField(
-            label = { Text(text = "Estado") },
-            singleLine = true,
-            value = torneo.estado,
-            onValueChange = { nombre->
-                updateEstado(nombre)
-            }
-        )*/
-
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {
-                updateTorneo(torneo)
+                // Al actualizar, asegúrate de usar el nuevo estado seleccionado
+                updateTorneo(torneo.copy(estado = selectedOptionText))
                 navigateBack()
             }
         ) {

@@ -77,7 +77,7 @@ fun ScaffoldWithTopBarTorneosScreen(
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
                 var selectedTabIndex by remember { mutableStateOf(0) }
-                val tabs = listOf("Todos", "En Curso", "Finalizados")
+                val tabs = listOf("Todos", "EN CURSO", "Finalizados")
 
                 TabRow(
                     selectedTabIndex = selectedTabIndex,

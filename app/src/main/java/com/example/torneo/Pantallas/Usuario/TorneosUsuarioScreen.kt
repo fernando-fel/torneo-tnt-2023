@@ -1,37 +1,18 @@
 package com.example.torneo.Pantallas.Usuario
 
 import Component.CustomTopAppBar
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.Components.Usuario.TorneosUsuarioContent
@@ -43,11 +24,19 @@ fun TorneosUsuarioScreen(
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
     navControllerBack: NavHostController
-){
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBarTorneosUsuarioScreen(viewModel, navController, navigateToFechaScreen, navControllerBack)
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 16.dp)
+    ) {
+        ScaffoldWithTopBarTorneosUsuarioScreen(
+            viewModel,
+            navController,
+            navigateToFechaScreen,
+            navControllerBack
+        )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,10 +46,8 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
     navControllerBack: NavHostController,
-){
-
-    val torneos by viewModel.torneos.collectAsState(initial = emptyList() )
-
+) {
+    val torneos by viewModel.torneos.collectAsState(initial = emptyList())
     var mostrarFinalizados by remember { mutableStateOf(false) }
     var mostrarEnCurso by remember { mutableStateOf(false) }
     var mostrarTodos by remember { mutableStateOf(true) }
@@ -71,67 +58,118 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
         mostrarFinalizados = finalizados
     }
 
-    Scaffold (
+    Scaffold(
         topBar = {
-            CustomTopAppBar(navControllerBack, "Torneos", true)
+            CustomTopAppBar(
+                navControllerBack,
+                "Mis Torneos",
+                true
+            )
         },
-        content = { padding ->
-            Column(modifier = Modifier.padding(padding)) {
-                var selectedTabIndex by remember { mutableStateOf(0) }
-                val tabs = listOf("Todos", "En curso", "Finalizados")
+        containerColor = MaterialTheme.colorScheme.background
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // Título y descripción
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = "Gestión de Torneos",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Ver torneos",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            }
 
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    indicator = { tabPositions ->
-                        SecondaryIndicator(
-                            Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                            height = 5.dp, // Altura del indicador
-                            color = MaterialTheme.colorScheme.primary // Color del indicador
-                        )
-                    }
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            text = { Text(title) },
-                            selected = selectedTabIndex == index,
-                            onClick = {
-                                selectedTabIndex = index
-                                when (index) {
-                                    0 -> actualizarPestañas(true, false, false)
-                                    1 -> actualizarPestañas(false, true, false)
-                                    2 -> actualizarPestañas(false, false, true)
-                                }
-                            },
-                            selectedContentColor = Color.Black,
-                            unselectedContentColor = Color.Black
-                        )
+            // Tabs mejorados
+            var selectedTabIndex by remember { mutableStateOf(0) }
+            val tabs = listOf(
+                TabItem("Todos", "Ver todos los torneos"),
+                TabItem("En Curso", "Torneos activos"),
+                TabItem("Finalizados", "Torneos completados")
+            )
+
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        modifier = Modifier
+                            .tabIndicatorOffset(tabPositions[selectedTabIndex])
+                            .padding(horizontal = 24.dp),
+                        height = 3.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                },
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary,
+                divider = {}
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = {
+                            selectedTabIndex = index
+                            when (index) {
+                                0 -> actualizarPestañas(true, false, false)
+                                1 -> actualizarPestañas(false, true, false)
+                                2 -> actualizarPestañas(false, false, true)
+                            }
+                        },
+                        modifier = Modifier.padding(vertical = 8.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Text(
+                                text = tab.title,
+                                fontSize = 14.sp,
+                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
+                                color = if (selectedTabIndex == index)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
+                        }
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Contenido principal
             TorneosUsuarioContent(
-                padding = padding,
+                padding = PaddingValues(horizontal = 16.dp),
                 torneos = torneos,
                 deleteTorneo = { torneo ->
                     viewModel.deleteTorneo(torneo)
                 },
                 navigateToUpdateTorneoScreen = navController,
-                navigateToFechaScreen, mostrarTodos, mostrarFinalizados,
-                mostrarEnCurso
+                navegarParaUnaFecha = navigateToFechaScreen,
+                mostrarTodos = mostrarTodos,
+                mostrarFinalizados = mostrarFinalizados,
+                mostrarEnCurso = mostrarEnCurso
             )
-            }
         }
-    )
+    }
 }
 
-@Composable
-fun SecondaryIndicator(
-    modifier: Modifier = Modifier,
-    height: Dp = 2.dp,
-    color: Color = Color.Blue
-) {
-    TabRowDefaults.Indicator(
-        modifier = modifier.height(height),
-        color = color,
-        //shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
-    )
-}
-
+data class TabItem(
+    val title: String,
+    val description: String
+)

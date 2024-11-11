@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
@@ -32,6 +33,7 @@ class EquiposViewModel @Inject constructor(
     var equipo by mutableStateOf(Equipo(0, ""))
     var openDialog by mutableStateOf(false)
     val equipos = repo.getEquipoFromRoom()
+
 
     fun recuperarEquiposTorneo(idFecha: Int): Flow<List<Equipo>> = flow {
         val fecha = repo3.getFecha(idFecha)
@@ -79,11 +81,16 @@ class EquiposViewModel @Inject constructor(
     fun getEquipo(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         equipo = repo.getEquipo(id)
     }
+    fun getNombreEquipos(idLocal: Int, idVisitante: Int): Flow<Pair<String, String>> = flow {
+        val equipoLocal = repo.getEquipo(idLocal)
+        val equipoVisitante = repo.getEquipo(idVisitante)
+        emit(Pair((equipoLocal?.nombre ?: "Local").toString(), (equipoVisitante?.nombre ?: "Visitante").toString()))
+    }.flowOn(Dispatchers.IO) // Ejecuta en el hilo IO
 
     fun inscribirEquipos(selectedEquipos: List<Equipo>, torneoId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             var torneo = repo2.getTorneo(id = torneoId)
-            torneo.estado = "En curso"
+            torneo.estado = "EN CURSO"
             repo2.updateTorneo(torneo)
             repo2.inscribirEquipos(torneoId, selectedEquipos)
         }

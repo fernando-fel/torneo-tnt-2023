@@ -70,7 +70,7 @@ fun TorneoCard(
 
     ){
         val modifier = when (torneo.estado) {
-            "En Curso" -> {
+            "EN CURSO" -> {
                 Modifier
                     .border(2.dp, Color.Green)
                     .fillMaxWidth()
@@ -95,7 +95,7 @@ fun TorneoCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             when (torneo.estado) {
-                "En Curso" -> {
+                "EN CURSO" -> {
                     Column {
                         Text("NOMBRE DEL TORNEO: " + torneo.nombre,
                             fontWeight = FontWeight.Bold)
@@ -152,7 +152,7 @@ fun MostrarDialogoConfirmacionEliminar(
 
     AlertDialog(
         onDismissRequest = { showDialog.value = false },
-        text = { Text("¿Estas seguro que deseas eliminar?") },
+        text = { Text("¿Deseas eliminar?") },
         confirmButton = {
             Button(onClick = {
                 onConfirmar()
@@ -184,6 +184,7 @@ fun EquipoCard(
     deleteEquipo: ()-> Unit,
     navigateToUpdateEquipoScreen: (equipoId: Int)-> Unit,
     showDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
+
 ){
 
     Card(
@@ -223,8 +224,8 @@ fun EquipoCard(
             IconButton(onClick = {navigateToUpdateEquipoScreen(equipo.id)}) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Modificar Equipo" )
             }
-            IconButton(onClick = { showDialog.value = true } ) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Equipo" )
+            IconButton(onClick = { showDialog.value = true }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo" )
             }
             if (showDialog.value) {
                 MostrarDialogoConfirmacionEliminar(

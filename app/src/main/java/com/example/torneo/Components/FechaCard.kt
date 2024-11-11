@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,7 @@ fun FechaCard(
     deleteFecha: ()-> Unit,
     navigateToUpdateFechaScreen: (fechaId: Int)-> Unit,
     navigateToPartidoScreen: (fechaId: Int) -> Unit,
+    showDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
 ){
     Card(
         shape = MaterialTheme.shapes.medium,
@@ -75,8 +77,14 @@ fun FechaCard(
             IconButton(onClick = {navigateToUpdateFechaScreen(fecha.id)}) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar Fecha" )
             }
-            IconButton(onClick = deleteFecha ) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Fecha" )
+            IconButton(onClick = { showDialog.value = true }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo" )
+            }
+            if (showDialog.value) {
+                MostrarDialogoConfirmacionEliminar(
+                    onConfirmar = deleteFecha,
+                    showDialog = showDialog
+                )
             }
 
         }
