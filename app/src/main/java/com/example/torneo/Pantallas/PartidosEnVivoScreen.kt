@@ -7,16 +7,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.SportsScore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.torneo.Core.Data.Dao.PartidoDao
+import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.TorneoViewModel.PartidosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,12 +23,17 @@ import com.example.torneo.TorneoViewModel.PartidosViewModel
 @Composable
 fun PartidosEnVivoScreen(
     viewModel: PartidosViewModel,
-    //onBackPressed: Boolean // Añadido navegación
 ) {
-    val partidosHoy = viewModel.loadPartidosDeHoy().collectAsState(initial = emptyList()).value
+    viewModel.loadPartidosDeHoyDesdeFirebase()
+
+    // Observamos los partidos obtenidos desde Firebase
+    val partidosHoy = viewModel.partidosHoyFirebase
+
+    //val partidosHoy = viewModel.loadPartidosDeHoy().collectAsState(initial = emptyList()).value
 
     LaunchedEffect(Unit) {
-        viewModel.loadPartidosDeHoy()
+        viewModel.startAutoRefresh()
+        //viewModel.loadPartidosDeHoy()
     }
 
     Scaffold(
@@ -40,12 +44,7 @@ fun PartidosEnVivoScreen(
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                title = { Text("Partidos en Vivo") },
-                navigationIcon = {
-                    /*IconButton(onClick = onBackPressed) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
-                    }*/
-                }
+                title = { Text("Partidos en Vivo") }
             )
         }
     ) { paddingValues ->
@@ -70,8 +69,11 @@ fun PartidosEnVivoScreen(
                         items(
                             items = fecha.partidos,
                             key = { it.id }
-                        ) { partido ->
-                            PartidoItem(partido)
+                        ) { partidoConDetalles ->
+                            PartidoItem(
+                                partido = partidoConDetalles,
+
+                            )
                         }
                     }
                 }
@@ -80,9 +82,9 @@ fun PartidosEnVivoScreen(
     }
 }
 
-fun agruparPartidos(partidos: List<PartidoDao.PartidoConDetalles>): List<TorneoConPartidos> {
-    return partidos.groupBy { it.nombreTorneo }.map { (torneo, partidosPorTorneo) ->
-        val fechasAgrupadas = partidosPorTorneo.groupBy { it.numeroFecha }.map { (fecha, partidosPorFecha) ->
+fun agruparPartidos(partidos: SnapshotStateList<Partido>): List<TorneoConPartidos> {
+    return partidos.groupBy { it.idFecha }.map { (torneo, partidosPorTorneo) ->
+        val fechasAgrupadas = partidosPorTorneo.groupBy { it.idFecha }.map { (fecha, partidosPorFecha) ->
             Log.d("Fechas", "Torneo: $torneo, Fecha: $fecha, Partidos: ${partidosPorFecha.joinToString { it.id.toString() }}")
             FechaConPartidos(fecha, partidosPorFecha) // Pasar la lista completa de PartidoConDetalles
 
@@ -97,7 +99,7 @@ data class TorneoConPartidos(
 
 data class FechaConPartidos(
     val numeroFecha: String,
-    val partidos: List<PartidoDao.PartidoConDetalles> // Asegúrate de que esto sea correcto
+    val partidos: List<Partido> // Asegúrate de que esto sea correcto
 )
 @Composable
 private fun EmptyState() {
@@ -152,7 +154,7 @@ private fun FechaHeader(numeroFecha: String) {
 }
 
 @Composable
-fun PartidoItem(partido: PartidoDao.PartidoConDetalles) {
+fun PartidoItem(partido: Partido) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -181,7 +183,7 @@ fun PartidoItem(partido: PartidoDao.PartidoConDetalles) {
             ) {
                 // Equipo Local
                 Text(
-                    text = partido.nombreLocal,
+                    text = partido.idLocal,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -195,7 +197,7 @@ fun PartidoItem(partido: PartidoDao.PartidoConDetalles) {
 
                 // Equipo Visitante
                 Text(
-                    text = partido.nombreVisitante,
+                    text = partido.idVisitante,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.End

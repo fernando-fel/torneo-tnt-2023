@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val db = Firebase.firestore
-/*
+
         // Iniciar sincronización
         lifecycleScope.launch {
             try {
@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
- */
 
 
 

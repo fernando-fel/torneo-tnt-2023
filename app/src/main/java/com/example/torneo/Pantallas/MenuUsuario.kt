@@ -139,7 +139,7 @@ fun StatItem(label: String, value: String) {
 @Composable
 fun MainMenuSection(navController: NavHostController) {
     val viewModel: PartidosViewModel = hiltViewModel()
-    val cantPartidosHoy = (viewModel.loadPartidosDeHoy().collectAsState(initial = emptyList()).value).count()
+    val cantPartidosHoy = 5 //(viewModel.loadPartidosDeHoy().collectAsState(initial = emptyList()).value).count()
     val menuItems = listOf(
         MenuItem(
             title = "Torneos",
