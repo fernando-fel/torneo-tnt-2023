@@ -19,6 +19,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -31,18 +32,14 @@ class PartidosViewModel @Inject constructor(
     private val partidoRepo: PartidoRepository,
     private val fechaRepo: FechaRepository
 ) : ViewModel() {
-
-
-    //var partido by mutableStateOf(Partido())
+    var partidos = partidoRepo.getAllPartidos()
     var openDialog by mutableStateOf(false)
 
-    // Obtener todos los partidos
-    val partidos = partidoRepo.getAllPartidos()
+    // Estado que mantendrá los partidos de hoy
+    var partidosHoyFirebase = mutableStateListOf<Partido>()
 
-    // Obtener partidos de hoy
-    val partidosHoy = mutableStateListOf<Partido>()
-
-    fun obtenerPartidosDeHoy(callback: (List<Partido>) -> Unit) {
+    // Función para obtener partidos de hoy desde Firebase
+    fun loadPartidosDeHoyDesdeFirebase() {
         val db = FirebaseFirestore.getInstance()
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fechaHoy = formatter.format(Date())
@@ -56,14 +53,21 @@ class PartidosViewModel @Inject constructor(
                         id = document.id.toInt()
                     }
                 }
-                callback(partidos)
+                partidosHoyFirebase.clear()  // Limpiamos la lista antes de agregar los nuevos partidos
+                partidosHoyFirebase.addAll(partidos) // Actualizamos la lista con los partidos obtenidos de Firebase
             }
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Error getting documents: ", exception)
-                callback(emptyList())
             }
     }
 
+    // Función que obtiene los partidos de hoy desde Firebase (solo si se necesita)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun loadPartidosDeHoy(): Flow<List<PartidoDao.PartidoConDetalles>> {
+        return partidoRepo.getPartidosDeHoyDetalle() // Usamos Room para obtener los partidos de hoy
+    }
+
+    // Funciones para manejar la base de datos de Firebase
     fun addPartido(partido: Partido) = viewModelScope.launch(Dispatchers.IO) {
         partidoRepo.addPartido(partido)
         val db = Firebase.firestore
@@ -104,16 +108,14 @@ class PartidosViewModel @Inject constructor(
             partidoRepo.updatePartido(partido)
         }
     }
-
-    fun getPartido(id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        var partido = partidoRepo.getPartido(id)
+    fun startAutoRefresh() {
+        viewModelScope.launch {
+            while (true) {
+                delay(5000) // Espera de 10 segundos
+                loadPartidosDeHoyDesdeFirebase() // Recargar partidos
+            }
+        }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun loadPartidosDeHoy(): Flow<List<PartidoDao.PartidoConDetalles>> {
-        return partidoRepo.getPartidosDeHoyDetalle()
-    }
-
     suspend fun getTorneoIdByFecha(fechaId: Int): String? {
         val fecha = fechaRepo.getFecha(fechaId)
         return fecha?.idTorneo // Asegúrate de que el campo sea correcto

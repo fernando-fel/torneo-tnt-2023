@@ -47,27 +47,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //val torneoId = intent.getIntExtra("TORNEO_ID", -1) // Obtén el torneoId
-        //Log.d(TAG, "torneoId: $torneoId")
-        val torneoId = 2
+        val torneoId = intent.getIntExtra("TORNEO_ID", -1) // Obtén el torneoId
+        Log.d(TAG, "torneoId: $torneoId")
+        //val torneoId = 2
 
         // Inicializar Firebase
-        //Firebase.initialize(this)
+        Firebase.initialize(this)
 
         val database = Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
             .fallbackToDestructiveMigration()
             .build()
 
-        //val db = Firebase.firestore
-
+        val db = Firebase.firestore
+/*
         // Iniciar sincronización
-        /*lifecycleScope.launch {
+        lifecycleScope.launch {
             try {
                 sincronizar_db(db, database)
             } catch (e: Exception) {
                 Log.e(TAG, "Error sincronizando base de datos", e)
             }
-        }*/
+        }
+
+ */
 
 
 
@@ -77,13 +79,19 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (intent.getBooleanExtra("fromNotification", false)) {
-                        Log.d("Entreeeee", "Adentrooooo")
-                        // Lógica para navegar a la pantalla correspondiente
+                    val  startDestination = if (intent.getBooleanExtra("fromNotification", false)) {
+                        "${Routes.FechaUsuarioScreen.route}/$torneoId"
+                        }else{
+                            Routes.SplashScreen.route
+                        }
+                    Log.d("Entreeeee",startDestination )
+                        //ScreenMain(database,torneoId)
+
+                            // Lógica para navegar a la pantalla correspondiente
                         if (torneoId != -1) {
                             val navController = rememberNavController()
                             // Navegar a la pantalla que necesites, por ejemplo:
-                            navController.navigate("${Routes.FechaUsuarioScreen.route}/$torneoId")
+
                         }
                     }
                     ScreenMain(database = database,torneoId)
@@ -91,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-}
+
 
 /*    private var canAuthenticate = false
     private lateinit var promptInfo: BiometricPrompt.PromptInfo

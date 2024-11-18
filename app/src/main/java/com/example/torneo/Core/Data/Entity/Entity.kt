@@ -62,17 +62,17 @@ data class Equipo(
 )
 data class Partido(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
-    @ColumnInfo(name = "idFecha") val idFecha: String,
-    @ColumnInfo(name = "hora") val hora: String,
-    @ColumnInfo(name = "dia") val dia: String,
-    @ColumnInfo(name = "numCancha") val numCancha: String,
-    @ColumnInfo(name = "idLocal") val idLocal: String,
-    @ColumnInfo(name = "idVisitante") val idVisitante: String,
-    @ColumnInfo(name = "golLocal") val golLocal: Int,
-    @ColumnInfo(name = "golVisitante") val golVisitante: Int,
-    @ColumnInfo(name = "estado") val estado: String,
-    @ColumnInfo(name = "resultado") val resultado: String,
-    @ColumnInfo(name = "idPersona") val idPersona: String,
+    @ColumnInfo(name = "idFecha") val idFecha: String = "",
+    @ColumnInfo(name = "hora") val hora: String = "",
+    @ColumnInfo(name = "dia") val dia: String = "",
+    @ColumnInfo(name = "numCancha") val numCancha: String= "",
+    @ColumnInfo(name = "idLocal") val idLocal: String= "",
+    @ColumnInfo(name = "idVisitante") val idVisitante: String= "",
+    @ColumnInfo(name = "golLocal") val golLocal: Int = 0,
+    @ColumnInfo(name = "golVisitante") val golVisitante: Int= 0,
+    @ColumnInfo(name = "estado") val estado: String = "",
+    @ColumnInfo(name = "resultado") val resultado: String = "",
+    @ColumnInfo(name = "idPersona") val idPersona: String = "",
 )
 @Entity(tableName = "torneo_equipo")
 data class TorneoEquipo(
