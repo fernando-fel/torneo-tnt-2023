@@ -52,22 +52,22 @@ class MainActivity : AppCompatActivity() {
         val torneoId = 2
 
         // Inicializar Firebase
-        Firebase.initialize(this)
+        //Firebase.initialize(this)
 
         val database = Room.databaseBuilder(this, TorneoDB::class.java, TORNEO_TABLE)
             .fallbackToDestructiveMigration()
             .build()
 
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
 
         // Iniciar sincronización
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             try {
                 sincronizar_db(db, database)
             } catch (e: Exception) {
                 Log.e(TAG, "Error sincronizando base de datos", e)
             }
-        }
+        }*/
 
 
 
