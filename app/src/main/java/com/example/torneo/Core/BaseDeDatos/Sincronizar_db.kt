@@ -23,7 +23,7 @@ private fun sincronizarTorneos(db_firebase: FirebaseFirestore, db_local: TorneoD
     val dao = db_local.torneoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("torneos").get().addOnSuccessListener { result ->
+    db_firebase.collection("Torneo").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val torneo = Torneo(
                 idTorneo = document.getString("idTorneo") ?: "",
@@ -55,7 +55,7 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
     val dao = db_local.personaDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("personas").get().addOnSuccessListener { result ->
+    db_firebase.collection("Persona").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val persona = Persona(
                 idPersona = document.getString("idPersona") ?: "",
@@ -117,7 +117,7 @@ private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoD
     val dao = db_local.equipoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("equipos").get().addOnSuccessListener { result ->
+    db_firebase.collection("Equipo").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val equipo = Equipo(
                 nombre = document.getString("nombre") ?: ""
@@ -142,7 +142,7 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
     val partidoDao = db_local.partidoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("partidos").get().addOnSuccessListener { result ->
+    db_firebase.collection("Partidos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val idFecha = document.getString("idFecha") ?: ""
 

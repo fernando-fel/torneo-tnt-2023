@@ -8,6 +8,7 @@ import com.example.torneo.Core.Data.Dao.PartidoDao
 
 import com.example.torneo.Core.Data.Entity.Partido
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -44,5 +45,11 @@ Este andaaaa
     val partidoss = partidoDao.getPartidosByDate(date.toString())
     Log.d("PArtidosssss", partidoss.toString())
     return partidoss
+    }
+    override fun getCountEquipos(): Int {
+        return runBlocking {
+            partidoDao.getCantidadPartidos()
+
+        }
     }
 }

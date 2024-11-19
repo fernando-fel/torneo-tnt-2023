@@ -33,7 +33,8 @@ fun PartidosEnVivoScreen(
 
     LaunchedEffect(Unit) {
         viewModel.startAutoRefresh()
-        //viewModel.loadPartidosDeHoy()
+        //
+    // viewModel.loadPartidosDeHoy()
     }
 
     Scaffold(

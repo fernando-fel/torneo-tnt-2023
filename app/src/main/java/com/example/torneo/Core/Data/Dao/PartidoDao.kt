@@ -32,6 +32,10 @@ interface PartidoDao {
 
     @Delete
     suspend fun deletePartido(partido: Partido)
+
+    // Nueva consulta para obtener el conteo de equipos
+    @Query("SELECT COUNT(*) FROM partido_table")
+    fun getCantidadPartidos(): Int
 /*
     @Query(
         """

@@ -45,8 +45,10 @@ class EquiposViewModel @Inject constructor(
     fun addEquipo(equipo: Equipo) = viewModelScope.launch(Dispatchers.IO) {
         val db = Firebase.firestore
         repo.addEquipoToRoom(equipo)
-        db.collection("Equipo").document(equipo.id.toString())
-            .set(equipo)
+        var cantidad = repo.getCountEquipos()
+        var equipo2 = equipo.copy(id = cantidad)
+        db.collection("Equipo").document(equipo2.id.toString())
+            .set(equipo2)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }

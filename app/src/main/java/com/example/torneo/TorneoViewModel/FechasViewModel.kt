@@ -97,7 +97,9 @@ class FechasViewModel @Inject constructor(
         try {
             val db = Firebase.firestore
             repo.addFecha(fecha)
-            db.collection("fechas").document(fecha.id.toString())
+            var cantidad = repo.getCountFechas()
+            var fecha2 = fecha.copy(id = cantidad)
+            db.collection("fechas").document(fecha2.id.toString())
                 .set(fecha)
                 .addOnSuccessListener {
                     Log.d(

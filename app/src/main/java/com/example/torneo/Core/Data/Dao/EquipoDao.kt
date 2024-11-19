@@ -31,4 +31,8 @@ interface EquipoDao {
 
     @Query("SELECT * from equipo_table WHERE id = :id")
     fun getEquipo(id: Int): Equipo
+
+    // Nueva consulta para obtener el conteo de equipos
+    @Query("SELECT COUNT(*) FROM equipo_table")
+    fun getCantidadEquipos(): Int
 }

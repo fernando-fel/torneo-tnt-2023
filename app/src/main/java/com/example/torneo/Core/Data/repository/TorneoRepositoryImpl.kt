@@ -7,6 +7,7 @@ import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.Entity.TorneoEquipo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 
 class TorneoRepositoryImpl(
     private val torneoDao: TorneoDao,
@@ -29,7 +30,11 @@ class TorneoRepositoryImpl(
         }
         torneoDao.inscribirEquipos(torneoEquipos)
     }
-
+    override fun getCountTorneos(): Int {
+        return runBlocking {
+            torneoDao.getCantidadTorneos()
+        }
+    }
 
 
 

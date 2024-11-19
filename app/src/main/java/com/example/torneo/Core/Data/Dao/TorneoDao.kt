@@ -46,5 +46,9 @@ interface TorneoDao {
     WHERE te.torneoId = :torneoId
 """)
     fun getEquiposEnTorneo(torneoId: Int): List<Equipo>
+
+    // Nueva consulta para obtener el conteo de equipos
+    @Query("SELECT COUNT(*) FROM torneo_table")
+    fun getCantidadTorneos(): Int
 }
 

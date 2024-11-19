@@ -73,4 +73,10 @@ class EquipoRepositoryImpl(
             }
         })
     }
+    override fun getCountEquipos(): Int {
+        return runBlocking {
+            equipoDao.getCantidadEquipos()
+
+        }
+    }
 }

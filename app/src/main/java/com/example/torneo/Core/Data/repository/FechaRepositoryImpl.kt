@@ -4,6 +4,7 @@ import com.example.torneo.Core.Data.Dao.FechaDao
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Torneo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 
 
 class FechaRepositoryImpl(private val fechaDao: FechaDao
@@ -39,5 +40,9 @@ class FechaRepositoryImpl(private val fechaDao: FechaDao
     override fun syncFirebaseToRoom() {
         TODO("Not yet implemented")
     }
-
+    override fun getCountFechas(): Int {
+        return runBlocking {
+            fechaDao.getCantidadFechas()
+        }
+    }
 }
