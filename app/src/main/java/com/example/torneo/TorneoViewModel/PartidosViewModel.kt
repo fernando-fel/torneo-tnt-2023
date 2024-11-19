@@ -70,8 +70,11 @@ class PartidosViewModel @Inject constructor(
     // Funciones para manejar la base de datos de Firebase
     fun addPartido(partido: Partido) = viewModelScope.launch(Dispatchers.IO) {
         partidoRepo.addPartido(partido)
+        var cantidad = partidoRepo.getCountEquipos()
+        var partido2 = partido.copy(id = cantidad + 1)
+
         val db = Firebase.firestore
-        db.collection("partidos").document(partido.id.toString())
+        db.collection("partidos").document(partido2.id.toString())
             .set(partido)
             .addOnSuccessListener {
                 Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")

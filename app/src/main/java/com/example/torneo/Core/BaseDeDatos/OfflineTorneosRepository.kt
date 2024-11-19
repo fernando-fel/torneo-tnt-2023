@@ -25,5 +25,8 @@ class OfflineTorneosRepository(private val torneoDao: TorneoDao,private val torn
         torneoDao.inscribirEquipos(torneoEquipos)
     }
     override suspend fun getEquiposEnTorneo(torneoId: Int) = torneoDao.getEquiposEnTorneo(torneoId)
+    override fun getCountTorneos(): Int {
+        TODO("Not yet implemented")
+    }
 
 }

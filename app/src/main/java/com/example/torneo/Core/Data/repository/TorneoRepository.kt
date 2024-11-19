@@ -37,5 +37,5 @@ interface TorneoRepository {
 
     suspend fun inscribirEquipos(torneoId: Int, equipos: List<Equipo>)
     suspend fun getEquiposEnTorneo(torneoId: Int): List<Equipo>
-
+    fun getCountTorneos(): Int
 }

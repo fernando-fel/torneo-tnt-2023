@@ -21,8 +21,14 @@ interface FechaRepository {
 
     // Sync methods
     fun syncFirebaseToRoom()
+
     fun getAllFechas(): Flow<List<Fecha>>
+
     suspend fun getFecha(id: Int): Fecha
+
     suspend fun addFecha(fecha: Fecha)
+
     fun getFechasByTorneo(id: Int): Flow<List<Fecha>>
+
+    fun getCountFechas(): Int
 }

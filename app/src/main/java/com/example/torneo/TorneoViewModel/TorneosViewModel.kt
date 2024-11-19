@@ -31,7 +31,9 @@ class TorneosViewModel @Inject constructor(
     fun addTorneo(torneo: Torneo) = viewModelScope.launch(Dispatchers.IO) {
         val db = Firebase.firestore
         repo.addTorneo(torneo)
-        db.collection("torneos").document(torneo.id.toString())
+        var cantidad = repo.getCountTorneos()
+        var torneo2 = torneo.copy(id = cantidad)
+        db.collection("torneos").document(torneo2.id.toString())
             .set(torneo)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }

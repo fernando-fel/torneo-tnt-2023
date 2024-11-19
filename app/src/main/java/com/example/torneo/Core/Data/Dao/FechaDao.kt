@@ -32,4 +32,7 @@ interface FechaDao {
 
     @Query("DELETE FROM fecha_table")
     suspend fun deleteAll()
+    // Nueva consulta para obtener el conteo de equipos
+    @Query("SELECT COUNT(*) FROM fecha_table")
+    fun getCantidadFechas(): Int
 }

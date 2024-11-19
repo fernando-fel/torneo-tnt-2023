@@ -39,5 +39,5 @@ interface PartidoRepository {
     //fun getPartidosDeHoy(): Flow<List<Partido>>
 
     fun getPartidosDeHoyDetalle(): Flow<List<PartidoDao.PartidoConDetalles>>
-
+    fun getCountEquipos(): Int
 }
