@@ -21,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -34,6 +35,7 @@ class PartidosViewModel @Inject constructor(
 ) : ViewModel() {
     var partidos = partidoRepo.getAllPartidos()
     var openDialog by mutableStateOf(false)
+    val tiempoActualPartido = MutableStateFlow(0L) // Tiempo actual del partido
 
     // Estado que mantendrá los partidos de hoy
     var partidosHoyFirebase = mutableStateListOf<Partido>()

@@ -7,10 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.torneo.Components.UpdateFechasContent
-import com.example.torneo.Components.UpdateTorneoContent
-import com.example.torneo.Components.UpdateTorneoTopBar
+import com.example.torneo.Components.UpdateFechaTopBar
 import com.example.torneo.TorneoViewModel.FechasViewModel
-import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -25,7 +23,7 @@ fun UpdateFechasScreen(
     }
     Scaffold(
         topBar = {
-            UpdateTorneoTopBar(
+            UpdateFechaTopBar(
                 navigateBack = navigateBack
             )
         },

@@ -3,6 +3,8 @@ package com.example.torneo.Pantallas
 import Component.CustomTopAppBar
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,6 +30,7 @@ import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.FechasViewModel
 import com.example.torneo.TorneoViewModel.PartidosViewModel
 import com.example.torneo.TorneoViewModel.TorneosViewModel
+import kotlin.random.Random
 
 data class MenuItem(
     val title: String,
@@ -41,30 +45,34 @@ data class MenuItem(
 fun MenuUsuario(navController: NavHostController) {
     val scrollState = rememberScrollState()
 
-
     Scaffold(
         topBar = {
             CustomTopAppBar(navController, "Menu Principal", true)
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(scrollState)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Perfil del Usuario
-            UserProfileCard()
+        },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .verticalScroll(scrollState)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Perfil del Usuario
+                UserProfileCard()
 
-            // Menú Principal
-            MainMenuSection(navController)
+                // Menú Principal
+                MainMenuSection(navController)
 
-            // Mapa
-            MapSection()
+                // Mapa
+                MapSection()
+
+                // Sección de publicidad mejorada
+                Publicidad()
+            }
         }
-    }
+
+    )
 }
 
 @Composable
@@ -225,9 +233,49 @@ fun MenuButton(
 @Composable
 fun MapSection() {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
     ) {
         myMarket()
     }
 }
+
+@Composable
+fun Publicidad() {
+    Card(
+        modifier = Modifier.fillMaxWidth().height(120.dp)
+    ) {
+        val scrollState = rememberScrollState()
+
+        Row(
+            Modifier
+                .horizontalScroll(scrollState)
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            repeat(10) {
+                Card(
+                    modifier = Modifier
+                        .size(160.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(randomColor().copy(alpha = 0.7f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Publicidad ${it + 1}",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun randomColor() = Color(Random.nextLong(0xFFFFFFFF))

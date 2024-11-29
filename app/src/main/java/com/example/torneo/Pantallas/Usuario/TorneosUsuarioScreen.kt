@@ -60,113 +60,112 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(
-                navControllerBack,
-                "Mis Torneos",
-                true
-            )
+            CustomTopAppBar(navControllerBack, "Mis Torneos", true)
         },
-        containerColor = MaterialTheme.colorScheme.background
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            // Título y descripción
+        content = { padding ->
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxSize()
+                    .padding(padding)
             ) {
-                Text(
-                    text = "Gestión de Torneos",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Ver torneos",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                )
-            }
-
-            // Tabs mejorados
-            var selectedTabIndex by remember { mutableStateOf(0) }
-            val tabs = listOf(
-                TabItem("Todos", "Ver todos los torneos"),
-                TabItem("En Curso", "Torneos activos"),
-                TabItem("Finalizados", "Torneos completados")
-            )
-
-            TabRow(
-                selectedTabIndex = selectedTabIndex,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(12.dp)),
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        modifier = Modifier
-                            .tabIndicatorOffset(tabPositions[selectedTabIndex])
-                            .padding(horizontal = 24.dp),
-                        height = 3.dp,
+                // Título y descripción
+                /*Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = "Gestión de Torneos",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-                },
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary,
-                divider = {}
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = {
-                            selectedTabIndex = index
-                            when (index) {
-                                0 -> actualizarPestañas(true, false, false)
-                                1 -> actualizarPestañas(false, true, false)
-                                2 -> actualizarPestañas(false, false, true)
-                            }
-                        },
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(8.dp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Ver torneos",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                }*/
+
+                // Tabs mejorados
+                var selectedTabIndex by remember { mutableStateOf(0) }
+                val tabs = listOf(
+                    TabItem("Todos", "Ver todos los torneos"),
+                    TabItem("En Curso", "Torneos activos"),
+                    TabItem("Finalizados", "Torneos completados")
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[selectedTabIndex])
+                                .padding(horizontal = 24.dp),
+                            height = 3.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    divider = {}
+                ) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            onClick = {
+                                selectedTabIndex = index
+                                when (index) {
+                                    0 -> actualizarPestañas(true, false, false)
+                                    1 -> actualizarPestañas(false, true, false)
+                                    2 -> actualizarPestañas(false, false, true)
+                                }
+                            },
+                            modifier = Modifier.padding(vertical = 8.dp),
                         ) {
-                            Text(
-                                text = tab.title,
-                                fontSize = 14.sp,
-                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
-                                color = if (selectedTabIndex == index)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Text(
+                                    text = tab.title,
+                                    fontSize = 14.sp,
+                                    fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (selectedTabIndex == index)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                )
+                            }
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Contenido principal
+                TorneosUsuarioContent(
+                    padding = PaddingValues(horizontal = 16.dp),
+                    torneos = torneos,
+                    deleteTorneo = { torneo ->
+                        viewModel.deleteTorneo(torneo)
+                    },
+                    navigateToUpdateTorneoScreen = navController,
+                    navegarParaUnaFecha = navigateToFechaScreen,
+                    mostrarTodos = mostrarTodos,
+                    mostrarFinalizados = mostrarFinalizados,
+                    mostrarEnCurso = mostrarEnCurso
+                )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Contenido principal
-            TorneosUsuarioContent(
-                padding = PaddingValues(horizontal = 16.dp),
-                torneos = torneos,
-                deleteTorneo = { torneo ->
-                    viewModel.deleteTorneo(torneo)
-                },
-                navigateToUpdateTorneoScreen = navController,
-                navegarParaUnaFecha = navigateToFechaScreen,
-                mostrarTodos = mostrarTodos,
-                mostrarFinalizados = mostrarFinalizados,
-                mostrarEnCurso = mostrarEnCurso
-            )
-        }
-    }
+        },
+        //containerColor = MaterialTheme.colorScheme.background
+    )
 }
 
 data class TabItem(

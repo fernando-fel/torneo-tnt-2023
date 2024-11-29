@@ -31,6 +31,25 @@ fun UpdateTorneoTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun UpdateFechaTopBar(
+    navigateBack: () -> Unit
+){
+    TopAppBar(
+        title = {
+            Text(text = "Actualizar Fecha")
+        },
+        navigationIcon = {
+            IconButton(onClick = navigateBack) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = null)
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun UpdateEquipoTopBar(
     navigateBack: () -> Unit
 ){
@@ -47,3 +66,4 @@ fun UpdateEquipoTopBar(
         }
     )
 }
+

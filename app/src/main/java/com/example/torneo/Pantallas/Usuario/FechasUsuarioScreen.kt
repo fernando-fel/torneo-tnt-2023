@@ -48,7 +48,9 @@ fun FechasUsuarioScreen(
             CustomTopAppBar(navControllerBack, "Fechas", true)
         },
         content = { padding ->
-            Column(modifier = Modifier.padding(padding)) {
+            Column(
+                modifier = Modifier.padding(padding)
+            ) {
                 torneo?.let {
                     Text(
                         it.nombre,

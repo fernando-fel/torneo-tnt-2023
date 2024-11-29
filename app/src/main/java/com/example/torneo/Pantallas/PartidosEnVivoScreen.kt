@@ -1,5 +1,6 @@
 package com.example.torneo.Pantallas
 
+import Component.CustomTopAppBar
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -11,19 +12,38 @@ import androidx.compose.material.icons.filled.SportsScore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.TorneoViewModel.PartidosViewModel
+import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PartidosEnVivoScreen(
     viewModel: PartidosViewModel,
+    //viewModel2: TorneosViewModel,
+    //torneoId: Int,
+    navControllerBack: NavHostController,
 ) {
+
+    /*var torneo by remember { mutableStateOf<Torneo?>(null) }
+
+    LaunchedEffect(torneoId) {
+        torneo = viewModel2.getTorneo(torneoId)
+    }*/
+
     viewModel.loadPartidosDeHoyDesdeFirebase()
 
     // Observamos los partidos obtenidos desde Firebase
@@ -39,14 +59,15 @@ fun PartidosEnVivoScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CustomTopAppBar(navControllerBack, "Partidos en Vivo", true)
+            /*TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 title = { Text("Partidos en Vivo") }
-            )
+            )*/
         }
     ) { paddingValues ->
         if (partidosHoy.isEmpty()) {
@@ -72,8 +93,7 @@ fun PartidosEnVivoScreen(
                             key = { it.id }
                         ) { partidoConDetalles ->
                             PartidoItem(
-                                partido = partidoConDetalles,
-
+                                partido = partidoConDetalles, viewModel
                             )
                         }
                     }
@@ -87,6 +107,7 @@ fun agruparPartidos(partidos: SnapshotStateList<Partido>): List<TorneoConPartido
     return partidos.groupBy { it.idFecha }.map { (torneo, partidosPorTorneo) ->
         val fechasAgrupadas = partidosPorTorneo.groupBy { it.idFecha }.map { (fecha, partidosPorFecha) ->
             Log.d("Fechas", "Torneo: $torneo, Fecha: $fecha, Partidos: ${partidosPorFecha.joinToString { it.id.toString() }}")
+
             FechaConPartidos(fecha, partidosPorFecha) // Pasar la lista completa de PartidoConDetalles
 
         }
@@ -102,6 +123,7 @@ data class FechaConPartidos(
     val numeroFecha: String,
     val partidos: List<Partido> // Asegúrate de que esto sea correcto
 )
+
 @Composable
 private fun EmptyState() {
     Box(
@@ -136,7 +158,7 @@ private fun TorneoHeader(nombreTorneo: String) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = nombreTorneo,
+            text = "Torneo $nombreTorneo",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -149,13 +171,16 @@ private fun FechaHeader(numeroFecha: String) {
     Text(
         text = "Fecha $numeroFecha",
         style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.secondary,
+        color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
     )
 }
 
 @Composable
-fun PartidoItem(partido: Partido) {
+fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
+
+    val tiempoActual = viewModel.tiempoActualPartido.collectAsState()
+
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -218,11 +243,22 @@ fun PartidoItem(partido: Partido) {
                 ),
                 modifier = Modifier.wrapContentWidth()
             ) {
-                Text(
-                    text = partido.estado,
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = partido.estado,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+
+                    /*if ((partido.estado == "PrimerTiempo") || (partido.estado == "SegundoTiempo")){
+                        Text(
+                            text = formatTime(tiempoActual.value)
+                        )
+                    }*/
+                }
             }
         }
     }

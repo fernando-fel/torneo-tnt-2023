@@ -91,7 +91,7 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
         }
         composable(Routes.PartidosEnVivoScreen.route) {
             PartidosEnVivoScreen(
-                viewModel = hiltViewModel()
+                viewModel = hiltViewModel(), navController
                 //onBackPressed = navController.popBackStack()
             )
         }

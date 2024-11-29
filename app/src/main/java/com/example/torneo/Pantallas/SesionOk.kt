@@ -55,79 +55,27 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
             CustomTopAppBar(navController, "Bienvenido", true)
         },
         content = { padding ->
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Column(
+                // Menú de opciones
+                MenuGrid(menuOptions, navController)
+
+                // Mapa
+                Card(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
                 ) {
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Sección de publicidad mejorada
-                    PublicidadCarousel()
-
-                    // Menú de opciones
-                    MenuGrid(menuOptions, navController)
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Mapa
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(16.dp))
-                    ) {
-                        myMarket()
-                    }
+                    myMarket()
                 }
             }
         }
     )
-}
-
-@Composable
-fun PublicidadCarousel() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-    ) {
-        val scrollState = rememberScrollState()
-
-        Row(
-            Modifier
-                .horizontalScroll(scrollState)
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            repeat(10) {
-                Card(
-                    modifier = Modifier
-                        .size(160.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(randomColor().copy(alpha = 0.7f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Publicidad ${it + 1}",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-        }
-    }
 }
 
 @Composable
@@ -181,5 +129,3 @@ fun MenuButton(
         }
     }
 }
-
-fun randomColor() = Color(Random.nextLong(0xFFFFFFFF))

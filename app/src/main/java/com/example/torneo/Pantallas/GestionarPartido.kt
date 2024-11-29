@@ -1,6 +1,7 @@
 package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -25,7 +26,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PartidosViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 enum class ButtonState {
     Iniciar,
@@ -35,7 +40,7 @@ enum class ButtonState {
     Fin
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+// PARTIDOS QUE GESTIONA EL ARBITRO/JUEZ DEL TORNEO
 @Composable
 fun GestionarPartido(
     viewModel: PartidosViewModel = hiltViewModel(),
@@ -43,12 +48,14 @@ fun GestionarPartido(
     navControllerBack: NavHostController,
     partidoId: Int
 ) {
+
     val partidos by viewModel.partidos.collectAsState(initial = emptyList())
     val partido = partidos.firstOrNull { it.id == partidoId }
 
     partido?.let {
         var nombreLocal by remember { mutableStateOf("") }
         var nombreVisitante by remember { mutableStateOf("") }
+
 
         LaunchedEffect(it.idLocal, it.idVisitante) {
             val nombres = (viewModel2.getNombreEquipos(it.idLocal.toInt(), it.idVisitante.toInt())).first()
@@ -65,6 +72,42 @@ fun GestionarPartido(
             val golVisitante = remember { mutableStateOf(0) }
             val stateButton = remember { mutableStateOf(ButtonState.Iniciar) }
 
+            val tiempoTranscurrido = remember { mutableStateOf(0L) } // Tiempo en milisegundos
+            val isTimerRunning = remember { mutableStateOf(false) } // Estado del timer (iniciado/pausado)
+
+            LaunchedEffect(stateButton.value) {
+                when (stateButton.value) {
+                    ButtonState.PrimerTiempo -> {
+                        isTimerRunning.value = true
+                        tiempoTranscurrido.value = 0L
+                        launch {
+                            while (isTimerRunning.value) {
+                                delay(10L) // Actualizar cada 1 segundo (1 seg = 1000L)
+                                tiempoTranscurrido.value += 1000L
+                            }
+                        }
+                    }
+                    ButtonState.Entretiempo -> {
+                        isTimerRunning.value = false
+                    }
+                    ButtonState.SegundoTiempo -> {
+                        isTimerRunning.value = true
+                        // Iniciar en el minuto 45 (45 * 60 * 1000 milisegundos)
+                        tiempoTranscurrido.value = 45L * 60L * 1000L
+                        launch {
+                            while (isTimerRunning.value) {
+                                delay(1L)
+                                tiempoTranscurrido.value += 1000L
+                            }
+                        }
+                    }
+                    ButtonState.Fin -> {
+                        isTimerRunning.value = false
+                    }
+                    else -> {}
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -72,7 +115,7 @@ fun GestionarPartido(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Estado del partido
+                // card Estado del partido
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -90,7 +133,7 @@ fun GestionarPartido(
                     )
                 }
 
-                // Marcador
+                // card equipo local vs visitante
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.elevatedCardElevation(
@@ -123,7 +166,7 @@ fun GestionarPartido(
                     }
                 }
 
-                // Botón de control de partido
+                // Botón estado de control de partido
                 Button(
                     onClick = {
                         stateButton.value = when (stateButton.value) {
@@ -140,10 +183,10 @@ fun GestionarPartido(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = when (stateButton.value) {
-                            ButtonState.Iniciar -> MaterialTheme.colorScheme.primary
-                            ButtonState.PrimerTiempo -> MaterialTheme.colorScheme.secondary
+                            ButtonState.Iniciar -> MaterialTheme.colorScheme.tertiary
+                            ButtonState.PrimerTiempo -> MaterialTheme.colorScheme.primary
                             ButtonState.Entretiempo -> MaterialTheme.colorScheme.tertiary
-                            ButtonState.SegundoTiempo -> MaterialTheme.colorScheme.secondary
+                            ButtonState.SegundoTiempo -> MaterialTheme.colorScheme.primary
                             ButtonState.Fin -> MaterialTheme.colorScheme.error
                         }
                     )
@@ -164,12 +207,22 @@ fun GestionarPartido(
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stateButton.value.name,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+
+                        if ((stateButton.value == ButtonState.PrimerTiempo) || (stateButton.value == ButtonState.SegundoTiempo))
+                            Text(
+                                text = stateButton.value.name+" - "+formatTime(tiempoTranscurrido.value),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        else{
+                            Text(
+                                text = stateButton.value.name,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
                     }
                 }
+
+                // aca poner el tiempo de partido
 
                 // Controles de goles
                 AnimatedVisibility(
@@ -245,6 +298,7 @@ fun GestionarPartido(
                     }
                 }
 
+                // Cartel de FIN DE PARTIDO
                 if (stateButton.value == ButtonState.Fin) {
                     ElevatedCard(
                         modifier = Modifier.fillMaxWidth(),
@@ -359,4 +413,10 @@ fun ScoreControls(
             }
         }
     }
+}
+
+fun formatTime(timeInMillis: Long): String {
+    val seconds = (timeInMillis / 1000) % 60
+    val minutes = (timeInMillis / (1000 * 60)) % 60
+    return "%02d:%02d".format(minutes, seconds)
 }
