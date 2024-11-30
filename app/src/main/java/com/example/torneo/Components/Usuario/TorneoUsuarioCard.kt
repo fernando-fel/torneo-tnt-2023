@@ -166,7 +166,7 @@ fun EquipoUsuarioCard(
                 color = MaterialTheme.colorScheme.surface
             ) {
                 Image(
-                    painter = painterResource(R.drawable.balon_roto),
+                    painter = painterResource(R.drawable.escudo_sinfondo),
                     contentDescription = "Logo del equipo",
                     modifier = Modifier
                         .padding(8.dp)
@@ -239,7 +239,7 @@ fun EquipoUsuarioCard2(
             verticalAlignment = Alignment.CenterVertically,
         ){
             Image(
-                painterResource(R.drawable.balon_roto),
+                painterResource(R.drawable.escudo_sinfondo),
                 contentDescription = "Imagen de prueba",
                 modifier = Modifier.size(80.dp,60.dp)
             )

@@ -204,7 +204,7 @@ fun EquipoCard(
             verticalAlignment = Alignment.CenterVertically,
         ){
             Image(
-                painterResource(R.drawable.balon_roto),
+                painterResource(R.drawable.escudo_sinfondo),
                 contentDescription = "Imagen de prueba",
                 modifier = Modifier.size(80.dp,60.dp)
             )
