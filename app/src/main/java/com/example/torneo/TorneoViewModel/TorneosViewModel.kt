@@ -17,6 +17,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,6 +76,11 @@ class TorneosViewModel @Inject constructor(
 
     suspend fun getTorneo(id: Int): Torneo? {
         return repo.getTorneo(id) // Suponiendo que esto devuelve el Torneo
+    }
+    suspend fun getTorneo2(id: Int): Torneo? {
+        return withContext(Dispatchers.IO) {
+            repo.getTorneo(id)
+        }
     }
 
     suspend fun inscribirEquipos(torneoId: Int, equipos: List<Equipo>) {

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
+import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.repository.EquipoRepository
 import com.example.torneo.Core.Data.repository.FechaRepository
 import com.google.firebase.firestore.ktx.firestore
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -76,6 +78,11 @@ class FechasViewModel @Inject constructor(
                 .set(fecha)
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                 .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+        }
+    }
+    suspend fun getFecha3(id: Int): Fecha? {
+        return withContext(Dispatchers.IO) {
+            repo.getFecha(id)
         }
     }
 

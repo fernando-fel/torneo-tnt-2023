@@ -9,20 +9,32 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SportsScore
+import androidx.compose.material.icons.filled.Stadium
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.navigation.NavHostController
 
 import com.example.torneo.Components.Usuario.MenuBottomBar
+import com.example.torneo.Core.Data.Entity.Fecha
+import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.Entity.Torneo
+import com.example.torneo.Pantallas.Usuario.DetallePartido
+import com.example.torneo.TorneoViewModel.FechasViewModel
 
 import com.example.torneo.TorneoViewModel.PartidosViewModel
+import com.example.torneo.TorneoViewModel.TorneosViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +43,8 @@ import com.example.torneo.TorneoViewModel.PartidosViewModel
 fun PartidosEnVivoScreen(
     viewModel: PartidosViewModel,
     navControllerBack: NavHostController,
+    viewModel2: TorneosViewModel = hiltViewModel(),
+    viewModel3: FechasViewModel = hiltViewModel()
 ) {
     // Cargar los partidos desde Firebase
     viewModel.loadPartidosDeHoyDesdeFirebase()
@@ -59,11 +73,11 @@ fun PartidosEnVivoScreen(
 
                     partidosAgrupados.forEach { torneo ->
                         item {
-                            TorneoHeader(torneo.nombreTorneo)
+                            TorneoHeader(torneo.nombreTorneo, viewModel2)
                         }
                         torneo.fechas.forEach { fecha ->
                             item {
-                                FechaHeader(fecha.numeroFecha)
+                                FechaHeader(fecha.numeroFecha, viewModel3)
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
                             items(
@@ -133,13 +147,18 @@ private fun EmptyState() {
 }
 
 @Composable
-private fun TorneoHeader(nombreTorneo: String) {
+private fun TorneoHeader(nombreTorneo: String, torneoVm : TorneosViewModel) {
+    var torneo by remember { mutableStateOf<Torneo?>(null) }
+
+    LaunchedEffect(nombreTorneo) {
+        torneo = torneoVm.getTorneo(id = nombreTorneo.toInt())
+    }
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Torneo $nombreTorneo",
+            text = "Torneo : ${torneo.let { it?.nombre }}" ?: " ",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -148,9 +167,15 @@ private fun TorneoHeader(nombreTorneo: String) {
 }
 
 @Composable
-private fun FechaHeader(numeroFecha: String) {
+private fun FechaHeader(numeroFecha: String, fechavm : FechasViewModel) {
+
+    var fecha by remember { mutableStateOf<Fecha?>(null) }
+
+    LaunchedEffect(numeroFecha) {
+        fecha = fechavm.getFecha3(id = numeroFecha.toInt())
+    }
     Text(
-        text = "Fecha $numeroFecha",
+        text = "Fecha Numero : ${fecha.let { it?.numero }}" ?: " ",
         style = MaterialTheme.typography.titleSmall,
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
@@ -159,6 +184,8 @@ private fun FechaHeader(numeroFecha: String) {
 @Composable
 fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel: PartidosViewModel) {
     val partido = partidoConTiempo.partido
+    var partido2 by remember { mutableStateOf<Partido?>(null) }
+
 
     val tiempoTrascurrido = partidoConTiempo.tiempoTrascurrido?.let { segundos ->
         try {
@@ -188,7 +215,11 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-
+            DetallePartido(
+                icon = Icons.Default.Stadium,
+                label = "Cancha",
+                value = partido.numCancha
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
             // Mostrar tiempo transcurrido, si está en curso
