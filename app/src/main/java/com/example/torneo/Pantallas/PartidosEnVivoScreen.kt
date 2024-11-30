@@ -27,14 +27,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 
 import com.example.torneo.Components.Usuario.MenuBottomBar
+import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Pantallas.Usuario.DetallePartido
+import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.FechasViewModel
 
 import com.example.torneo.TorneoViewModel.PartidosViewModel
 import com.example.torneo.TorneoViewModel.TorneosViewModel
+import kotlinx.coroutines.flow.first
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +47,9 @@ fun PartidosEnVivoScreen(
     viewModel: PartidosViewModel,
     navControllerBack: NavHostController,
     viewModel2: TorneosViewModel = hiltViewModel(),
-    viewModel3: FechasViewModel = hiltViewModel()
+    viewModel3: FechasViewModel = hiltViewModel(),
+    viewModel4 : EquiposViewModel = hiltViewModel()
+
 ) {
     // Cargar los partidos desde Firebase
     viewModel.loadPartidosDeHoyDesdeFirebase()
@@ -86,7 +91,8 @@ fun PartidosEnVivoScreen(
                             ) { partidoConTiempo ->
                                 PartidoItem2(
                                     partidoConTiempo,
-                                    viewModel = viewModel
+                                    viewModel = viewModel,
+                                    equipovm = viewModel4
                                 )
                             }
                         }
@@ -182,10 +188,10 @@ private fun FechaHeader(numeroFecha: String, fechavm : FechasViewModel) {
     )
 }
 @Composable
-fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel: PartidosViewModel) {
+fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel: PartidosViewModel, equipovm: EquiposViewModel) {
     val partido = partidoConTiempo.partido
     var partido2 by remember { mutableStateOf<Partido?>(null) }
-
+    var equipo by remember { mutableStateOf<Equipo?>(null) }
 
     val tiempoTrascurrido = partidoConTiempo.tiempoTrascurrido?.let { segundos ->
         try {
@@ -232,7 +238,17 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
                 )
             }
             }
+        var nombreLocal by remember { mutableStateOf("") }
+        var nombreVisitante by remember { mutableStateOf("") }
 
+        LaunchedEffect(partido.idLocal, partido.idVisitante) {
+            val nombres = equipovm.getNombreEquipos(
+                partido.idLocal.toInt(),
+                partido.idVisitante.toInt()
+            ).first()
+            nombreLocal = nombres.first
+            nombreVisitante = nombres.second
+        }
             // Equipos y marcador
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -240,7 +256,7 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
             ) {
                 // Equipo Local
                 Text(
-                    text = partido.idLocal,
+                    text = nombreLocal,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -259,7 +275,7 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
 
                 // Equipo Visitante
                 Text(
-                    text = partido.idVisitante,
+                    text = nombreVisitante,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.End
