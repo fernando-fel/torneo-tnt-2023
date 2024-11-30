@@ -11,18 +11,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PartidosViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun PartidoUsuarioScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
@@ -32,53 +32,57 @@ fun PartidoUsuarioScreen(
     navControllerBack: NavHostController
 ) {
     val partidos by viewModel.partidos.collectAsState(initial = emptyList())
-    val partidosDeFecha = partidos.filter { it.idFecha.toString() == fechaId.toString() }
+    val partidosDeFecha = partidos.filter { it.idFecha == fechaId.toString() }
     val equipos by viewModel2.equipos.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
             CustomTopAppBar(navControllerBack, "Programación  de Partidos", true)
-        }
-    ) { padding ->
-        if (partidosDeFecha.isEmpty()) {
-            // Estado vacío
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+        },
+        content = { padding ->
+            if (partidosDeFecha.isEmpty()) {
+                // Estado vacío
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.SportsScore,
-                        contentDescription = "No hay partidos",
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "No hay partidos programados",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.SportsScore,
+                            contentDescription = "No hay partidos",
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "No hay partidos programados",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(partidosDeFecha) { partido ->
+                        PartidoCard(partido, equipos)
+                    }
                 }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(partidosDeFecha) { partido ->
-                    PartidoCard(partido, equipos)
-                }
-            }
+        },
+        bottomBar = {
+            MenuBottomBar(navControllerBack)
         }
-    }
+    )
 }
 
 @Composable
@@ -86,8 +90,8 @@ fun PartidoCard(
     partido: Partido,
     equipos: List<Equipo>
 ) {
-    val equipoLocal = equipos.firstOrNull { it.id.toString() == partido.idLocal.toString() }
-    val equipoVisitante = equipos.firstOrNull { it.id.toString() == partido.idVisitante.toString() }
+    val equipoLocal = equipos.firstOrNull { it.id.toString() == partido.idLocal }
+    val equipoVisitante = equipos.firstOrNull { it.id.toString() == partido.idVisitante }
 
     Card(
         modifier = Modifier
@@ -143,7 +147,7 @@ fun PartidoCard(
                 }
             }
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .fillMaxWidth(),

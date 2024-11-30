@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Mapas.myMarket
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.FechasViewModel
@@ -40,7 +41,6 @@ data class MenuItem(
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuUsuario(navController: NavHostController) {
     val scrollState = rememberScrollState()
@@ -70,8 +70,10 @@ fun MenuUsuario(navController: NavHostController) {
                 // Sección de publicidad mejorada
                 Publicidad()
             }
+        },
+        bottomBar = {
+            MenuBottomBar(navController)
         }
-
     )
 }
 
@@ -279,3 +281,4 @@ fun Publicidad() {
 }
 
 fun randomColor() = Color(Random.nextLong(0xFFFFFFFF))
+

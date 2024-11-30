@@ -17,6 +17,7 @@ import com.example.torneo.Components.AddEquipoFlotingActionButton
 import com.example.torneo.Components.AddEquiposAlertDialog
 import com.example.torneo.Components.EquipoContent
 import com.example.torneo.Components.Usuario.EquipoUsuarioContent
+import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
@@ -53,6 +54,9 @@ fun EquiposUsuarioScreen(
                 },
                 navigateToUpdateEquipoScreen =  navController*/
             )
+        },
+        bottomBar = {
+            MenuBottomBar(navControllerBack)
         }
     )
 }

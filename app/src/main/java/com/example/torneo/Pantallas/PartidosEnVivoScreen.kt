@@ -19,10 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.TorneoViewModel.PartidosViewModel
@@ -68,39 +70,45 @@ fun PartidosEnVivoScreen(
                 ),
                 title = { Text("Partidos en Vivo") }
             )*/
-        }
-    ) { paddingValues ->
-        if (partidosHoy.isEmpty()) {
-            EmptyState()
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                val partidosAgrupados = agruparPartidos(partidosHoy)
+        },
+        content = { padding ->
+            if (partidosHoy.isEmpty()) {
+                EmptyState()
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                ) {
+                    val partidosAgrupados = agruparPartidos(partidosHoy)
 
-                partidosAgrupados.forEach { torneo ->
-                    item {
-                        TorneoHeader(torneo.nombreTorneo)
-                    }
-                    torneo.fechas.forEach { fecha ->
+                    partidosAgrupados.forEach { torneo ->
+
                         item {
-                            FechaHeader(fecha.numeroFecha)
+                            TorneoHeader(torneo.nombreTorneo)
                         }
-                        items(
-                            items = fecha.partidos,
-                            key = { it.id }
-                        ) { partidoConDetalles ->
-                            PartidoItem(
-                                partido = partidoConDetalles, viewModel
-                            )
+                        torneo.fechas.forEach { fecha ->
+                            item {
+                                FechaHeader(fecha.numeroFecha)
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                            items(
+                                items = fecha.partidos,
+                                key = { it.id }
+                            ) { partidoConDetalles ->
+                                PartidoItem(
+                                    partido = partidoConDetalles, viewModel
+                                )
+                            }
                         }
                     }
                 }
             }
+        },
+        bottomBar = {
+            MenuBottomBar(navControllerBack)
         }
-    }
+    )
 }
 
 fun agruparPartidos(partidos: SnapshotStateList<Partido>): List<TorneoConPartidos> {
@@ -154,12 +162,12 @@ private fun EmptyState() {
 @Composable
 private fun TorneoHeader(nombreTorneo: String) {
     Surface(
-        color = MaterialTheme.colorScheme.primaryContainer,
+        color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = "Torneo $nombreTorneo",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
@@ -183,12 +191,13 @@ fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
 
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        //elevation = CardDefaults.cardElevation(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
+
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -262,4 +271,11 @@ fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
             }
         }
     }
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 22.dp).fillMaxWidth(),
+        thickness = 1.dp,
+        color = Color.Black
+    )
+
+    //Spacer(modifier = Modifier.height(8.dp))
 }

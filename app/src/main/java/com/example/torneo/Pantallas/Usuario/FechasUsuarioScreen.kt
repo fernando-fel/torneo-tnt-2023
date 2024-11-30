@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.Components.FechaCard
 import com.example.torneo.Components.Usuario.FechaUsuarioCard
+import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.TorneoViewModel.FechasViewModel
 import com.example.torneo.TorneoViewModel.TorneosViewModel
@@ -45,21 +46,32 @@ fun FechasUsuarioScreen(
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(navControllerBack, "Fechas", true)
+            torneo?.let {
+                CustomTopAppBar(navControllerBack, "Torneo "+it.nombre, true)
+            }
         },
         content = { padding ->
             Column(
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.fillMaxSize().padding(padding)
             ) {
-                torneo?.let {
-                    Text(
-                        it.nombre,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                /*torneo?.let {
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            it.nombre,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        }
                 }
-                Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    thickness = 1.dp,
+                    color = Color.Black
+                )*/
 
                 // Pestañas
                 TabRow(selectedTabIndex = selectedTabIndex) {
@@ -78,7 +90,7 @@ fun FechasUsuarioScreen(
                 // Contenido de las pestañas
                 when (selectedTabIndex) {
                     0 -> {
-                        Text(text = "Próxima fecha", fontWeight = FontWeight.Bold)
+                        //Text(text = "Próxima fecha", fontWeight = FontWeight.Bold)
                         if (fechasProgramadas.isNotEmpty()) {
                             fechasProgramadas.forEach { fecha ->
                                 FechaUsuarioCard(
@@ -93,8 +105,9 @@ fun FechasUsuarioScreen(
                             Text("No hay fechas programadas", color = Color.Gray)
                         }
                     }
+
                     1 -> {
-                        Text(text = "Fechas anteriores", fontWeight = FontWeight.Bold)
+                        //Text(text = "Fechas anteriores", fontWeight = FontWeight.Bold)
                         if (fechasFinalizadas.isNotEmpty()) {
                             fechasFinalizadas.forEach { fecha ->
                                 FechaUsuarioCard(
@@ -112,6 +125,9 @@ fun FechasUsuarioScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
+        },
+        bottomBar = {
+            MenuBottomBar(navControllerBack)
         }
     )
 }

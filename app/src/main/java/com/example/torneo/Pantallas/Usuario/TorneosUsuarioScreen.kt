@@ -9,12 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Components.Usuario.TorneosUsuarioContent
 import com.example.torneo.TorneoViewModel.TorneosViewModel
 
@@ -24,28 +24,6 @@ fun TorneosUsuarioScreen(
     navController: (torneoId: Int) -> Unit,
     navigateToFechaScreen: (torneoId: Int) -> Unit,
     navControllerBack: NavHostController
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 16.dp)
-    ) {
-        ScaffoldWithTopBarTorneosUsuarioScreen(
-            viewModel,
-            navController,
-            navigateToFechaScreen,
-            navControllerBack
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScaffoldWithTopBarTorneosUsuarioScreen(
-    viewModel: TorneosViewModel = hiltViewModel(),
-    navController: (torneoId: Int) -> Unit,
-    navigateToFechaScreen: (torneoId: Int) -> Unit,
-    navControllerBack: NavHostController,
 ) {
     val torneos by viewModel.torneos.collectAsState(initial = emptyList())
     var mostrarFinalizados by remember { mutableStateOf(false) }
@@ -67,6 +45,8 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Título y descripción
                 /*Column(
@@ -89,14 +69,14 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
                 }*/
 
                 // Tabs mejorados
-                var selectedTabIndex by remember { mutableStateOf(0) }
+                var selectedTabIndex by remember { mutableIntStateOf(0) }
                 val tabs = listOf(
                     TabItem("Todos", "Ver todos los torneos"),
                     TabItem("En Curso", "Torneos activos"),
                     TabItem("Finalizados", "Torneos completados")
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 TabRow(
                     selectedTabIndex = selectedTabIndex,
@@ -122,9 +102,21 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
                             onClick = {
                                 selectedTabIndex = index
                                 when (index) {
-                                    0 -> actualizarPestañas(true, false, false)
-                                    1 -> actualizarPestañas(false, true, false)
-                                    2 -> actualizarPestañas(false, false, true)
+                                    0 -> actualizarPestañas(
+                                        todos = true,
+                                        enCurso = false,
+                                        finalizados = false
+                                    )
+                                    1 -> actualizarPestañas(
+                                        todos = false,
+                                        enCurso = true,
+                                        finalizados = false
+                                    )
+                                    2 -> actualizarPestañas(
+                                        todos = false,
+                                        enCurso = false,
+                                        finalizados = true
+                                    )
                                 }
                             },
                             modifier = Modifier.padding(vertical = 8.dp),
@@ -147,7 +139,7 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 // Contenido principal
                 TorneosUsuarioContent(
@@ -164,6 +156,9 @@ fun ScaffoldWithTopBarTorneosUsuarioScreen(
                 )
             }
         },
+        bottomBar = {
+            MenuBottomBar(navControllerBack)
+        }
         //containerColor = MaterialTheme.colorScheme.background
     )
 }

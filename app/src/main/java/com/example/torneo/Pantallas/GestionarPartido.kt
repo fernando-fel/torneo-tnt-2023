@@ -56,7 +56,6 @@ fun GestionarPartido(
         var nombreLocal by remember { mutableStateOf("") }
         var nombreVisitante by remember { mutableStateOf("") }
 
-
         LaunchedEffect(it.idLocal, it.idVisitante) {
             val nombres = (viewModel2.getNombreEquipos(it.idLocal.toInt(), it.idVisitante.toInt())).first()
             nombreLocal = nombres.first

@@ -108,7 +108,7 @@ fun PartidoCard(partido: Partido, equipoLocal: Equipo?, equipoVisitante: Equipo?
             // Encabezado con equipos y resultado
             EncabezadoPartido(equipoLocal, equipoVisitante, partido)
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .fillMaxWidth(),
