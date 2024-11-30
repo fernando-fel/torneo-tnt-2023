@@ -120,6 +120,7 @@ private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoD
     db_firebase.collection("Equipo").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val equipo = Equipo(
+                id = document.getString("idEquipo")?.toInt() ?: 0, // Ajusta el ID según sea necesario
                 nombre = document.getString("nombre") ?: ""
             )
 
