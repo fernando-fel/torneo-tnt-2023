@@ -73,7 +73,8 @@ fun GestionarPartido(
             val stateButton = remember { mutableStateOf(ButtonState.Iniciar) }
 
             val tiempoTranscurrido = remember { mutableStateOf(0L) } // Tiempo en milisegundos
-            val isTimerRunning = remember { mutableStateOf(false) } // Estado del timer (iniciado/pausado)
+            val isTimerRunning =
+                remember { mutableStateOf(false) } // Estado del timer (iniciado/pausado)
 
             LaunchedEffect(stateButton.value) {
                 when (stateButton.value) {
@@ -84,30 +85,55 @@ fun GestionarPartido(
                             while (isTimerRunning.value) {
                                 delay(1000L) // Actualizar cada 1 segundo (1 seg = 1000L)
                                 tiempoTranscurrido.value += 1000L
+
+                                // Enviar actualización cada minuto
+                                if (tiempoTranscurrido.value % (60 * 1000L) == 0L) {
+                                    val partidoUpdate =
+                                        it.copy(estado = stateButton.value.toString())
+                                    viewModel.updatePartido(
+                                        partidoUpdate,
+                                        tiempoTranscurrido.value.toString()
+                                    )
+                                }
                             }
                         }
                     }
+
                     ButtonState.Entretiempo -> {
                         isTimerRunning.value = false
                     }
+
                     ButtonState.SegundoTiempo -> {
                         isTimerRunning.value = true
                         // Iniciar en el minuto 45 (45 * 60 * 1000 milisegundos)
-                        tiempoTranscurrido.value = 45L * 60L * 1000L
+                        //tiempoTranscurrido.value = 45L * 60L * 1000L
+                        //lo cambio para que inicie en cero
+                        tiempoTranscurrido.value = 0
                         launch {
                             while (isTimerRunning.value) {
                                 delay(1000L)
                                 tiempoTranscurrido.value += 1000L
+
+                                // Enviar actualización cada minuto
+                                if (tiempoTranscurrido.value % (60 * 1000L) == 0L) {
+                                    val partidoUpdate =
+                                        it.copy(estado = stateButton.value.toString())
+                                    viewModel.updatePartido(
+                                        partidoUpdate,
+                                        tiempoTranscurrido.value.toString()
+                                    )
+                                }
                             }
                         }
                     }
+
                     ButtonState.Fin -> {
                         isTimerRunning.value = false
                     }
+
                     else -> {}
                 }
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -166,19 +192,24 @@ fun GestionarPartido(
                     }
                 }
 
-                // Botón estado de control de partido
-                Button(
-                    onClick = {
-                        stateButton.value = when (stateButton.value) {
-                            ButtonState.Iniciar -> ButtonState.PrimerTiempo
-                            ButtonState.PrimerTiempo -> ButtonState.Entretiempo
-                            ButtonState.Entretiempo -> ButtonState.SegundoTiempo
-                            ButtonState.SegundoTiempo -> ButtonState.Fin
-                            ButtonState.Fin -> ButtonState.Fin
-                        }
-                        val partidoUpdate = it.copy(estado = stateButton.value.toString())
-                        viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
-                    },
+    Button(
+        onClick = {
+            stateButton.value = when (stateButton.value) {
+                ButtonState.Iniciar -> ButtonState.PrimerTiempo
+                ButtonState.PrimerTiempo -> ButtonState.Entretiempo
+                ButtonState.Entretiempo -> ButtonState.SegundoTiempo
+                ButtonState.SegundoTiempo -> ButtonState.Fin
+                ButtonState.Fin -> ButtonState.Fin
+            }
+            val partidoUpdate = it.copy(estado = stateButton.value.toString())
+            viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
+
+            // Si el partido finaliza, detener el tiempo
+            if (stateButton.value == ButtonState.Fin) {
+                isTimerRunning.value = false
+            }
+        },
+
                     enabled = stateButton.value != ButtonState.Fin,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(

@@ -2,7 +2,7 @@ package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
 import android.os.Build
-import android.util.Log
+
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,21 +12,16 @@ import androidx.compose.material.icons.filled.SportsScore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.navigation.NavHostController
-import com.example.torneo.Core.Data.Entity.Partido
-import com.example.torneo.Core.Data.Entity.Torneo
+
 import com.example.torneo.TorneoViewModel.PartidosViewModel
-import com.example.torneo.TorneoViewModel.TorneosViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -158,7 +153,15 @@ private fun FechaHeader(numeroFecha: String) {
 @Composable
 fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel: PartidosViewModel) {
     val partido = partidoConTiempo.partido
-    val tiempoTrascurrido = partidoConTiempo.tiempoTrascurrido ?: ""
+
+    val tiempoTrascurrido = partidoConTiempo.tiempoTrascurrido?.let { segundos ->
+        try {
+            val minutos = segundos.toInt() / 60
+            "$minutos"
+        } catch (e: NumberFormatException) {
+            ""
+        }
+    } ?: ""
 
     Card(
         modifier = Modifier
@@ -182,12 +185,14 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
             Spacer(modifier = Modifier.height(8.dp))
 
             // Mostrar tiempo transcurrido, si está en curso
+            if ((partido.estado == "Primer Tiempo") || (partido.estado == "SegudoTiempo")) {
                 Text(
-
-                    text = "Tiempo: $tiempoTrascurrido'",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    text = " $tiempoTrascurrido'",
+                    style = MaterialTheme.typography.headlineSmall, // Aumentado de titleMedium a headlineSmall
+                    color = Color.Green, // Cambiado a color verde
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
+            }
             }
 
             // Equipos y marcador
@@ -203,6 +208,7 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
                 )
 
                 // Marcador (solo se muestra si el partido no está en curso)
+
                 Text(
                     text = when {
                         partido.estado == "EN CURSO" -> ""
