@@ -82,7 +82,7 @@ fun GestionarPartido(
                         tiempoTranscurrido.value = 0L
                         launch {
                             while (isTimerRunning.value) {
-                                delay(10L) // Actualizar cada 1 segundo (1 seg = 1000L)
+                                delay(1000L) // Actualizar cada 1 segundo (1 seg = 1000L)
                                 tiempoTranscurrido.value += 1000L
                             }
                         }
@@ -96,7 +96,7 @@ fun GestionarPartido(
                         tiempoTranscurrido.value = 45L * 60L * 1000L
                         launch {
                             while (isTimerRunning.value) {
-                                delay(1L)
+                                delay(1000L)
                                 tiempoTranscurrido.value += 1000L
                             }
                         }
@@ -177,7 +177,7 @@ fun GestionarPartido(
                             ButtonState.Fin -> ButtonState.Fin
                         }
                         val partidoUpdate = it.copy(estado = stateButton.value.toString())
-                        viewModel.updatePartido(partidoUpdate)
+                        viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
                     },
                     enabled = stateButton.value != ButtonState.Fin,
                     modifier = Modifier.fillMaxWidth(),
@@ -257,7 +257,7 @@ fun GestionarPartido(
                                             golLocal = golLocal.value,
                                             resultado = "${golLocal.value} - ${golVisitante.value}"
                                         )
-                                        viewModel.updatePartido(partidoUpdate)
+                                        viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
                                     },
                                     onDecrement = {
                                         if (golLocal.value > 0) {
@@ -266,7 +266,7 @@ fun GestionarPartido(
                                                 golLocal = golLocal.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
-                                            viewModel.updatePartido(partidoUpdate)
+                                            viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
                                         }
                                     }
                                 )
@@ -280,7 +280,7 @@ fun GestionarPartido(
                                             golVisitante = golVisitante.value,
                                             resultado = "${golLocal.value} - ${golVisitante.value}"
                                         )
-                                        viewModel.updatePartido(partidoUpdate)
+                                        viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
                                     },
                                     onDecrement = {
                                         if (golVisitante.value > 0) {
@@ -289,7 +289,7 @@ fun GestionarPartido(
                                                 golVisitante = golVisitante.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
-                                            viewModel.updatePartido(partidoUpdate)
+                                            viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
                                         }
                                     }
                                 )

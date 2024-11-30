@@ -98,9 +98,10 @@ class PartidosViewModel @Inject constructor(
         partidoRepo.deletePartido(partido)
     }
 
-    fun updatePartido(partido: Partido) {
+    fun updatePartido(partido: Partido,tiempo: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val db = Firebase.firestore
+
             db.collection("partidos").document(partido.id.toString())
                 .set(partido)
                 .addOnSuccessListener {
@@ -109,7 +110,15 @@ class PartidosViewModel @Inject constructor(
                 .addOnFailureListener { e ->
                     Log.w(ContentValues.TAG, "Error updating document", e)
                 }
-
+            // Luego, añade el nuevo campo al documento
+            db.collection("partidos").document(partido.id.toString())
+                .update("tiempoTrascurrido", tiempo)
+                .addOnSuccessListener {
+                    Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated with nuevoCampo!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(ContentValues.TAG, "Error updating document with nuevoCampo", e)
+                }
             partidoRepo.updatePartido(partido)
         }
     }
