@@ -2,7 +2,7 @@ package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
 import android.os.Build
-import android.util.Log
+
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,64 +12,39 @@ import androidx.compose.material.icons.filled.SportsScore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.navigation.NavHostController
+
 import com.example.torneo.Components.Usuario.MenuBottomBar
-import com.example.torneo.Core.Data.Entity.Partido
-import com.example.torneo.Core.Data.Entity.Torneo
+
 import com.example.torneo.TorneoViewModel.PartidosViewModel
-import com.example.torneo.TorneoViewModel.TorneosViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PartidosEnVivoScreen(
     viewModel: PartidosViewModel,
-    //viewModel2: TorneosViewModel,
-    //torneoId: Int,
     navControllerBack: NavHostController,
 ) {
-
-    /*var torneo by remember { mutableStateOf<Torneo?>(null) }
-
-    LaunchedEffect(torneoId) {
-        torneo = viewModel2.getTorneo(torneoId)
-    }*/
-
+    // Cargar los partidos desde Firebase
     viewModel.loadPartidosDeHoyDesdeFirebase()
 
     // Observamos los partidos obtenidos desde Firebase
     val partidosHoy = viewModel.partidosHoyFirebase
 
-    //val partidosHoy = viewModel.loadPartidosDeHoy().collectAsState(initial = emptyList()).value
-
     LaunchedEffect(Unit) {
         viewModel.startAutoRefresh()
-        //
-    // viewModel.loadPartidosDeHoy()
     }
 
     Scaffold(
         topBar = {
             CustomTopAppBar(navControllerBack, "Partidos en Vivo", true)
-            /*TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                title = { Text("Partidos en Vivo") }
-            )*/
         },
         content = { padding ->
             if (partidosHoy.isEmpty()) {
@@ -83,7 +58,6 @@ fun PartidosEnVivoScreen(
                     val partidosAgrupados = agruparPartidos(partidosHoy)
 
                     partidosAgrupados.forEach { torneo ->
-
                         item {
                             TorneoHeader(torneo.nombreTorneo)
                         }
@@ -94,10 +68,11 @@ fun PartidosEnVivoScreen(
                             }
                             items(
                                 items = fecha.partidos,
-                                key = { it.id }
-                            ) { partidoConDetalles ->
-                                PartidoItem(
-                                    partido = partidoConDetalles, viewModel
+                                key = { it.partido.id }
+                            ) { partidoConTiempo ->
+                                PartidoItem2(
+                                    partidoConTiempo,
+                                    viewModel = viewModel
                                 )
                             }
                         }
@@ -111,17 +86,15 @@ fun PartidosEnVivoScreen(
     )
 }
 
-fun agruparPartidos(partidos: SnapshotStateList<Partido>): List<TorneoConPartidos> {
-    return partidos.groupBy { it.idFecha }.map { (torneo, partidosPorTorneo) ->
-        val fechasAgrupadas = partidosPorTorneo.groupBy { it.idFecha }.map { (fecha, partidosPorFecha) ->
-            Log.d("Fechas", "Torneo: $torneo, Fecha: $fecha, Partidos: ${partidosPorFecha.joinToString { it.id.toString() }}")
-
-            FechaConPartidos(fecha, partidosPorFecha) // Pasar la lista completa de PartidoConDetalles
-
+fun agruparPartidos(partidos: SnapshotStateList<PartidosViewModel.PartidoConTiempo>): List<TorneoConPartidos> {
+    return partidos.groupBy { it.partido.idFecha }.map { (torneo, partidosPorTorneo) ->
+        val fechasAgrupadas = partidosPorTorneo.groupBy { it.partido.idFecha }.map { (fecha, partidosPorFecha) ->
+            FechaConPartidos(fecha, partidosPorFecha.map { it }) // Este es el arreglo de fechas agrupadas
         }
         TorneoConPartidos(torneo, fechasAgrupadas)
     }
 }
+
 data class TorneoConPartidos(
     val nombreTorneo: String,
     val fechas: List<FechaConPartidos>
@@ -129,7 +102,7 @@ data class TorneoConPartidos(
 
 data class FechaConPartidos(
     val numeroFecha: String,
-    val partidos: List<Partido> // Asegúrate de que esto sea correcto
+    val partidos: List<PartidosViewModel.PartidoConTiempo> // Asegúrate de que esto sea correcto
 )
 
 @Composable
@@ -183,11 +156,18 @@ private fun FechaHeader(numeroFecha: String) {
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
     )
 }
-
 @Composable
-fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
+fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel: PartidosViewModel) {
+    val partido = partidoConTiempo.partido
 
-    val tiempoActual = viewModel.tiempoActualPartido.collectAsState()
+    val tiempoTrascurrido = partidoConTiempo.tiempoTrascurrido?.let { segundos ->
+        try {
+            val minutos = segundos.toInt() / 60
+            "$minutos"
+        } catch (e: NumberFormatException) {
+            ""
+        }
+    } ?: ""
 
     Card(
         modifier = Modifier
@@ -211,6 +191,17 @@ fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Mostrar tiempo transcurrido, si está en curso
+            if ((partido.estado == "Primer Tiempo") || (partido.estado == "SegudoTiempo")) {
+                Text(
+                    text = " $tiempoTrascurrido'",
+                    style = MaterialTheme.typography.headlineSmall, // Aumentado de titleMedium a headlineSmall
+                    color = Color.Green, // Cambiado a color verde
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+            }
+
             // Equipos y marcador
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -223,9 +214,14 @@ fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
                     modifier = Modifier.weight(1f)
                 )
 
-                // Marcador
+                // Marcador (solo se muestra si el partido no está en curso)
+
                 Text(
-                    text = "${partido.golLocal} - ${partido.golVisitante}",
+                    text = when {
+                        partido.estado == "EN CURSO" -> ""
+                        partido.estado == "Finalizado" -> "Fin"
+                        else -> "${partido.golLocal} - ${partido.golVisitante}"
+                    },
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -255,20 +251,14 @@ fun PartidoItem(partido: Partido, viewModel: PartidosViewModel ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         text = partido.estado,
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
-
-                    /*if ((partido.estado == "PrimerTiempo") || (partido.estado == "SegundoTiempo")){
-                        Text(
-                            text = formatTime(tiempoActual.value)
-                        )
-                    }*/
                 }
-            }
+            
         }
     }
     HorizontalDivider(
