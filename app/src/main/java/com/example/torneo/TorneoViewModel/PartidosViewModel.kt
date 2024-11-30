@@ -58,7 +58,7 @@ class PartidosViewModel @Inject constructor(
                     val partido = document.toObject(Partido::class.java).apply {
                         id = document.id.toInt()
                     }
-                    val tiempoTrascurrido = ((document.getString("tiempoTrascurrido")?.toInt() ?:0) /60).toString()
+                    val tiempoTrascurrido = (((document.getString("tiempoTrascurrido")?.toInt() ?:0) /60) /1000).toString()
                     PartidoConTiempo(partido, tiempoTrascurrido)
                 }
                 partidosHoyFirebase.clear()

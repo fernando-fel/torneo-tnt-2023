@@ -23,7 +23,7 @@ private fun sincronizarTorneos(db_firebase: FirebaseFirestore, db_local: TorneoD
     val dao = db_local.torneoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("Torneo").get().addOnSuccessListener { result ->
+    db_firebase.collection("torneos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val torneo = Torneo(
                 idTorneo = document.getString("idTorneo") ?: "",
@@ -36,7 +36,7 @@ private fun sincronizarTorneos(db_firebase: FirebaseFirestore, db_local: TorneoD
             )
 
             scope.launch {
-                val existingTorneo = dao.getTorneo(torneo.idTorneo.toInt())
+                val existingTorneo = dao.getTorneo(id = torneo.idTorneo.toInt())
                 if (existingTorneo != null) {
                     if (existingTorneo != torneo) {
                         dao.update(torneo)
@@ -55,7 +55,7 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
     val dao = db_local.personaDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("Persona").get().addOnSuccessListener { result ->
+    db_firebase.collection("persona").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val persona = Persona(
                 idPersona = document.getString("idPersona") ?: "",
@@ -83,36 +83,40 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
 
 private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
     val dao = db_local.fechaDao()
+    val torneoDao = db_local.torneoDao()
     val scope = CoroutineScope(Dispatchers.IO)
-
 
     db_firebase.collection("fechas").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val idTorneo = document.getString("idTorneo") ?: ""
-            Log.d("id torneooo", idTorneo)
-
-            val fecha = Fecha(
-                idTorneo = document.getString("idTorneo") ?: "",
-                numero = document.getString("numero") ?: "",
-                estado = document.getString("estado") ?: ""
-            )
+            Log.d("idTorneo", idTorneo)
 
             scope.launch {
-                val existingFecha = dao.getFechaById(fecha.id)
-                if (existingFecha != null) {
-                    if (existingFecha != fecha) {
-                        dao.updateFecha(fecha)
+                val torneo = torneoDao.getTorneo(idTorneo.toInt())
+                if (torneo != null) {  // Asegúrate de que el torneo existe antes de insertar la fecha
+                    val fecha = Fecha(
+                        idTorneo = idTorneo,
+                        numero = document.getString("numero") ?: "",
+                        estado = document.getString("estado") ?: ""
+                    )
+
+                    val existingFecha = dao.getFechaById(fecha.id)
+                    if (existingFecha != null) {
+                        if (existingFecha != fecha) {
+                            dao.updateFecha(fecha)
+                        }
+                    } else {
+                        dao.insertFecha(fecha)
                     }
                 } else {
-                    dao.insertFecha(fecha)
+                    Log.w("TAG", "Torneo no encontrado para id: $idTorneo")
                 }
             }
         }
     }.addOnFailureListener { exception ->
-        Log.w("TAG", "Error getting documents from fechas.", exception)
+        Log.w("TAG", "Error al obtener documentos de fechas.", exception)
     }
 }
-
 private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
     val dao = db_local.equipoDao()
     val scope = CoroutineScope(Dispatchers.IO)
@@ -143,7 +147,7 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
     val partidoDao = db_local.partidoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("Partidos").get().addOnSuccessListener { result ->
+    db_firebase.collection("partidos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val idFecha = document.getString("idFecha") ?: ""
 
