@@ -107,7 +107,7 @@ class FechasViewModel @Inject constructor(
             var cantidad = repo.getCountFechas()
             var fecha2 = fecha.copy(id = cantidad)
             db.collection("fechas").document(fecha2.id.toString())
-                .set(fecha)
+                .set(fecha2)
                 .addOnSuccessListener {
                     Log.d(
                         "FechasViewModel",

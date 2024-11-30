@@ -80,11 +80,11 @@ class PartidosViewModel @Inject constructor(
     fun addPartido(partido: Partido) = viewModelScope.launch(Dispatchers.IO) {
         partidoRepo.addPartido(partido)
         var cantidad = partidoRepo.getCountEquipos()
-        var partido2 = partido.copy(id = cantidad + 1)
+        var partido2 = partido.copy(id = cantidad)
 
         val db = Firebase.firestore
         db.collection("partidos").document(partido2.id.toString())
-            .set(partido)
+            .set(partido2)
             .addOnSuccessListener {
                 Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
             }
