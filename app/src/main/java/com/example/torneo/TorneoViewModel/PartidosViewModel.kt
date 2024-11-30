@@ -38,9 +38,13 @@ class PartidosViewModel @Inject constructor(
     val tiempoActualPartido = MutableStateFlow(0L) // Tiempo actual del partido
 
     // Estado que mantendrá los partidos de hoy
-    var partidosHoyFirebase = mutableStateListOf<Partido>()
+    var partidosHoyFirebase = mutableStateListOf<PartidoConTiempo>()
 
-    // Función para obtener partidos de hoy desde Firebase
+    data class PartidoConTiempo(
+        val partido: Partido,
+        val tiempoTrascurrido: String?
+    )
+
     fun loadPartidosDeHoyDesdeFirebase() {
         val db = FirebaseFirestore.getInstance()
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -51,17 +55,20 @@ class PartidosViewModel @Inject constructor(
             .get()
             .addOnSuccessListener { documents ->
                 val partidos = documents.mapNotNull { document ->
-                    document.toObject(Partido::class.java).apply {
+                    val partido = document.toObject(Partido::class.java).apply {
                         id = document.id.toInt()
                     }
+                    val tiempoTrascurrido = document.getString("tiempoTrascurrido")
+                    PartidoConTiempo(partido, tiempoTrascurrido)
                 }
-                partidosHoyFirebase.clear()  // Limpiamos la lista antes de agregar los nuevos partidos
-                partidosHoyFirebase.addAll(partidos) // Actualizamos la lista con los partidos obtenidos de Firebase
+                partidosHoyFirebase.clear()
+                partidosHoyFirebase.addAll(partidos)
             }
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
     }
+
 
     // Función que obtiene los partidos de hoy desde Firebase (solo si se necesita)
     @RequiresApi(Build.VERSION_CODES.O)
