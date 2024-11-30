@@ -15,7 +15,7 @@ fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
         sincronizarPersonas(db_firebase, db_local)
         sincronizarFechas(db_firebase, db_local)
         sincronizarEquipos(db_firebase, db_local)
-        //sincronizarPartidos(db_firebase, db_local)
+        sincronizarPartidos(db_firebase, db_local)
     }
 }
 

@@ -45,8 +45,6 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
     val menuOptions = listOf(
         MenuOption("Torneos", Icons.Default.EmojiEvents, Routes.TorneosScreen.route),
         MenuOption("Equipos", Icons.Default.Group, Routes.EquiposScreen.route),
-        MenuOption("Fechas", Icons.Default.DateRange, Routes.FechasScreen.route),
-        MenuOption("Fixture", Icons.Default.Schedule, Routes.Fixture.route),
         MenuOption("Personas Inscriptas", Icons.Default.Person, Routes.ListadoDePersonas.route)
     )
 
@@ -65,14 +63,6 @@ fun ScaffoldWithTopBarSesionOk(navController: NavHostController) {
                 // Menú de opciones
                 MenuGrid(menuOptions, navController)
 
-                // Mapa
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                ) {
-                    myMarket()
-                }
             }
         }
     )
