@@ -21,7 +21,7 @@ import com.example.torneo.Core.Data.Jugador
 
 @Database(
     entities = [Torneo::class, Equipo::class, Jugador::class,Fecha::class, Partido::class, Persona::class, TorneoEquipo::class], // Agrega TorneoEquipo aquí
-    version = 12,
+    version = 24,
     exportSchema = false
 )
 abstract class TorneoDB: RoomDatabase() {
