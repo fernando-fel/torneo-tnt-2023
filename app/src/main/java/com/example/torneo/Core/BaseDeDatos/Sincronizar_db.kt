@@ -60,6 +60,7 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
     db_firebase.collection("persona").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val persona = Persona(
+                id = (document.getString("id")?.toInt() ?: "0") as Int,
                 idPersona = document.getString("idPersona") ?: "",
                 nombre = document.getString("nombre") ?: "",
                 username = document.getString("username") ?: "",
