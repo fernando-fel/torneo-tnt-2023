@@ -93,14 +93,16 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
 
             scope.launch {
                 val torneo = torneoDao.getTorneo(idTorneo.toInt())
+                Log.d("TAG", "Sincronizando fecha con ID: $torneo")
                 if (torneo != null) {  // Asegúrate de que el torneo existe antes de insertar la fecha
                     val fecha = Fecha(
+                        id = (document.getString("id") ?: "").toInt(),
                         idTorneo = idTorneo,
                         numero = document.getString("numero") ?: "",
                         estado = document.getString("estado") ?: ""
                     )
 
-                    val existingFecha = dao.getFechaById(fecha.id)
+                    val existingFecha = dao.getFecha(fecha.id)
                     if (existingFecha != null) {
                         if (existingFecha != fecha) {
                             dao.updateFecha(fecha)
@@ -124,12 +126,13 @@ private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoD
     db_firebase.collection("Equipo").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val equipo = Equipo(
-                id = document.getString("idEquipo")?.toInt() ?: 0, // Ajusta el ID según sea necesario
+                id = document.getString("id")?.toInt() ?: 0, // Ajusta el ID según sea necesario
                 nombre = document.getString("nombre") ?: ""
             )
 
             scope.launch {
                 val existingEquipo = dao.getEquipo(equipo.id)
+                Log.d("TAG", "Sincronizando equipo con ID: ${equipo.id}")
                 if (existingEquipo != null) {
                     if (existingEquipo != equipo) {
                         dao.updateEquipo(equipo)
@@ -150,11 +153,20 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
     db_firebase.collection("partidos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val idFecha = document.getString("idFecha") ?: ""
-
+            Log.d("idFecha", idFecha)
+            Log.d("TAG", "Sincronizando partido con IDLoca: $document.getString(idLocal")
+            Log.d("TAG", "Sincronizando partido con IDVisitante: $document.getString(idVisitante")
             scope.launch {
                 val dao = db_local.fechaDao()
-                val fecha = dao.getFechaById(idFecha.toInt())  // Mover aquí
+                val fecha = dao.getFecha(idFecha.toInt())  // Mover aquí
                 if (fecha != null) {  // Asegúrate de que la fecha existe antes de crear el partido
+                    val golLocalString = document.getString("golLocal") ?: "0"
+                    val golVisitanteString = document.getString("golVisitante") ?: "0"
+
+                    // Verificar si las cadenas están vacías antes de convertir
+                    val golLocal = if (golLocalString.isNotEmpty()) golLocalString.toInt() else 0
+                    val golVisitante = if (golVisitanteString.isNotEmpty()) golVisitanteString.toInt() else 0
+
                     val partido = Partido(
                         idFecha = idFecha,
                         hora = document.getString("hora") ?: "",
@@ -162,8 +174,8 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
                         numCancha = document.getString("numCancha") ?: "",
                         idLocal = document.getString("idLocal") ?: "",
                         idVisitante = document.getString("idVisitante") ?: "",
-                        golLocal = document.getString("golLocal")?.toInt() ?: 0,
-                        golVisitante = document.getString("golVisitante")?.toInt() ?: 0,
+                        golLocal = golLocal,  // Aquí asignamos el valor convertido
+                        golVisitante = golVisitante,  // Aquí asignamos el valor convertido
                         estado = document.getString("estado") ?: "",
                         resultado = document.getString("resultado") ?: "",
                         idPersona = document.getString("persona") ?: ""
