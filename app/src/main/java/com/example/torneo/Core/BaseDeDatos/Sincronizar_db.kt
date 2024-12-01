@@ -100,7 +100,7 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
                 if (torneo != null) {  // Asegúrate de que el torneo existe antes de insertar la fecha
                     val fecha = Fecha(
                         id = (document.getString("id") ?: "").toInt(),
-                        idTorneo = document.getString("idTorneo") ?: "",
+                        idTorneo = document.getString("idTorneo")?.toInt() ?: 0,
                         numero = document.getString("numero") ?: "",
                         estado = document.getString("estado") ?: ""
                     )
@@ -152,11 +152,10 @@ private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoD
     }
 }
 private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
-    Log.d("Entrando a sincronizar Partido", "")
-
+    Log.d("Entrando a sicronizar Partido","")
     val partidoDao = db_local.partidoDao()
-    val fechaDao = db_local.fechaDao()
     val equipoDao = db_local.equipoDao()
+    val fechaDao = db_local.fechaDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
     db_firebase.collection("partidos").get().addOnSuccessListener { result ->
@@ -170,48 +169,41 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
             Log.d("idVisitante", idVisitante)
 
             scope.launch {
-                try {
-                    // Verificar si la fecha existe
-                    val fecha = fechaDao.getFecha(id = idFecha.toInt())
+                val fecha = fechaDao.getFecha(id = idFecha.toInt())
+                val local = equipoDao.getEquipo(id = idLocal.toInt())
+                val visitante = equipoDao.getEquipo(id = idVisitante.toInt())
 
-                    // Verificar si los equipos existen
-                    val equipoLocal = equipoDao.getEquipo(idLocal.toInt())
-                    val equipoVisitante = equipoDao.getEquipo(idVisitante.toInt())
+                if (fecha != null && local != null && visitante != null) {
+                    val golLocalString = document.getString("golLocal") ?: "0"
+                    val golVisitanteString = document.getString("golVisitante") ?: "0"
+                    val golLocal = golLocalString.toIntOrNull() ?: 0
+                    val golVisitante = golVisitanteString.toIntOrNull() ?: 0
 
-                    if (fecha != null && equipoLocal != null && equipoVisitante != null) {
-                        val golLocal = document.getString("golLocal")?.toIntOrNull() ?: 0
-                        val golVisitante = document.getString("golVisitante")?.toIntOrNull() ?: 0
+                    val partido = Partido(
+                        id = document.getString("id")?.toInt() ?: 0,
+                        idFecha = idFecha,
+                        hora = document.getString("hora") ?: "",
+                        dia = document.getString("dia") ?: "",
+                        numCancha = document.getString("numCancha") ?: "",
+                        idLocal = idLocal,
+                        idVisitante = idVisitante,
+                        golLocal = golLocal,
+                        golVisitante = golVisitante,
+                        estado = document.getString("estado") ?: "",
+                        resultado = document.getString("resultado") ?: "",
+                        idPersona = document.getString("idPersona") ?: ""
+                    )
 
-                        val partido = Partido(
-                            id = document.getString("id")?.toInt() ?: 0,
-                            idFecha = idFecha,
-                            hora = document.getString("hora") ?: "",
-                            dia = document.getString("dia") ?: "",
-                            numCancha = document.getString("numCancha") ?: "",
-                            idLocal = idLocal,
-                            idVisitante = idVisitante,
-                            golLocal = golLocal,
-                            golVisitante = golVisitante,
-                            estado = document.getString("estado") ?: "",
-                            resultado = document.getString("resultado") ?: "",
-                            idPersona = document.getString("idPersona") ?: ""
-                        )
-
-                        val existingPartido = partidoDao.getPartido(partido.id)
-                        if (existingPartido != null) {
-                            if (existingPartido != partido) {
-                                Log.d("Partido", "Actualizando partido con ID: ${partido.id}")
-                                partidoDao.updatePartido(partido)
-                            }
-                        } else {
-                            Log.d("Partido", "Insertando nuevo partido con ID: ${partido.id}")
-                            partidoDao.insertPartido(partido)
+                    val existingPartido = partidoDao.getPartido(partido.id)
+                    if (existingPartido != null) {
+                        if (existingPartido != partido) {
+                            partidoDao.updatePartido(partido)
                         }
                     } else {
-                        Log.w("TAG", "Datos de referencia no encontrados: idFecha: $idFecha, idLocal: $idLocal, idVisitante: $idVisitante")
+                        partidoDao.insertPartido(partido)
                     }
-                } catch (e: Exception) {
-                    Log.e("Sincronización", "Error al sincronizar partido", e)
+                } else {
+                    Log.w("TAG", "No se encontró fecha, local o visitante para idFecha: $idFecha, idLocal: $idLocal, idVisitante: $idVisitante")
                 }
             }
         }

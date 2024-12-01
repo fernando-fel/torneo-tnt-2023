@@ -137,7 +137,7 @@ class PartidosViewModel @Inject constructor(
             }
         }
     }
-    suspend fun getTorneoIdByFecha(fechaId: Int): String? {
+    suspend fun getTorneoIdByFecha(fechaId: Int): Int? {
         val fecha = fechaRepo.getFecha(fechaId)
         return fecha?.idTorneo // Asegúrate de que el campo sea correcto
     }

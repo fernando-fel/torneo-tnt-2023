@@ -39,7 +39,7 @@ data class Torneo (
 )
 data class Fecha(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name= "idTorneo") val idTorneo: String,
+    @ColumnInfo(name= "idTorneo") val idTorneo: Int,
     @ColumnInfo(name= "numeroFecha") val numero: String,
     @ColumnInfo(name= "estado") val estado: String,
 

@@ -31,7 +31,7 @@ class FechasViewModel @Inject constructor(
     private val repo: FechaRepository,
 ) : ViewModel() {
 
-    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = "1", numero = "0", estado = "programado"))
+    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = 1, numero = "0", estado = "programado"))
     var openDialog by mutableStateOf(false)
     val fechas = repo.getAllFechas().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -91,7 +91,7 @@ class FechasViewModel @Inject constructor(
     }
 
     fun getNextFechaNumber(torneoId: String): Int {
-        val fechasDeTorneo = fechas.value.filter { it.idTorneo == torneoId }
+        val fechasDeTorneo = fechas.value.filter { it.idTorneo == torneoId.toInt() }
         val maxNumber = fechasDeTorneo
             .mapNotNull { it.numero.toIntOrNull() }
             .maxOrNull() ?: 0
