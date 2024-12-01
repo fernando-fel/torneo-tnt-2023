@@ -87,9 +87,7 @@ class TorneosViewModel @Inject constructor(
         val db = Firebase.firestore
         try {
             for (equipo in equipos) {
-                db.collection("Torneo").document(torneoId.toString())
-                    .collection("Equipos")
-                    .add(equipo)
+                db.collection("torneo_equipo").document(torneoId.toString()).set(equipo)
                     .addOnSuccessListener {
                         Log.d(TAG, "Equipo ${equipo.nombre} inscrito correctamente.")
                     }
