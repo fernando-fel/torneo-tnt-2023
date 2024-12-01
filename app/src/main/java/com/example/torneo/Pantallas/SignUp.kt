@@ -192,8 +192,10 @@ fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
                                 val db = Firebase.firestore
 
                                 persona.insertPersona(usuario)
-                                db.collection("Persona").document(usuario.id.toString())
-                                    .set(usuario)
+                                var cantidad = persona.getCantidadPersonas()
+                                var persona2 = usuario.copy(id = cantidad)
+                                db.collection("Persona").document(persona2.id.toString())
+                                    .set(persona2)
                                     .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                                     .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                                 //personaId.value++

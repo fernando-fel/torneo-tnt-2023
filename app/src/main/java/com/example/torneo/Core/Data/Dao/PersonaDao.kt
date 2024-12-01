@@ -34,5 +34,9 @@ interface PersonaDao{
 
     @Query("SELECT * from persona_table WHERE idPersona = :idPersona")
     suspend fun getPersona(idPersona: Int): Persona
+
+    // Nueva consulta para obtener el conteo de equipos
+    @Query("SELECT COUNT(*) FROM persona_table")
+    fun getCantidadPersonas(): Int
 }
 
