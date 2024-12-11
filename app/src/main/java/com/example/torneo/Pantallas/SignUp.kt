@@ -187,7 +187,7 @@ fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                val usuario = Persona(id = idPersona.value, idPersona="1", nombre=nombre.value,
+                                val usuario = Persona(id = 0, idPersona=idPersona.value.toString(), nombre=nombre.value,
                                     username = username.value, pass = password.value, rol = "usuario")
                                 val db = Firebase.firestore
 
