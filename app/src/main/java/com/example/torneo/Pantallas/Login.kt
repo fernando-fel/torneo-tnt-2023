@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,41 +26,37 @@ import androidx.compose.material.IconButton
 
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.R
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginPage(
-    navController: NavHostController,
-    persona: PersonaDao
-) {
+fun Login(navController: NavHostController, persona: PersonasViewModel) {
 
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    val inicioSesionOk = remember { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
 
     //ICONO OJO: oculta o da visibilidad DE los caracteres
@@ -69,10 +64,19 @@ fun LoginPage(
     val passwordVisibilityIcon = if (passwordVisible.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
 
+    var estadoInicioSesion by remember { mutableStateOf(false) }
+    var personaRegistrada by remember { mutableStateOf<Persona?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+    var personasList by remember { mutableStateOf<List<Persona>>(emptyList()) }
 
+    LaunchedEffect(key1 = Unit) {
+        personasList = persona.getPersonaList()
+    }
     Column(
         //modifier = Modifier.padding(40.dp),
-        modifier = Modifier.fillMaxSize().padding(20.dp,60.dp,20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp, 60.dp, 20.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -119,34 +123,13 @@ fun LoginPage(
         )
         Spacer(modifier = Modifier.height(30.dp))
 
-        val coroutineScope = rememberCoroutineScope()
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
                 onClick = {
                     // Llamar a getPersona dentro de un bloque de coroutine
                     coroutineScope.launch {
-                        val listaDePersonas: List<Persona> = persona.getPersonaList()
-                        var esRol = false
-
-                        for(persona in listaDePersonas){
-                            when {
-                                persona.rol == "admin" && persona.username == username.value && persona.pass == password.value -> {
-                                    navController.navigate(Routes.SesionOk.route)
-                                    esRol = true
-                                }
-                                persona.rol == "juez" && persona.username == username.value && persona.pass == password.value -> {
-                                    navController.navigate("${Routes.PartidosDelJuezScreen.route}/${persona.id}")
-                                    esRol = true
-                                }
-                                persona.rol == "usuario" && persona.username == username.value && persona.pass == password.value -> {
-                                    navController.navigate(Routes.MenuUsuario.route)
-                                    esRol = true
-                                }
-                            }
-                        }
-                        if (!esRol) {
-                            showErrorDialog.value = true
-                        }
+                        personaRegistrada = persona.login(username.value, password.value, personasList) //Llamar a la función de inicio de sesión en ViewModel
+                        estadoInicioSesion = personaRegistrada != null
                     }
                 },
                 shape = RoundedCornerShape(50.dp),
@@ -155,6 +138,27 @@ fun LoginPage(
                     .height(50.dp)
             ) {
                 Text(text = "Iniciar Sesion")
+            }
+
+            if (estadoInicioSesion) {
+                var esRol = false
+                when (personaRegistrada?.rol) {
+                    "admin" -> {
+                        navController.navigate(Routes.SesionOk.route)
+                        esRol = true
+                    }
+                    "juez" -> {
+                        navController.navigate("${Routes.PartidosDelJuezScreen.route}/${personaRegistrada?.id}")
+                        esRol = true
+                    }
+                    "usuario" -> {
+                        navController.navigate(Routes.MenuUsuario.route)
+                        esRol = true
+                    }
+                }
+                if (!esRol) {
+                    showErrorDialog.value = true
+                }
             }
             if (showErrorDialog.value) {
                 AlertDialog(
@@ -174,7 +178,7 @@ fun LoginPage(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        ClickableText(
+        /*ClickableText(
             text = AnnotatedString("¿Has olvidado tu contraseña?"),
             onClick = { navController.navigate(Routes.ForgotPassword.route) },
             style = TextStyle(
@@ -183,10 +187,12 @@ fun LoginPage(
                 textDecoration = TextDecoration.Underline,
                 color = MaterialTheme.colorScheme.primary
             )
-        )
+        )*/
 
         Box(
-            modifier = Modifier.fillMaxSize().padding(40.dp,0.dp,40.dp,30.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(40.dp, 0.dp, 40.dp, 30.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
             Button(

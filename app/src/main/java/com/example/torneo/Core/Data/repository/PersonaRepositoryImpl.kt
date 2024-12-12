@@ -3,12 +3,13 @@ package com.example.torneo.Core.Data.repository
 
 import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Entity.Persona
+import kotlinx.coroutines.runBlocking
 
 class PersonaRepositoryImpl(private val personaDao: PersonaDao
 ): PersonaRepository{
-    override fun getPersonaFromRoom()= personaDao.getAlphabetizedPersona()
+    override fun getAllPersonas()= personaDao.getAlphabetizedPersona()
 
-    override suspend fun addPersonaToRoom(persona: Persona) = personaDao.insertPersona(persona)
+    override suspend fun addPersona(persona: Persona) = personaDao.addPersona(persona)
 
     override suspend fun deletePersona(persona: Persona) = personaDao.deletePersona(persona)
 
@@ -20,6 +21,10 @@ class PersonaRepositoryImpl(private val personaDao: PersonaDao
         return personaDao.getPersonaList()
     }
 
-
+    override fun getCountPersonas(): Int {
+        return runBlocking {
+            personaDao.getCantidadPersonas()
+        }
+    }
 
 }

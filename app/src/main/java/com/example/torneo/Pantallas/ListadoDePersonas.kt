@@ -10,18 +10,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Persona
-import com.example.torneo.Core.Data.Dao.PersonaDao
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +30,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun ListadoDePersonas(
     navController: NavHostController,
-    personaDao: PersonaDao
+    personaDao: PersonasViewModel
 ) {
     val mostrarDialog = remember { mutableStateOf(false) }
     val personasList = remember { mutableStateListOf<Persona>() }
@@ -46,7 +44,7 @@ fun ListadoDePersonas(
     // Cargar datos
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            val personas: List<Persona> = personaDao.getPersonaList()
+            val personas = personaDao.getPersonaList()
             personasList.addAll(personas)
         }
     }

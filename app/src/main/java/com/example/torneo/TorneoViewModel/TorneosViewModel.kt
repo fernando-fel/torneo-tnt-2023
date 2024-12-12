@@ -25,7 +25,7 @@ class TorneosViewModel @Inject constructor(
     private val repo: TorneoRepository
 ) : ViewModel() {
 
-    var torneo by mutableStateOf(Torneo(0, ubicacion = "", idTorneo = "", precio = "", fechaInicio = "", fechaFin = "", estado = "", nombre = ""))
+    var torneo by mutableStateOf(Torneo(0, idTorneo = "", nombre = "", fechaInicio = "", fechaFin = "",ubicacion = "",precio = "", estado = ""))
     var openDialog by mutableStateOf(false)
     val torneos = repo.getAllTorneos()
 
@@ -34,7 +34,7 @@ class TorneosViewModel @Inject constructor(
         repo.addTorneo(torneo)
         var cantidad = repo.getCountTorneos()
         var torneo2 = torneo.copy(id = cantidad,idTorneo = cantidad.toString())
-        db.collection("torneos").document(torneo2.id.toString())
+        db.collection("Torneos").document(torneo2.id.toString())
             .set(torneo2)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }

@@ -7,6 +7,10 @@ import com.example.torneo.Pantallas.Usuario.FechasUsuarioScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,6 +29,7 @@ import com.example.torneo.Pantallas.Usuario.EquiposUsuarioScreen
 import com.example.torneo.Pantallas.Usuario.PartidoUsuarioScreen
 import com.example.torneo.Pantallas.Usuario.TorneosUsuarioScreen
 import com.example.torneo.Splash.SplashScreen
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -33,24 +38,29 @@ import kotlinx.coroutines.withContext
 @ExperimentalMaterial3Api
 fun ScreenMain(database: TorneoDB, torneoId: Int){
     val navController = rememberNavController()
+    val persona: PersonasViewModel = hiltViewModel()
+    var usuariosInsertados by remember { mutableStateOf(false) }
 
-    // Obtener instancia del DAO (carga de roles a mano en la base de datos)
-    val persona = database.personaDao()
-    LaunchedEffect(Unit) {
-        //persona.deleteAll()
-        val admin = Persona(idPersona = "1", nombre = "admin", username = "admin", pass = "admin", rol = "admin")
-        val juez = Persona(idPersona = "2", nombre = "juez", username = "juez", pass = "juez", rol = "juez")
+    LaunchedEffect(key1 = usuariosInsertados) {
+        if (!usuariosInsertados) {
+            //persona.deleteAll()
+            val admin = Persona(idPersona = "1", nombre = "admin", username = "admin", pass = "admin", rol = "admin")
+            val juez = Persona(idPersona = "2", nombre = "juez", username = "juez", pass = "juez", rol = "juez")
 
-        if (persona.getPersona(1) == null) {
-            withContext(Dispatchers.IO) {
-                persona.insertPersona(admin)
+
+            if (persona.getPersona(1) == null) {
+                withContext(Dispatchers.IO) {
+                    persona.addPersona(admin)
+                }
             }
-        }
-        if (persona.getPersona(2) == null) {
-            withContext(Dispatchers.IO) {
-                persona.insertPersona(juez)
+            if (persona.getPersona(2) == null) {
+                withContext(Dispatchers.IO) {
+                    persona.addPersona(juez)
+                }
             }
+            usuariosInsertados = true // Marcar como insertados
         }
+
         if (torneoId != -1) {
             Log.d("ScreenMain", "Navegando a FechaUsuarioScreen con torneoId: $torneoId")
             navController.navigate("${Routes.FechaUsuarioScreen.route}/$torneoId")
@@ -71,7 +81,7 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
 
         composable(Routes.Login.route) {
             //val persona = database.personaDao()
-            LoginPage(navController, persona)
+            Login(navController, persona)
         }
         composable(Routes.SignUp.route) {
             SignUp(navController, persona)

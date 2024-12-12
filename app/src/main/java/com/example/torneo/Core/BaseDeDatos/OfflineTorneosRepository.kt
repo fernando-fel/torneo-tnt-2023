@@ -7,12 +7,10 @@ import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Torneo
 import com.example.torneo.Core.Data.Entity.TorneoEquipo
 import com.example.torneo.Core.Data.repository.TorneoRepository
-import com.example.torneo.Core.Data.repository.Torneos
-import kotlinx.coroutines.flow.Flow
 
 class OfflineTorneosRepository(private val torneoDao: TorneoDao,private val torneoEquipoDao: TorneoEquipoDao) : TorneoRepository {
     override fun getAllTorneos() = torneoDao.getTorneos()
-    override suspend fun getTorneo(id: Int): Torneo = torneoDao.getTorneo(id)
+    override suspend fun getTorneo(id: Int): Torneo = torneoDao.getTorneo(id.toString())
     override suspend fun addTorneo(torneo: Torneo) = torneoDao.insertTorneo(torneo)
 
     override suspend fun deleteTorneo(torneo:Torneo) = torneoDao.deleteTorneo(torneo)
@@ -24,7 +22,7 @@ class OfflineTorneosRepository(private val torneoDao: TorneoDao,private val torn
         }
         torneoDao.inscribirEquipos(torneoEquipos)
     }
-    override suspend fun getEquiposEnTorneo(torneoId: Int) = torneoDao.getEquiposEnTorneo(torneoId)
+    override suspend fun getEquiposEnTorneo(torneoId: String) = torneoDao.getEquiposEnTorneo(torneoId)
     override fun getCountTorneos(): Int {
         TODO("Not yet implemented")
     }

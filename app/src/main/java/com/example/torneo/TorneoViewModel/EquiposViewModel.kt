@@ -16,9 +16,6 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -37,7 +34,7 @@ class EquiposViewModel @Inject constructor(
 
     fun recuperarEquiposTorneo(idFecha: Int): Flow<List<Equipo>> = flow {
         val fecha = repo3.getFecha(idFecha)
-        val equipos = repo2.getEquiposEnTorneo(fecha.idTorneo.toInt())
+        val equipos = repo2.getEquiposEnTorneo(fecha.idTorneo.toString())
         emit(equipos) // Emitir la lista de equipos
     }.flowOn(Dispatchers.IO) // Asegúrate de que se ejecute en el hilo IO
 
@@ -47,7 +44,7 @@ class EquiposViewModel @Inject constructor(
         repo.addEquipoToRoom(equipo)
         var cantidad = repo.getCountEquipos()
         var equipo2 = equipo.copy(id = cantidad)
-        db.collection("Equipo").document(equipo2.id.toString())
+        db.collection("Equipos").document(equipo2.id.toString())
             .set(equipo2)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }

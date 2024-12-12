@@ -5,8 +5,6 @@ import com.example.torneo.Core.Data.Entity.Equipo
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 class EquipoRepositoryImpl(
@@ -41,7 +39,7 @@ class EquipoRepositoryImpl(
 
     override fun getEquipo(id: Int): Equipo {
         // Try to get from Room
-        val equipo = equipoDao.getEquipo(id)
+        val equipo = equipoDao.getEquipo(id.toString())
         // Ensure the data is in Firebase
         equipoRef.child(id.toString()).get().addOnSuccessListener { snapshot ->
             val firebaseEquipo = snapshot.getValue(Equipo::class.java)

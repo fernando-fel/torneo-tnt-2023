@@ -30,7 +30,7 @@ interface EquipoDao {
     fun insertAll(equipos: List<Equipo>)
 
     @Query("SELECT * from equipo_table WHERE id = :id")
-    fun getEquipo(id: Int): Equipo
+    fun getEquipo(id: String): Equipo
 
     // Nueva consulta para obtener el conteo de equipos
     @Query("SELECT COUNT(*) FROM equipo_table")

@@ -69,10 +69,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-
-
-
         setContent {
             TorneoTheme(darkTheme = false) {
                 Surface(

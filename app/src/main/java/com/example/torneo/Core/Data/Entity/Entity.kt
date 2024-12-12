@@ -18,6 +18,7 @@ data class Persona(
     @ColumnInfo(name = "pass") val pass: String,
     @ColumnInfo(name = "rol") val rol: String,
 )
+
 @Entity(tableName = "torneo_table",)
 data class Torneo (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
@@ -39,11 +40,11 @@ data class Torneo (
 )
 data class Fecha(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name= "idTorneo") val idTorneo: Int,
+    @ColumnInfo(name= "idTorneo") val idTorneo: String?,
     @ColumnInfo(name= "numeroFecha") val numero: String,
     @ColumnInfo(name= "estado") val estado: String,
 
-)
+    )
 
 @Entity(tableName = "equipo_table",)
 data class Equipo(
@@ -68,8 +69,8 @@ data class Partido(
     @ColumnInfo(name = "numCancha") val numCancha: String= "",
     @ColumnInfo(name = "idLocal") val idLocal: String= "",
     @ColumnInfo(name = "idVisitante") val idVisitante: String= "",
-    @ColumnInfo(name = "golLocal") val golLocal: Int = 0,
-    @ColumnInfo(name = "golVisitante") val golVisitante: Int= 0,
+    @ColumnInfo(name = "golLocal") var golLocal: String? = 0.toString(),
+    @ColumnInfo(name = "golVisitante") var golVisitante: String? = 0.toString(),
     @ColumnInfo(name = "estado") val estado: String = "",
     @ColumnInfo(name = "resultado") val resultado: String = "",
     @ColumnInfo(name = "idPersona") val idPersona: String = "",

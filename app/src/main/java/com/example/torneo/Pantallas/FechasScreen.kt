@@ -49,7 +49,7 @@ fun ScaffoldWithTopBarFechasScreen(
     navControllerBack: NavHostController
 ) {
     val fechas by viewModel.fechas.collectAsState()
-    val fechasDeTorneo = fechas.filter { it.idTorneo == torneoId.toInt()}
+    val fechasDeTorneo = fechas.filter { it.idTorneo == torneoId}
 
     Scaffold(
         topBar = {
@@ -74,7 +74,7 @@ fun ScaffoldWithTopBarFechasScreen(
                     // Crear una nueva fecha
                     val nuevaFecha = Fecha(
                         id = 0, // Deberías manejar el ID adecuadamente o usar una estrategia para generar IDs únicos
-                        idTorneo = torneoId.toInt(),
+                        idTorneo = torneoId,
                         numero = newFechaNumber.toString(),
                         estado = "programado"
                     )

@@ -1,4 +1,5 @@
 package com.example.torneo.Core.Data.repository
+import androidx.room.Query
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Core.Data.Jugador
 import kotlinx.coroutines.flow.Flow
@@ -6,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 typealias Personas = List<Persona>
 interface PersonaRepository {
-    fun getPersonaFromRoom() : Flow<Personas>
 
-    suspend fun addPersonaToRoom(persona: Persona)
+    fun getAllPersonas() : Flow<Personas>
+
+    suspend fun addPersona(persona: Persona)
 
     /**
      * Delete item from the data source
@@ -20,9 +22,11 @@ interface PersonaRepository {
      */
     suspend fun updatePersona(persona: Persona)
 
-    suspend fun getPersona(id: Int): Persona
+    suspend fun getPersona(id: Int): Persona?
 
     suspend fun getPersonaList(): List<Persona>
+
+    fun getCountPersonas(): Int
 }
 
 

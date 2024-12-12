@@ -10,7 +10,7 @@ interface FechaDao {
     @Query("SELECT * FROM fecha_table")
     fun getFechas(): Flow<List<Fecha>>
     @Query("SELECT * FROM fecha_table Where id = :id ")
-    fun getFecha(id: Int): Fecha
+    fun getFecha(id: String): Fecha
 
     @Query("SELECT * FROM fecha_table WHERE idTorneo = :idTorneo")
     fun getFechasByTorneoId(idTorneo: Int): Flow<List<Fecha>>

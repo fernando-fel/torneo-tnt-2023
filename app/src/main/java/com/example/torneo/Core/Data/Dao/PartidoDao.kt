@@ -7,9 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.torneo.Core.Data.Entity.Partido
-import com.example.torneo.Core.Data.Jugador
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 
 @Dao
 interface PartidoDao {

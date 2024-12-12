@@ -1,6 +1,5 @@
 package com.example.torneo.Components
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,8 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -18,7 +15,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.torneo.Core.Constantes.Companion.NO_VALUE
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.Entity.Persona
@@ -247,8 +242,8 @@ fun AddPartidosDialog(
                                         idFecha = fechaId.toString(),
                                         hora = selectedTime,
                                         dia = selectedDate?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "",
-                                        golVisitante = 0,
-                                        golLocal = 0,
+                                        golVisitante = 0.toString(),
+                                        golLocal = 0.toString(),
                                         estado = "Programado",
                                         id = 0,
                                         idPersona = juez!!.id.toString()

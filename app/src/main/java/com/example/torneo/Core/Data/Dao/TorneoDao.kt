@@ -33,7 +33,7 @@ interface TorneoDao {
     suspend fun update(torneo: Torneo)
 
     @Query("SELECT * from torneo_table WHERE id = :id")
-    suspend fun getTorneo(id: Int): Torneo
+    suspend fun getTorneo(id: String): Torneo
 
     // Cambiar este método para aceptar una lista de TorneoEquipo
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -45,7 +45,7 @@ interface TorneoDao {
     INNER JOIN equipo_table e ON te.equipoId = e.id 
     WHERE te.torneoId = :torneoId
 """)
-    fun getEquiposEnTorneo(torneoId: Int): List<Equipo>
+    fun getEquiposEnTorneo(torneoId: String): List<Equipo>
 
     // Nueva consulta para obtener el conteo de equipos
     @Query("SELECT COUNT(*) FROM torneo_table")

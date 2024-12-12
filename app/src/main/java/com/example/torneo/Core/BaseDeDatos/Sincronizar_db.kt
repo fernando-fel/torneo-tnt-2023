@@ -5,7 +5,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
     val scope = CoroutineScope(Dispatchers.IO)
@@ -27,7 +26,8 @@ private fun sincronizarTorneos(db_firebase: FirebaseFirestore, db_local: TorneoD
     db_firebase.collection("torneos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val torneo = Torneo(
-                idTorneo = document.getString("idTorneo") ?: "",
+                id = document.getString("id")?.toIntOrNull()?: 0,
+                idTorneo = document.getString("idTorneo").toString(),
                 nombre = document.getString("nombre") ?: "",
                 fechaInicio = document.getString("fechaInicio") ?: "",
                 fechaFin = document.getString("fechaFin") ?: "",
@@ -37,7 +37,7 @@ private fun sincronizarTorneos(db_firebase: FirebaseFirestore, db_local: TorneoD
             )
 
             scope.launch {
-                val existingTorneo = dao.getTorneo(id = torneo.idTorneo.toInt())
+                val existingTorneo = dao.getTorneo(id = torneo.idTorneo)
                 if (existingTorneo != null) {
                     if (existingTorneo != torneo) {
                         dao.update(torneo)
@@ -60,7 +60,7 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
     db_firebase.collection("persona").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val persona = Persona(
-                id = (document.getString("id")?.toInt() ?: "0") as Int,
+                id = document.getString("id")?.toIntOrNull()?: 0,
                 idPersona = document.getString("idPersona") ?: "",
                 nombre = document.getString("nombre") ?: "",
                 username = document.getString("username") ?: "",
@@ -75,7 +75,7 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
                         dao.updatePersona(persona)
                     }
                 } else {
-                    dao.insertPersona(persona)
+                    dao.addPersona(persona)
                 }
             }
         }
@@ -96,17 +96,17 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
             Log.d("idTorneo", idTorneo)
 
             scope.launch {
-                val torneo = torneoDao.getTorneo(id = idTorneo.toInt())
+                val torneo = torneoDao.getTorneo(id = idTorneo.toInt().toString())
                 Log.d("TAG", "Sincronizando fecha con este torneo con ID: ${torneo.id}")
                 if (torneo != null) {  // Asegúrate de que el torneo existe antes de insertar la fecha
                     val fecha = Fecha(
-                        id = (document.getString("id") ?: "").toInt(),
-                        idTorneo = document.getString("idTorneo")?.toInt() ?: 0,
+                        id = document.getString("id")?.toIntOrNull()?: 0,
+                        idTorneo = document.getString("idTorneo")?: "",
                         numero = document.getString("numero") ?: "",
                         estado = document.getString("estado") ?: ""
                     )
 
-                    val existingFecha = dao.getFecha(fecha.id)
+                    val existingFecha = dao.getFecha(fecha.id.toString())
                     if (existingFecha != null) {
                         if (existingFecha != fecha) {
                             dao.updateFecha(fecha)
@@ -131,12 +131,12 @@ private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoD
     db_firebase.collection("Equipo").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val equipo = Equipo(
-                id = document.getString("id")?.toInt() ?: 0, // Ajusta el ID según sea necesario
+                id = document.getString("id")?.toIntOrNull()?: 0, // Ajusta el ID según sea necesario
                 nombre = document.getString("nombre") ?: ""
             )
 
             scope.launch {
-                val existingEquipo = dao.getEquipo(equipo.id)
+                val existingEquipo = dao.getEquipo(equipo.id.toString())
                 Log.d("TAG", "Sincronizando equipo con ID: ${equipo.id}")
                 if (existingEquipo != null) {
                     if (existingEquipo != equipo) {
@@ -170,18 +170,18 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
             Log.d("idVisitante", idVisitante)
 
             scope.launch {
-                val fecha = fechaDao.getFecha(id = idFecha.toInt())
-                val local = equipoDao.getEquipo(id = idLocal.toInt())
-                val visitante = equipoDao.getEquipo(id = idVisitante.toInt())
+                val fecha = fechaDao.getFecha(id = idFecha.toInt().toString())
+                val local = equipoDao.getEquipo(id = idLocal.toInt().toString())
+                val visitante = equipoDao.getEquipo(id = idVisitante.toInt().toString())
 
                 if (fecha != null && local != null && visitante != null) {
                     val golLocalString = document.getString("golLocal") ?: "0"
                     val golVisitanteString = document.getString("golVisitante") ?: "0"
-                    val golLocal = golLocalString.toIntOrNull() ?: 0
-                    val golVisitante = golVisitanteString.toIntOrNull() ?: 0
+                    val golLocal = golLocalString.toIntOrNull() ?.toString()
+                    val golVisitante = golVisitanteString.toIntOrNull() ?.toString()
 
                     val partido = Partido(
-                        id = document.getString("id")?.toInt() ?: 0,
+                        id = document.getString("id")?.toIntOrNull()?: 0,
                         idFecha = idFecha,
                         hora = document.getString("hora") ?: "",
                         dia = document.getString("dia") ?: "",

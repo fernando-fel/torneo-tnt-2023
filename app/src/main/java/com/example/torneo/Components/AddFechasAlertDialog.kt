@@ -59,7 +59,7 @@ fun AddFechasAlertDialog(
                         if (numero.isNotBlank()) {
                             val fecha = Fecha(
                                 id = 0, // Deberías manejar el ID adecuadamente
-                                idTorneo = torneoId.toInt(),
+                                idTorneo = torneoId.toInt().toString(),
                                 numero = numero,
                                 estado = "Empezado"
                             )

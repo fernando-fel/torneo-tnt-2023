@@ -267,7 +267,7 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
                     text = when {
                         partido.estado == "EN CURSO" -> ""
                         partido.estado == "Finalizado" -> "Fin"
-                        else -> "${partido.golLocal} - ${partido.golVisitante}"
+                        else -> "${partido.golLocal.toString()} - ${partido.golVisitante.toString()}"
                     },
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 16.dp)

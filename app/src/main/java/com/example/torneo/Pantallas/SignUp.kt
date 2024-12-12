@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,11 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import Component.CustomTopAppBar
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,7 +28,6 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
@@ -46,15 +40,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.torneo.Core.Data.Dao.PersonaDao
-import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.R
 import kotlinx.coroutines.launch
-import androidx.compose.material.ContentAlpha
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 
 
 //import Component.CustomTopAppBar
@@ -63,17 +52,9 @@ import com.google.firebase.ktx.Firebase
 @ExperimentalMaterial3Api
 fun SignUp(
     navController: NavHostController,
-    persona: PersonaDao
+    persona: PersonasViewModel
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScaffoldWithTopBar(navController, persona)
-    }
-}
 
-@Composable
-@ExperimentalMaterial3Api
-fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
-{
     // Inicializar el siguiente idPersona a partir de 3
     val idPersona = remember { mutableStateOf(0) }
 
@@ -91,6 +72,7 @@ fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
     val passErrorText = if (password.value.isBlank()) "*Obligatorio" else ""
 
     val mostrarDialog = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
 
     Scaffold(
@@ -181,24 +163,20 @@ fun ScaffoldWithTopBar(navController: NavHostController, persona: PersonaDao)
 
                 Spacer(modifier = Modifier.height(100.dp))
 
-                val coroutineScope = rememberCoroutineScope()
-                //Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)
                 Box(modifier = Modifier.fillMaxSize().padding(40.dp, 0.dp, 40.dp, 0.dp)) {
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                val usuario = Persona(id = 0, idPersona=idPersona.value.toString(), nombre=nombre.value,
-                                    username = username.value, pass = password.value, rol = "usuario")
-                                val db = Firebase.firestore
+                                val usuario = Persona(
+                                    id = 0,
+                                    idPersona=idPersona.value.toString(),
+                                    nombre=nombre.value,
+                                    username = username.value,
+                                    pass = password.value,
+                                    rol = "usuario"
+                                )
 
-                                persona.insertPersona(usuario)
-                                var cantidad = persona.getCantidadPersonas()
-                                var persona2 = usuario.copy(id = cantidad)
-                                db.collection("Persona").document(persona2.id.toString())
-                                    .set(persona2)
-                                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-                                //personaId.value++
+                                persona.addPersona(usuario)
 
                                 if (nombre.value.isNotBlank() && username.value.isNotBlank() &&
                                     password.value.isNotBlank()) {

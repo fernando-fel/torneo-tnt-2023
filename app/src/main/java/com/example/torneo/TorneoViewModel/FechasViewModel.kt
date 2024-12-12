@@ -7,10 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Fecha
-import com.example.torneo.Core.Data.Entity.Torneo
-import com.example.torneo.Core.Data.repository.EquipoRepository
 import com.example.torneo.Core.Data.repository.FechaRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -24,14 +21,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class FechasViewModel @Inject constructor(
     private val repo: FechaRepository,
 ) : ViewModel() {
 
-    var fecha by mutableStateOf(Fecha(id = 0, idTorneo = 1, numero = "0", estado = "programado"))
+    var fecha by mutableStateOf(Fecha(0, idTorneo = "", numero = "0", estado = "programado"))
     var openDialog by mutableStateOf(false)
     val fechas = repo.getAllFechas().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -45,6 +41,27 @@ class FechasViewModel @Inject constructor(
 //            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
 //            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 //    }
+
+    fun addFecha(fecha: Fecha) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d("FechasViewModel", "Adding fecha: $fecha")
+        try {
+            val db = Firebase.firestore
+            repo.addFecha(fecha)
+            var cantidad = repo.getCountFechas()
+            var fecha2 = fecha.copy(id = cantidad,idTorneo = cantidad.toString())
+            db.collection("Fechas").document(fecha2.id.toString())
+                .set(fecha2)
+                .addOnSuccessListener {
+                    Log.d(
+                        "FechasViewModel",
+                        "Fecha added successfully: $fecha"
+                    )
+                }
+                .addOnFailureListener { e -> Log.w("FechasViewModel", "Error adding fecha", e) }
+        } catch (e: Exception) {
+            Log.e("FechasViewModel", "Error adding fecha", e)
+        }
+    }
 
     fun closeDialog() {
         openDialog = false
@@ -91,32 +108,11 @@ class FechasViewModel @Inject constructor(
     }
 
     fun getNextFechaNumber(torneoId: String): Int {
-        val fechasDeTorneo = fechas.value.filter { it.idTorneo == torneoId.toInt() }
+        val fechasDeTorneo = fechas.value.filter { it.idTorneo == torneoId.toString() }
         val maxNumber = fechasDeTorneo
             .mapNotNull { it.numero.toIntOrNull() }
             .maxOrNull() ?: 0
         Log.d("FechasViewModel", "Max number for torneoId $torneoId: $maxNumber")
         return maxNumber + 1
-    }
-
-    fun addFecha(fecha: Fecha) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d("FechasViewModel", "Adding fecha: $fecha")
-        try {
-            val db = Firebase.firestore
-            repo.addFecha(fecha)
-            var cantidad = repo.getCountFechas()
-            var fecha2 = fecha.copy(id = cantidad)
-            db.collection("fechas").document(fecha2.id.toString())
-                .set(fecha2)
-                .addOnSuccessListener {
-                    Log.d(
-                        "FechasViewModel",
-                        "Fecha added successfully: $fecha"
-                    )
-                }
-                .addOnFailureListener { e -> Log.w("FechasViewModel", "Error adding fecha", e) }
-        } catch (e: Exception) {
-            Log.e("FechasViewModel", "Error adding fecha", e)
-        }
     }
 }

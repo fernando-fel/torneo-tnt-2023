@@ -55,8 +55,10 @@ class PartidosViewModel @Inject constructor(
             .get()
             .addOnSuccessListener { documents ->
                 val partidos = documents.mapNotNull { document ->
-                    val partido = document.toObject(Partido::class.java).apply {
+                    var partido = document.toObject(Partido::class.java).apply {
                         id = document.id.toInt()
+                        golLocal = (document.getLong("golLocal")?.toInt() ?: 0).toString()
+                        golVisitante = (document.getLong("golVisitante")?.toInt() ?: 0).toString()
                     }
                     val tiempoTrascurrido = (((document.getString("tiempoTrascurrido")?.toInt() ?:0) /60) /1000).toString()
                     PartidoConTiempo(partido, tiempoTrascurrido)
@@ -78,12 +80,11 @@ class PartidosViewModel @Inject constructor(
 
     // Funciones para manejar la base de datos de Firebase
     fun addPartido(partido: Partido) = viewModelScope.launch(Dispatchers.IO) {
+        val db = Firebase.firestore
         partidoRepo.addPartido(partido)
         var cantidad = partidoRepo.getCountEquipos()
         var partido2 = partido.copy(id = cantidad)
-
-        val db = Firebase.firestore
-        db.collection("partidos").document(partido2.id.toString())
+        db.collection("Partidos").document(partido2.id.toString())
             .set(partido2)
             .addOnSuccessListener {
                 Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
@@ -137,7 +138,7 @@ class PartidosViewModel @Inject constructor(
             }
         }
     }
-    suspend fun getTorneoIdByFecha(fechaId: Int): Int? {
+    suspend fun getTorneoIdByFecha(fechaId: Int): String? {
         val fecha = fechaRepo.getFecha(fechaId)
         return fecha?.idTorneo // Asegúrate de que el campo sea correcto
     }
