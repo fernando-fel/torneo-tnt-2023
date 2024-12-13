@@ -50,15 +50,15 @@ class PartidosViewModel @Inject constructor(
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fechaHoy = formatter.format(Date())
 
-        db.collection("partidos")
+        db.collection("Partidos")
             .whereEqualTo("dia", fechaHoy)
             .get()
             .addOnSuccessListener { documents ->
                 val partidos = documents.mapNotNull { document ->
                     var partido = document.toObject(Partido::class.java).apply {
                         id = document.id.toInt()
-                        golLocal = (document.getLong("golLocal")?.toInt() ?: 0).toString()
-                        golVisitante = (document.getLong("golVisitante")?.toInt() ?: 0).toString()
+                        golLocal = (document.getLong("golLocal")?.toInt() ?: 0)
+                        golVisitante = (document.getLong("golVisitante")?.toInt() ?: 0)
                     }
                     val tiempoTrascurrido = (((document.getString("tiempoTrascurrido")?.toInt() ?:0) /60) /1000).toString()
                     PartidoConTiempo(partido, tiempoTrascurrido)
@@ -110,7 +110,7 @@ class PartidosViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val db = Firebase.firestore
 
-            db.collection("partidos").document(partido.id.toString())
+            db.collection("Partidos").document(partido.id.toString())
                 .set(partido)
                 .addOnSuccessListener {
                     Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated!")
@@ -119,7 +119,7 @@ class PartidosViewModel @Inject constructor(
                     Log.w(ContentValues.TAG, "Error updating document", e)
                 }
             // Luego, añade el nuevo campo al documento
-            db.collection("partidos").document(partido.id.toString())
+            db.collection("Partidos").document(partido.id.toString())
                 .update("tiempoTrascurrido", tiempo)
                 .addOnSuccessListener {
                     Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated with nuevoCampo!")

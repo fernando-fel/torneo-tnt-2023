@@ -23,10 +23,11 @@ private fun sincronizarTorneos(db_firebase: FirebaseFirestore, db_local: TorneoD
     val dao = db_local.torneoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("torneos").get().addOnSuccessListener { result ->
+    db_firebase.collection("Torneos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val torneo = Torneo(
-                id = document.getString("id")?.toIntOrNull()?: 0,
+                //id = document.getString("id")?.toIntOrNull()?: 0,
+                id= document.getLong("id")?.toInt()?: 0,
                 idTorneo = document.getString("idTorneo").toString(),
                 nombre = document.getString("nombre") ?: "",
                 fechaInicio = document.getString("fechaInicio") ?: "",
@@ -57,10 +58,11 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
     val dao = db_local.personaDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("persona").get().addOnSuccessListener { result ->
+    db_firebase.collection("Personas").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val persona = Persona(
-                id = document.getString("id")?.toIntOrNull()?: 0,
+                //id = document.getString("id")?.toIntOrNull()?: 0,
+                id = document.getLong("id")?.toInt()?: 0,
                 idPersona = document.getString("idPersona") ?: "",
                 nombre = document.getString("nombre") ?: "",
                 username = document.getString("username") ?: "",
@@ -97,10 +99,10 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
 
             scope.launch {
                 val torneo = torneoDao.getTorneo(id = idTorneo.toInt().toString())
-                Log.d("TAG", "Sincronizando fecha con este torneo con ID: ${torneo.id}")
+                Log.d("TAG", "Sincronizando fecha con este torneo con ID: ${torneo}")
                 if (torneo != null) {  // Asegúrate de que el torneo existe antes de insertar la fecha
                     val fecha = Fecha(
-                        id = document.getString("id")?.toIntOrNull()?: 0,
+                        id = document.getLong("id")?.toInt()?: 0,
                         idTorneo = document.getString("idTorneo")?: "",
                         numero = document.getString("numero") ?: "",
                         estado = document.getString("estado") ?: ""
@@ -128,10 +130,11 @@ private fun sincronizarEquipos(db_firebase: FirebaseFirestore, db_local: TorneoD
     val dao = db_local.equipoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("Equipo").get().addOnSuccessListener { result ->
+    db_firebase.collection("Equipos").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val equipo = Equipo(
-                id = document.getString("id")?.toIntOrNull()?: 0, // Ajusta el ID según sea necesario
+                //id = document.getString("id")?.toIntOrNull()?: 0, // Ajusta el ID según sea necesario
+                id =  document.getLong("id")?.toInt()?: 0,
                 nombre = document.getString("nombre") ?: ""
             )
 
@@ -159,15 +162,18 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
     val fechaDao = db_local.fechaDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("partidos").get().addOnSuccessListener { result ->
+    db_firebase.collection("Partidos").get().addOnSuccessListener { result ->
         result.forEach { document ->
+
             val idFecha = document.getString("idFecha") ?: ""
             val idLocal = document.getString("idLocal") ?: ""
             val idVisitante = document.getString("idVisitante") ?: ""
-
-            Log.d("idFecha", idFecha)
-            Log.d("idLocal", idLocal)
-            Log.d("idVisitante", idVisitante)
+            //val idFecha = document.getLong("idFecha")?.toInt()?: 0
+            //val idLocal = document.getLong("idLocal")?.toInt()?: 0
+            //val idVisitante = document.getLong("idVisitante")?.toInt()?: 0
+            Log.d("idFecha", idFecha.toString())
+            Log.d("idLocal", idLocal.toString())
+            Log.d("idVisitante", idVisitante.toString())
 
             scope.launch {
                 val fecha = fechaDao.getFecha(id = idFecha.toInt().toString())
@@ -175,19 +181,20 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
                 val visitante = equipoDao.getEquipo(id = idVisitante.toInt().toString())
 
                 if (fecha != null && local != null && visitante != null) {
-                    val golLocalString = document.getString("golLocal") ?: "0"
-                    val golVisitanteString = document.getString("golVisitante") ?: "0"
-                    val golLocal = golLocalString.toIntOrNull() ?.toString()
-                    val golVisitante = golVisitanteString.toIntOrNull() ?.toString()
+                    //val golLocalString = document.getString("golLocal") ?: "0"
+                    //val golVisitanteString = document.getString("golVisitante") ?: "0"
+                    val golLocal = document.getLong("golLocal")?.toInt()?: 0
+                    val golVisitante = document.getLong("golVisitante")?.toInt()?: 0
 
                     val partido = Partido(
-                        id = document.getString("id")?.toIntOrNull()?: 0,
-                        idFecha = idFecha,
+                        //id = document.getString("id")?.toIntOrNull()?: 0,
+                        id = document.getLong("id")?.toInt()?: 0,
+                        idFecha = idFecha.toString(),
                         hora = document.getString("hora") ?: "",
                         dia = document.getString("dia") ?: "",
                         numCancha = document.getString("numCancha") ?: "",
-                        idLocal = idLocal,
-                        idVisitante = idVisitante,
+                        idLocal = idLocal.toString(),
+                        idVisitante = idVisitante.toString(),
                         golLocal = golLocal,
                         golVisitante = golVisitante,
                         estado = document.getString("estado") ?: "",

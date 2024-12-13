@@ -242,8 +242,8 @@ fun AddPartidosDialog(
                                         idFecha = fechaId.toString(),
                                         hora = selectedTime,
                                         dia = selectedDate?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "",
-                                        golVisitante = 0.toString(),
-                                        golLocal = 0.toString(),
+                                        golVisitante = 0,
+                                        golLocal = 0,
                                         estado = "Programado",
                                         id = 0,
                                         idPersona = juez!!.id.toString()

@@ -284,7 +284,7 @@ fun GestionarPartido(
                                     onIncrement = {
                                         golLocal.value += 1
                                         val partidoUpdate = it.copy(
-                                            golLocal = golLocal.value.toString(),
+                                            golLocal = golLocal.value,
                                             resultado = "${golLocal.value} - ${golVisitante.value}"
                                         )
                                         viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
@@ -293,7 +293,7 @@ fun GestionarPartido(
                                         if (golLocal.value > 0) {
                                             golLocal.value -= 1
                                             val partidoUpdate = it.copy(
-                                                golLocal = golLocal.value.toString(),
+                                                golLocal = golLocal.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
                                             viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
@@ -307,7 +307,7 @@ fun GestionarPartido(
                                     onIncrement = {
                                         golVisitante.value += 1
                                         val partidoUpdate = it.copy(
-                                            golVisitante = golVisitante.value.toString(),
+                                            golVisitante = golVisitante.value,
                                             resultado = "${golLocal.value} - ${golVisitante.value}"
                                         )
                                         viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
@@ -316,7 +316,7 @@ fun GestionarPartido(
                                         if (golVisitante.value > 0) {
                                             golVisitante.value -= 1
                                             val partidoUpdate = it.copy(
-                                                golVisitante = golVisitante.value.toString(),
+                                                golVisitante = golVisitante.value,
                                                 resultado = "${golLocal.value} - ${golVisitante.value}"
                                             )
                                             viewModel.updatePartido(partidoUpdate,tiempoTranscurrido.value.toString())
