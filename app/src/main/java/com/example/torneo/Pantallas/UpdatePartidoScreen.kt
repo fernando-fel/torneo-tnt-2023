@@ -37,6 +37,7 @@ fun UpdatePartidoScreen(
                 updateHora = { hora ->
                     viewModel.updateHora(hora)
                 },
+
                 navigateBack = navigateBack
             )
 

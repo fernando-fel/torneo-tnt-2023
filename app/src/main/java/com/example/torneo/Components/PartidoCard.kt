@@ -46,9 +46,9 @@ fun PartidoCard(
             .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(),
-        onClick = {
+        /*onClick = {
             navigateToUpdatePartidoScreen(partido.id)
-        }
+        }*/
     ) {
         Row(
             modifier = Modifier
@@ -65,14 +65,19 @@ fun PartidoCard(
                 Text(text = "Juez: ${juez?.username ?: "juez"}")
                 Text(text = "Cancha: ${partido.numCancha}")
                 Text(text = "Resultado: ${partido.resultado}")
+                Text(text = "Estado: ${partido.estado}")
             }
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { navigateToUpdatePartidoScreen(partido.id) }) {
-                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar Partido")
+            if (partido.estado != "Fin")
+            {
+                IconButton(onClick = { navigateToUpdatePartidoScreen(partido.id) }) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar Partido")
+                }
+                IconButton(onClick = { showDialog.value = true }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo")
+                }
             }
-            IconButton(onClick = { showDialog.value = true }) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Borrar Torneo")
-            }
+
             if (showDialog.value) {
                 MostrarDialogoConfirmacionEliminar(
                     onConfirmar = deletePartido,

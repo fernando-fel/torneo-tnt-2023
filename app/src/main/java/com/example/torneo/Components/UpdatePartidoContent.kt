@@ -15,12 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.TorneoViewModel.PartidosViewModel
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdatePartidoContent(
+    viewModel: PartidosViewModel = hiltViewModel(),
     padding: PaddingValues,
     partido: Partido,
     updateDia: (dia: String) -> Unit,
@@ -40,16 +43,6 @@ fun UpdatePartidoContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        TextField(
-            label = { Text(text = "Dia de partido") },
-            singleLine = true,
-            value = partido.dia,
-            onValueChange = { dia ->
-                updateDia(dia)
-            }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
         Box {
             TextField(
                 label = { Text(text = "Fecha de partido") },
@@ -88,8 +81,8 @@ fun UpdatePartidoContent(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = { navigateBack() }) {
-            Text(text = "Guardar cambios")
+        Button(onClick = { navigateBack()}) {
+            Text(text = "Actualizar")
         }
 
         if (showDatePicker) {
@@ -99,6 +92,7 @@ fun UpdatePartidoContent(
                 { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                     selectedFecha = "$dayOfMonth/${month + 1}/$year"
                     updateDia(selectedFecha)
+                    viewModel.updatePartido(partido.copy(dia = selectedFecha),"0")
                     showDatePicker = false
                 },
                 calendar.get(Calendar.YEAR),
@@ -114,6 +108,8 @@ fun UpdatePartidoContent(
                 { _: TimePicker, hour: Int, minute: Int ->
                     selectedHora = String.format("%02d:%02d", hour, minute)
                     updateHora(selectedHora)
+
+                    viewModel.updatePartido(partido.copy(hora = selectedHora),"0")
                     showTimePicker = false
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),

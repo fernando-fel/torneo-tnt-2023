@@ -158,6 +158,6 @@ class PartidosViewModel @Inject constructor(
         partido = partido.copy(dia= fecha)
     }
     fun updateHora(hora: String) {
-        partido = partido.copy(hora= hora)
+        partido = partido.copy(hora = hora)
     }
 }
