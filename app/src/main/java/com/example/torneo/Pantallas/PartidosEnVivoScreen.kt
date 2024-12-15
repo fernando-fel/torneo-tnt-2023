@@ -231,7 +231,7 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
             // Mostrar tiempo transcurrido, si está en curso
             if ((partido.estado == "Primer Tiempo") || (partido.estado == "SegudoTiempo")) {
                 Text(
-                    text = " $tiempoTrascurrido'",
+                    text = " El tiempo $tiempoTrascurrido'",
                     style = MaterialTheme.typography.headlineSmall, // Aumentado de titleMedium a headlineSmall
                     color = Color.Green, // Cambiado a color verde
                     modifier = Modifier.padding(horizontal = 16.dp)

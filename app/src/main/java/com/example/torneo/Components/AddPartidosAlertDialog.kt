@@ -1,39 +1,21 @@
 package com.example.torneo.Components
 
-import androidx.compose.foundation.clickable
+import android.app.TimePickerDialog
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Partido
@@ -42,12 +24,22 @@ import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PersonasViewModel
 import com.example.torneo.TorneoViewModel.TorneosViewModel
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+data class PartidoField(
+    val label: String,
+    val icon: ImageVector,
+    val value: String,
+    val onValueChange: (String) -> Unit,
+    val keyboardType: KeyboardType = KeyboardType.Text,
+    val isError: Boolean = false,
+    val errorMessage: String = "",
+    val placeholder: String = "",
+    val trailingIcon: @Composable (() -> Unit)? = null
+)
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddPartidosDialog(
     viewModel: EquiposViewModel = hiltViewModel(),
@@ -59,255 +51,322 @@ fun AddPartidosDialog(
     addPartido: (partido: Partido) -> Unit
 ) {
     if (openDialog) {
-        var datePickerExpanded by rememberSaveable { mutableStateOf(false) }
-        var timePickerExpanded by rememberSaveable { mutableStateOf(false) }
-        var selectedDate by rememberSaveable { mutableStateOf<Date?>(null) }
-        var selectedTime by rememberSaveable { mutableStateOf("") }
-        var local by rememberSaveable { mutableStateOf<Equipo?>(null) }
-        var visitante by rememberSaveable { mutableStateOf<Equipo?>(null) }
-        var numeroCancha by rememberSaveable { mutableStateOf("") }
-        var juez by rememberSaveable { mutableStateOf<Persona?>(null) }
-        /*
-        var datePickerExpanded by remember { mutableStateOf(false) }
-        var timePickerExpanded by remember { mutableStateOf(false) }
-        var selectedDate by remember { mutableStateOf<Date?>(null) }
+        var numeroCancha by remember { mutableStateOf("") }
+        var selectedDate by remember { mutableStateOf<String>("") }
         var selectedTime by remember { mutableStateOf("") }
         var local by remember { mutableStateOf<Equipo?>(null) }
         var visitante by remember { mutableStateOf<Equipo?>(null) }
-        var numeroCancha by remember { mutableStateOf("") }
         var juez by remember { mutableStateOf<Persona?>(null) }
-        */
+
+        val focusRequester = FocusRequester()
+        val scrollState = rememberScrollState()
+
+        var showDatePicker by remember { mutableStateOf(false) }
+        var showTimePicker by remember { mutableStateOf(false) }
+
+        val equipos by viewModel.recuperarEquiposTorneo(fechaId).collectAsState(initial = emptyList())
+        val personas by viewModel2.personas.collectAsState(initial = emptyList())
+        val jueces = personas.filter { it.rol == "juez" }
+
+        // Validaciones
+        val isNumeroCanchaValid = numeroCancha.length >= 1
+        val isDateValid = { date: String ->
+            try {
+                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(date)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+        val isTimeValid = { time: String ->
+            time.matches(Regex("^([01]\\d|2[0-3]):([0-5]\\d)$"))
+        }
+
+        if (showDatePicker) {
+            showDatePicker { date ->
+                selectedDate = date
+                showDatePicker = false
+            }
+        }
+
+        if (showTimePicker) {
+            TimePickerDialog(
+                onDismissRequest = { showTimePicker = false },
+                onTimeSelected = { hour, minute ->
+                    selectedTime = String.format("%02d:%02d", hour, minute)
+                    showTimePicker = false
+                }
+            )
+        }
+
+        val fields = listOf(
+            PartidoField(
+                label = "Número de Cancha",
+                icon = Icons.Default.SportsSoccer,
+                value = numeroCancha,
+                onValueChange = { numeroCancha = it },
+                isError = numeroCancha.isNotBlank() && !isNumeroCanchaValid,
+                errorMessage = "Ingrese un número de cancha válido",
+                placeholder = "Ej: Cancha 1"
+            ),
+            PartidoField(
+                label = "Fecha del Partido",
+                icon = Icons.Default.DateRange,
+                value = selectedDate,
+                onValueChange = { selectedDate = it },
+                isError = selectedDate.isNotBlank() && !isDateValid(selectedDate),
+                errorMessage = "Formato de fecha inválido (dd/MM/yyyy)",
+                placeholder = "dd/MM/yyyy",
+                trailingIcon = {
+                    IconButton(onClick = { showDatePicker = true }) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = "Seleccionar Fecha"
+                        )
+                    }
+                }
+            ),
+            PartidoField(
+                label = "Hora del Partido",
+                icon = Icons.Default.AccessTime,
+                value = selectedTime,
+                onValueChange = { selectedTime = it },
+                isError = selectedTime.isNotBlank() && !isTimeValid(selectedTime),
+                errorMessage = "Formato de hora inválido (HH:mm)",
+                placeholder = "HH:mm",
+                trailingIcon = {
+                    IconButton(onClick = { showTimePicker = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Timer,
+                            contentDescription = "Seleccionar Hora"
+                        )
+                    }
+                }
+            )
+        )
 
         AlertDialog(
-            onDismissRequest = { closeDialog() },
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Surface(
-                modifier = Modifier
-                    .width(400.dp) // Ajusta el ancho del diálogo aquí
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                shape = MaterialTheme.shapes.medium,
-                elevation = 8.dp
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Agregar Partido", style = MaterialTheme.typography.h4)
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    val personas by viewModel2.personas.collectAsState(initial = emptyList())
-                    val jueces = personas.filter { it.rol == "juez" }
-                    //val equipos by viewModel.equipos.collectAsState(initial = emptyList())
-                    val equipos by viewModel.recuperarEquiposTorneo(fechaId).collectAsState(initial = emptyList())
-                    // Filtra los equipos para que el equipo seleccionado no aparezca en la otra lista
-                    val equiposDisponiblesParaLocal = equipos.filter { it != visitante }
-                    val equiposDisponiblesParaVisitante = equipos.filter { it != local }
-                    // Selector de cancha
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Nombre de la Cancha",
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        TextField(
-                            value = numeroCancha,
-                            onValueChange = { numeroCancha = it },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { datePickerExpanded = true }
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Fecha")
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = selectedDate?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "Selecciona una fecha",
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    if (datePickerExpanded) {
-                        DatePickerDialog(
-                            onDismissRequest = { datePickerExpanded = false },
-                            onDateSelected = { date ->
-                                selectedDate = date
-                                datePickerExpanded = false
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { timePickerExpanded = true }
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(imageVector = Icons.Filled.AccessTime, contentDescription = "Hora")
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = if (selectedTime.isNotEmpty()) selectedTime else "Selecciona una hora",
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    if (timePickerExpanded) {
-                        TimePickerDialog(
-                            onDismissRequest = { timePickerExpanded = false },
-                            onTimeSelected = { hour, minute ->
-                                selectedTime = String.format("%02d:%02d", hour, minute)
-                                timePickerExpanded = false
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Equipo Local*",
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        EditableExposedDropdownMenuSample(equipos = equiposDisponiblesParaLocal) { selectedLocal ->
-                            local = selectedLocal
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Equipo Visitante*",
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        EditableExposedDropdownMenuSample(equipos = equiposDisponiblesParaVisitante) { selectedVisitante ->
-                            visitante = selectedVisitante
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Juez*",
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        ObtenerJuez(jueces = jueces) { selectedJuez ->
-                            juez = selectedJuez
-                        }
-                    }
-
-                    // Función de validación
-                    fun isFormValid(): Boolean {
-                        return local != null &&
-                                visitante != null &&
-                                numeroCancha.isNotEmpty() &&
-                                juez != null
-                    }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(onClick = closeDialog) {
-                            Text("Cancelar")
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        TextButton(
-                            onClick = {
-                                if (isFormValid()) {
-                                    closeDialog()
-                                    val partido = Partido(
-                                        resultado = " -    -",
-                                        numCancha = numeroCancha,
-                                        idVisitante = visitante!!.id.toString(),
-                                        idLocal = local!!.id.toString(),
-                                        idFecha = fechaId.toString(),
-                                        hora = selectedTime,
-                                        dia = selectedDate?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "",
-                                        golVisitante = 0,
-                                        golLocal = 0,
-                                        estado = "Programado",
-                                        id = 0,
-                                        idPersona = juez!!.id.toString()
+            onDismissRequest = closeDialog,
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Agregar Partido",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .padding(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    fields.forEach { field ->
+                        Column {
+                            OutlinedTextField(
+                                value = field.value,
+                                onValueChange = field.onValueChange,
+                                label = { Text(field.label) },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = field.icon,
+                                        contentDescription = null
                                     )
-                                    addPartido(partido)
-                                }
-                            },
-                            enabled = isFormValid()
-                        ) {
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .then(
+                                        if (field == fields.first())
+                                            Modifier.focusRequester(focusRequester)
+                                        else Modifier
+                                    ),
+                                isError = field.isError,
+                                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                                    keyboardType = field.keyboardType
+                                ),
+                                placeholder = {
+                                    Text(field.placeholder)
+                                },
+                                singleLine = true,
+                                trailingIcon = field.trailingIcon
+                            )
 
-                            Text("Agregar Partido")
+                            AnimatedVisibility(visible = field.isError) {
+                                Text(
+                                    text = field.errorMessage,
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    // Dropdown para Equipo Local
+                    var localExpanded by remember { mutableStateOf(false) }
+                    val equiposDisponiblesParaLocal = equipos.filter { it != visitante }
+                    Column {
+                        Text("Equipo Local", style = MaterialTheme.typography.labelMedium)
+                        ExposedDropdownMenuBox(
+                            expanded = localExpanded,
+                            onExpandedChange = { localExpanded = !localExpanded }
+                        ) {
+                            OutlinedTextField(
+                                value = local?.nombre ?: "",
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Seleccionar Equipo Local") },
+                                leadingIcon = { Icon(Icons.Default.Group, contentDescription = null) },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = localExpanded) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth()
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = localExpanded,
+                                onDismissRequest = { localExpanded = false }
+                            ) {
+                                equiposDisponiblesParaLocal.forEach { equipo ->
+                                    DropdownMenuItem(
+                                        text = { Text(equipo.nombre) },
+                                        onClick = {
+                                            local = equipo
+                                            localExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Dropdown para Equipo Visitante
+                    var visitanteExpanded by remember { mutableStateOf(false) }
+                    val equiposDisponiblesParaVisitante = equipos.filter { it != local }
+                    Column {
+                        Text("Equipo Visitante", style = MaterialTheme.typography.labelMedium)
+                        ExposedDropdownMenuBox(
+                            expanded = visitanteExpanded,
+                            onExpandedChange = { visitanteExpanded = !visitanteExpanded }
+                        ) {
+                            OutlinedTextField(
+                                value = visitante?.nombre ?: "",
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Seleccionar Equipo Visitante") },
+                                leadingIcon = { Icon(Icons.Default.Group, contentDescription = null) },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = visitanteExpanded) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth()
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = visitanteExpanded,
+                                onDismissRequest = { visitanteExpanded = false }
+                            ) {
+                                equiposDisponiblesParaVisitante.forEach { equipo ->
+                                    DropdownMenuItem(
+                                        text = { Text(equipo.nombre) },
+                                        onClick = {
+                                            visitante = equipo
+                                            visitanteExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Dropdown para Juez
+                    var juezExpanded by remember { mutableStateOf(false) }
+                    Column {
+                        Text("Juez", style = MaterialTheme.typography.labelMedium)
+                        ExposedDropdownMenuBox(
+                            expanded = juezExpanded,
+                            onExpandedChange = { juezExpanded = !juezExpanded }
+                        ) {
+                            OutlinedTextField(
+                                value = juez?.nombre ?: "",
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Seleccionar Juez") },
+                                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = juezExpanded) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth()
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = juezExpanded,
+                                onDismissRequest = { juezExpanded = false }
+                            ) {
+                                jueces.forEach { persona ->
+                                    DropdownMenuItem(
+                                        text = { Text(persona.nombre) },
+                                        onClick = {
+                                            juez = persona
+                                            juezExpanded = false
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val partido = Partido(
+                            resultado = " -    -",
+                            numCancha = numeroCancha,
+                            idVisitante = visitante?.id.toString(),
+                            idLocal = local?.id.toString(),
+                            idFecha = fechaId.toString(),
+                            hora = selectedTime,
+                            dia = selectedDate,
+                            golVisitante = 0,
+                            golLocal = 0,
+                            estado = "Programado",
+                            id = 0,
+                            idPersona = juez?.id.toString()
+                        )
+                        addPartido(partido)
+                        closeDialog()
+                    },
+                    enabled = (local != null &&
+                            visitante != null &&
+                            juez != null &&
+                            selectedDate.isNotBlank() &&
+                            selectedTime.isNotBlank() &&
+                            numeroCancha.isNotBlank())
+                ) {
+                    Text("Agregar Partido")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = closeDialog) {
+                    Text("Cancelar")
+                }
             }
+        )
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
         }
     }
 }
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerDialog(
-    onDismissRequest: () -> Unit,
-    onDateSelected: (date: Date) -> Unit,
-    state: DatePickerState = rememberDatePickerState()
-) {
-    AlertDialog(
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = onDismissRequest,
-        title = { Text("Selecciona la fecha") },
-        text = {
-                DatePicker(
-                    state = state,
-                    modifier = Modifier.fillMaxWidth()
-                )
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    val selectedDateMillis = state.selectedDateMillis ?: return@TextButton
-                    // Utiliza Calendar para ajustar la fecha
-                    val calendar = Calendar.getInstance().apply {
-                        timeInMillis = selectedDateMillis
-                    }
-                    // Asegúrate de que estás trabajando con la fecha correcta
-                    val selectedDate = calendar.time
-                    onDateSelected(selectedDate)
-                    onDismissRequest()
-                }
-
-            ) {
-                Text("Aceptar")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text("Cancelar")
-            }
-        }
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerDialog(
@@ -345,106 +404,3 @@ fun TimePickerDialog(
     )
 }
 
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun EditableExposedDropdownMenuSample(
-    equipos: List<Equipo>,
-    onEquipoSelected: (Equipo) -> Unit // Callback para devolver el objeto seleccionado
-) {
-    var selectedOption by remember { mutableStateOf<Equipo?>(null) }
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                value = selectedOption?.nombre ?: "",
-                singleLine = true,
-                onValueChange = { /* No se usa aquí */ },
-                label = { Text("Equipo") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            val filteringOptions = equipos.filter {
-                it.nombre.contains(selectedOption?.nombre ?: "", ignoreCase = true)
-            }
-
-            if (filteringOptions.isNotEmpty()) {
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    filteringOptions.forEach { equipo ->
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOption = equipo
-                                onEquipoSelected(equipo) // Devolver el objeto seleccionado
-                                expanded = false
-                            }
-                        ) {
-                            Text("${equipo.nombre}")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun ObtenerJuez(
-    jueces: List<Persona>,
-    onJuezSelected: (Persona) -> Unit // Callback para devolver el objeto seleccionado
-) {
-    var selectedOption by remember { mutableStateOf<Persona?>(null) }
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                value = selectedOption?.nombre ?: "",
-                singleLine = true,
-                onValueChange = { /* No se usa aquí */ },
-                label = { Text("Juez") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            val filteringOptions = jueces.filter {
-                it.nombre.contains(selectedOption?.nombre ?: "", ignoreCase = true)
-            }
-
-            if (filteringOptions.isNotEmpty()) {
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    filteringOptions.forEach { juez ->
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOption = juez
-                                onJuezSelected(juez) // Devolver el objeto seleccionado
-                                expanded = false
-                            }
-                        ) {
-                            Text("${juez.nombre}")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}

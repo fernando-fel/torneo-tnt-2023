@@ -61,7 +61,6 @@ private fun sincronizarPersonas(db_firebase: FirebaseFirestore, db_local: Torneo
     db_firebase.collection("Personas").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val persona = Persona(
-                //id = document.getString("id")?.toIntOrNull()?: 0,
                 id = document.getLong("id")?.toInt()?: 0,
                 idPersona = document.getString("idPersona") ?: "",
                 nombre = document.getString("nombre") ?: "",
@@ -92,7 +91,7 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
     val torneoDao = db_local.torneoDao()
     val scope = CoroutineScope(Dispatchers.IO)
 
-    db_firebase.collection("fechas").get().addOnSuccessListener { result ->
+    db_firebase.collection("Fechas").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val idTorneo = document.getString("idTorneo") ?: ""
             Log.d("idTorneo", idTorneo)

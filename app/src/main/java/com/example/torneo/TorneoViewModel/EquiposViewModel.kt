@@ -1,5 +1,6 @@
 package com.example.torneo.TorneoViewModel
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -89,7 +90,17 @@ class EquiposViewModel @Inject constructor(
     fun inscribirEquipos(selectedEquipos: List<Equipo>, torneoId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             var torneo = repo2.getTorneo(id = torneoId)
+            val db = Firebase.firestore
             torneo.estado = "EN CURSO"
+            // Luego, añade el nuevo campo al documento
+            db.collection("Torneos").document(torneo.id.toString())
+                .update("estado", torneo.estado)
+                .addOnSuccessListener {
+                    Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated with nuevoCampo!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(ContentValues.TAG, "Error updating document with nuevoCampo", e)
+                }
             repo2.updateTorneo(torneo)
             repo2.inscribirEquipos(torneoId, selectedEquipos)
         }
