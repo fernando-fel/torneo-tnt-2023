@@ -24,6 +24,7 @@ import com.example.torneo.Core.Constantes.Companion.FECHA_ID
 import com.example.torneo.Core.Constantes.Companion.PARTIDO_ID
 import com.example.torneo.Core.Constantes.Companion.PERSONA_ID
 import com.example.torneo.Core.Constantes.Companion.TORNEO_ID
+import com.example.torneo.Core.Data.Dao.PersonaDao
 import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Pantallas.Usuario.EquiposUsuarioScreen
 import com.example.torneo.Pantallas.Usuario.PartidoUsuarioScreen
@@ -39,6 +40,7 @@ import kotlinx.coroutines.withContext
 fun ScreenMain(database: TorneoDB, torneoId: Int){
     val navController = rememberNavController()
     val persona: PersonasViewModel = hiltViewModel()
+    val persona2 = database.personaDao()
     var usuariosInsertados by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = usuariosInsertados) {
@@ -50,12 +52,12 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
 
             if (persona.getPersona(1) == null) {
                 withContext(Dispatchers.IO) {
-                    persona.addPersona(admin)
+                    persona2.addPersona(admin)
                 }
             }
             if (persona.getPersona(2) == null) {
                 withContext(Dispatchers.IO) {
-                    persona.addPersona(juez)
+                    persona2.addPersona(juez)
                 }
             }
             usuariosInsertados = true // Marcar como insertados
@@ -184,6 +186,24 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
                 }
             )
         }
+
+
+        composable(route = "${Routes.UpdatePartidoScreen.route}/{${FECHA_ID}}",
+            arguments = listOf(
+                navArgument("partidoId"){
+                    type = NavType.IntType
+                }
+            )
+        ){ navBackStackEntry ->
+            val partidoId = navBackStackEntry.arguments?.getInt(PARTIDO_ID)?:0
+            UpdatePartidoScreen(
+                partidoId = partidoId,
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
 
         composable(
             route = "${Routes.UpdateEquipoScreen.route}/{$EQUIPO_ID}",

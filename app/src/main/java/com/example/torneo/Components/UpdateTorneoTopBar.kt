@@ -67,3 +67,22 @@ fun UpdateEquipoTopBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdatePartidoTopBar(
+    navigateBack: () -> Unit
+){
+    TopAppBar(
+        title = {
+            Text(text = "Actualizar Partido")
+        },
+        navigationIcon = {
+            IconButton(onClick = navigateBack) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = null)
+            }
+        }
+    )
+}
+

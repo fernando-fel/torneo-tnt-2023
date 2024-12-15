@@ -12,7 +12,7 @@ sealed class Routes(val route: String) {
     object InscripcionScreen : Routes("InscripcionScreen-")
     object UpdateFechasScreen : Routes("UpdateFechasScreen")
     object UpdateTorneoScreen : Routes("UpdateTorneoScreen")
-
+    object UpdatePartidoScreen : Routes("UpdatePartidoScreen")
     object EquiposScreen : Routes("EquiposScreen")
     object UpdateEquipoScreen : Routes("UpdateEquipoScreen")
     object Fixture : Routes("Fixture")

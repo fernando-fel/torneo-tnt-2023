@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.torneo.Core.Data.Dao.PartidoDao
+import com.example.torneo.Core.Data.Entity.Fecha
 import com.example.torneo.Core.Data.Entity.Partido
 import com.example.torneo.Core.Data.repository.FechaRepository
 import com.example.torneo.Core.Data.repository.PartidoRepository
@@ -33,6 +34,7 @@ class PartidosViewModel @Inject constructor(
     private val partidoRepo: PartidoRepository,
     private val fechaRepo: FechaRepository
 ) : ViewModel() {
+    var partido by mutableStateOf(Partido(0, idFecha = "", hora = "", dia = "",idLocal = "", idVisitante = "", golLocal = 0, golVisitante = 0))
     var partidos = partidoRepo.getAllPartidos()
     var openDialog by mutableStateOf(false)
     val tiempoActualPartido = MutableStateFlow(0L) // Tiempo actual del partido
@@ -60,7 +62,8 @@ class PartidosViewModel @Inject constructor(
                         golLocal = (document.getLong("golLocal")?.toInt() ?: 0)
                         golVisitante = (document.getLong("golVisitante")?.toInt() ?: 0)
                     }
-                    val tiempoTrascurrido = (((document.getString("tiempoTrascurrido")?.toInt() ?:0) /60) /1000).toString()
+                    val tiempoTrascurrido = (((document.getString("tiempoTrascurrido")?.toInt()
+                        ?: 0) / 60) / 1000).toString()
                     PartidoConTiempo(partido, tiempoTrascurrido)
                 }
                 partidosHoyFirebase.clear()
@@ -106,7 +109,7 @@ class PartidosViewModel @Inject constructor(
         partidoRepo.deletePartido(partido)
     }
 
-    fun updatePartido(partido: Partido,tiempo: String) {
+    fun updatePartido(partido: Partido, tiempo: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val db = Firebase.firestore
 
@@ -122,7 +125,10 @@ class PartidosViewModel @Inject constructor(
             db.collection("Partidos").document(partido.id.toString())
                 .update("tiempoTrascurrido", tiempo)
                 .addOnSuccessListener {
-                    Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated with nuevoCampo!")
+                    Log.d(
+                        ContentValues.TAG,
+                        "DocumentSnapshot successfully updated with nuevoCampo!"
+                    )
                 }
                 .addOnFailureListener { e ->
                     Log.w(ContentValues.TAG, "Error updating document with nuevoCampo", e)
@@ -130,6 +136,7 @@ class PartidosViewModel @Inject constructor(
             partidoRepo.updatePartido(partido)
         }
     }
+
     fun startAutoRefresh() {
         viewModelScope.launch {
             while (true) {
@@ -138,8 +145,19 @@ class PartidosViewModel @Inject constructor(
             }
         }
     }
+
     suspend fun getTorneoIdByFecha(fechaId: Int): String? {
         val fecha = fechaRepo.getFecha(fechaId)
         return fecha?.idTorneo // Asegúrate de que el campo sea correcto
+    }
+
+    fun getPartido(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        partido = partidoRepo.getPartido(id)
+    }
+    fun updateFecha(fecha: String) {
+        partido = partido.copy(dia= fecha)
+    }
+    fun updateHora(hora: String) {
+        partido = partido.copy(hora= hora)
     }
 }
