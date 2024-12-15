@@ -19,12 +19,15 @@ import androidx.navigation.NavHostController
 import com.example.torneo.Components.Usuario.MenuBottomBar
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.TorneoViewModel.EquiposViewModel
 import com.example.torneo.TorneoViewModel.PartidosViewModel
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 
 
 @Composable
 fun PartidoUsuarioScreen(
+    viewModel3: PersonasViewModel = hiltViewModel(),
     viewModel: PartidosViewModel = hiltViewModel(),
     viewModel2: EquiposViewModel = hiltViewModel(),
     navController: (partidoId: Int) -> Unit,
@@ -74,7 +77,7 @@ fun PartidoUsuarioScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(partidosDeFecha) { partido ->
-                        PartidoCard(partido, equipos)
+                        PartidoCard(viewModel3, partido, equipos)
                     }
                 }
             }
@@ -87,11 +90,18 @@ fun PartidoUsuarioScreen(
 
 @Composable
 fun PartidoCard(
+    viewModel3: PersonasViewModel,
     partido: Partido,
     equipos: List<Equipo>
 ) {
     val equipoLocal = equipos.firstOrNull { it.id.toString() == partido.idLocal }
     val equipoVisitante = equipos.firstOrNull { it.id.toString() == partido.idVisitante }
+
+    var juez by remember { mutableStateOf<Persona?>(null) }
+    LaunchedEffect(partido.idPersona) {
+        val persona = viewModel3.getPersona(id = partido.idPersona.toInt())
+        juez = persona
+    }
 
     Card(
         modifier = Modifier
@@ -168,8 +178,8 @@ fun PartidoCard(
                 // Juez
                 DetallePartido(
                     icon = Icons.Default.Person,
-                    label = "Árbitro",
-                    value = partido.idPersona
+                    label = "Juez",
+                    value = "${juez?.username ?: "juez"}"
                 )
 
                 // Cancha

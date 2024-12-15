@@ -4,6 +4,7 @@ import com.example.torneo.Core.Data.Entity.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
@@ -11,10 +12,13 @@ fun sincronizar_db(db_firebase: FirebaseFirestore, db_local: TorneoDB) {
 
     scope.launch {
         sincronizarTorneos(db_firebase, db_local)
+        delay(1500)
         sincronizarPersonas(db_firebase, db_local)
         sincronizarFechas(db_firebase, db_local)
+        delay(1500)
         sincronizarEquipos(db_firebase, db_local)
         sincronizarPartidos(db_firebase, db_local)
+        delay(1500)
     }
 }
 
@@ -94,12 +98,13 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
     db_firebase.collection("Fechas").get().addOnSuccessListener { result ->
         result.forEach { document ->
             val idTorneo = document.getString("idTorneo") ?: ""
-            Log.d("idTorneo", idTorneo)
+            Log.d("idTorneo de fire baseeee", idTorneo)
 
             scope.launch {
                 val torneo = torneoDao.getTorneo(id = idTorneo.toInt().toString())
                 Log.d("TAG", "Sincronizando fecha con este torneo con ID: ${torneo}")
                 if (torneo != null) {  // Asegúrate de que el torneo existe antes de insertar la fecha
+                    Log.d("Estre a sicroizaaras fechasss", "acaaaaa")
                     val fecha = Fecha(
                         id = document.getLong("id")?.toInt()?: 0,
                         idTorneo = document.getString("idTorneo")?: "",
@@ -108,11 +113,13 @@ private fun sincronizarFechas(db_firebase: FirebaseFirestore, db_local: TorneoDB
                     )
 
                     val existingFecha = dao.getFecha(fecha.id.toString())
+                    Log.d("TAG", "Sincronizando fecha con esta fechaaaaa con ID: ${existingFecha}")
                     if (existingFecha != null) {
                         if (existingFecha != fecha) {
                             dao.updateFecha(fecha)
                         }
                     } else {
+                        Log.d("TAG", "Sincronizando a insetar fechassss")
                         dao.insertFecha(fecha)
                     }
                 } else {
@@ -167,10 +174,7 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
             val idFecha = document.getString("idFecha") ?: ""
             val idLocal = document.getString("idLocal") ?: ""
             val idVisitante = document.getString("idVisitante") ?: ""
-            //val idFecha = document.getLong("idFecha")?.toInt()?: 0
-            //val idLocal = document.getLong("idLocal")?.toInt()?: 0
-            //val idVisitante = document.getLong("idVisitante")?.toInt()?: 0
-            Log.d("idFecha", idFecha.toString())
+            Log.d("idFecha", idFecha)
             Log.d("idLocal", idLocal.toString())
             Log.d("idVisitante", idVisitante.toString())
 
@@ -178,7 +182,7 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
                 val fecha = fechaDao.getFecha(id = idFecha.toInt().toString())
                 val local = equipoDao.getEquipo(id = idLocal.toInt().toString())
                 val visitante = equipoDao.getEquipo(id = idVisitante.toInt().toString())
-
+                Log.d("TAG", "Sincronizando fecha con este torneo con ID: ${fecha},${local},${visitante}")
                 if (fecha != null && local != null && visitante != null) {
                     //val golLocalString = document.getString("golLocal") ?: "0"
                     //val golVisitanteString = document.getString("golVisitante") ?: "0"
@@ -203,10 +207,12 @@ private fun sincronizarPartidos(db_firebase: FirebaseFirestore, db_local: Torneo
 
                     val existingPartido = partidoDao.getPartido(partido.id)
                     if (existingPartido != null) {
+                        Log.e("Entre a existe partidooooo partidoooo","acaaa")
                         if (existingPartido != partido) {
                             partidoDao.updatePartido(partido)
                         }
                     } else {
+                        Log.e("Entre a insertar partidoooo","acaaa")
                         partidoDao.insertPartido(partido)
                     }
                 } else {

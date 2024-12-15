@@ -12,8 +12,12 @@ import androidx.compose.material.icons.filled.SportsScore
 import androidx.compose.material.icons.filled.Stadium
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -22,14 +26,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.torneo.Core.Data.Entity.Equipo
 import com.example.torneo.Core.Data.Entity.Partido
+import com.example.torneo.Core.Data.Entity.Persona
 import com.example.torneo.Pantallas.Usuario.DetallePartido
 import com.example.torneo.TorneoViewModel.PartidosViewModel
 import com.example.torneo.TorneoViewModel.EquiposViewModel
+import com.example.torneo.TorneoViewModel.PersonasViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartidosDeEquipoScreen(
     viewModel: PartidosViewModel = hiltViewModel(),
+    viewModel2 : PersonasViewModel = hiltViewModel(),
     equiposViewModel: EquiposViewModel = hiltViewModel(),
     navController: (partidoId: Int) -> Unit,
     equipoId: Int,
@@ -39,6 +46,9 @@ fun PartidosDeEquipoScreen(
     val equipos by equiposViewModel.equipos.collectAsState(initial = emptyList())
 
     val partidosDeEquipo: List<Partido> = partidos.filter { partido -> ((partido.idLocal.toString() == equipoId.toString()) or (partido.idVisitante.toString() == equipoId.toString())) }
+    var juez by remember { mutableStateOf<Persona?>(null) }
+
+
     Scaffold(
         topBar = {
             CustomTopAppBar(navControllerBack, "Listado de Partidos", true)
@@ -57,7 +67,13 @@ fun PartidosDeEquipoScreen(
                     items(partidosDeEquipo) { partido ->
                         val equipoLocal = equipos.firstOrNull { it.id.toString() == partido.idLocal.toString() }
                         val equipoVisitante = equipos.firstOrNull { it.id.toString() == partido.idVisitante.toString() }
-                        PartidoCard(partido, equipoLocal, equipoVisitante)
+                        var juez by remember { mutableStateOf<Persona?>(null) }
+
+                        LaunchedEffect(partido.idPersona) {
+                            val persona = viewModel2.getPersona(id = partido.idPersona.toInt())
+                            juez = persona
+                        }
+                        PartidoCard(partido, equipoLocal, equipoVisitante,juez)
                     }
                 }
             }
@@ -93,7 +109,7 @@ fun EstadoVacio(padding: PaddingValues) {
 }
 
 @Composable
-fun PartidoCard(partido: Partido, equipoLocal: Equipo?, equipoVisitante: Equipo?) {
+fun PartidoCard(partido: Partido, equipoLocal: Equipo?, equipoVisitante: Equipo?,juez: Persona?) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -116,7 +132,7 @@ fun PartidoCard(partido: Partido, equipoLocal: Equipo?, equipoVisitante: Equipo?
             )
 
             // Detalles del partido
-            DetallesPartido(partido)
+            juez?.let { DetallesPartido(partido, it) }
         }
     }
 }
@@ -166,7 +182,7 @@ fun EncabezadoPartido(
 }
 
 @Composable
-fun DetallesPartido(partido: Partido) {
+fun DetallesPartido(partido: Partido,juez:Persona) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -178,8 +194,8 @@ fun DetallesPartido(partido: Partido) {
 
         DetallePartido(
             icon = Icons.Default.Person,
-            label = "Árbitro",
-            value = partido.idPersona
+            label = "Juez",
+            value = "${juez?.username ?: "juez"}"
         )
 
         DetallePartido(
