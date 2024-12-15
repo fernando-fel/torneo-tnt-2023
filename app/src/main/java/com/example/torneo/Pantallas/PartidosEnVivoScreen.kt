@@ -2,6 +2,7 @@ package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
 import android.os.Build
+import android.util.Log
 
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
@@ -227,14 +228,14 @@ fun PartidoItem2(partidoConTiempo: PartidosViewModel.PartidoConTiempo, viewModel
                 value = partido.numCancha
             )
             Spacer(modifier = Modifier.height(8.dp))
-
+            Log.d("tiempo transcurrido", tiempoTrascurrido)
             // Mostrar tiempo transcurrido, si está en curso
-            if ((partido.estado == "Primer Tiempo") || (partido.estado == "SegudoTiempo")) {
+            if ((partido.estado == "PrimerTiempo") || (partido.estado == "SegundoTiempo")) {
                 Text(
-                    text = " El tiempo $tiempoTrascurrido'",
+                    text = "  ${partidoConTiempo.tiempoTrascurrido + "'"} ",
                     style = MaterialTheme.typography.headlineSmall, // Aumentado de titleMedium a headlineSmall
                     color = Color.Green, // Cambiado a color verde
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 50.dp)
                 )
             }
             }
