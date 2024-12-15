@@ -188,7 +188,7 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
         }
 
 
-        composable(route = "${Routes.UpdatePartidoScreen.route}/{${FECHA_ID}}",
+        composable(route = "${Routes.UpdatePartidoScreen.route}/{${PARTIDO_ID}}",
             arguments = listOf(
                 navArgument("partidoId"){
                     type = NavType.IntType
@@ -260,8 +260,10 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
             val fechaId = navBackStackEntry.arguments?.getInt(FECHA_ID) ?: 0
             PartidoScreen(
                 navController = { partidoId ->
+                    navController.navigate("${Routes.UpdatePartidoScreen.route}/${partidoId}")
                     // Realiza la acción deseada con partidoId
                 },
+
                 fechaId = fechaId,
                 navControllerBack = navController
             )
