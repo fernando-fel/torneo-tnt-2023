@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import com.example.torneo.Pantallas.Routes
 
 
 @Composable
@@ -30,6 +31,43 @@ fun CustomTopAppBar(navController: NavHostController, title: String, showBackIco
             {
                 IconButton(
                     onClick = { navController.navigateUp() }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
+        } else {
+            {}
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun CustomTopAppBar2(navController: NavHostController, title: String, showBackIcon : Boolean) {
+
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        },
+        navigationIcon = if (showBackIcon && navController.previousBackStackEntry != null) {
+            {
+
+                IconButton(
+
+                    onClick = { navController.navigate(Routes.TorneosScreen.route) }
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,

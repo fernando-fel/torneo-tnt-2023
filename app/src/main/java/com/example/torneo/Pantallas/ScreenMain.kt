@@ -149,7 +149,7 @@ fun ScreenMain(database: TorneoDB, torneoId: Int){
                 navController = {
                     navController.navigate("${Routes.FechasScreen.route}/$torneoId")
                 },
-                navControllerBack = navController
+                navControllerBack = navController // Pasa el NavHostController directamente
             )
         }
 

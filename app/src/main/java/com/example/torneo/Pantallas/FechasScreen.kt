@@ -1,6 +1,7 @@
 package com.example.torneo.Pantallas
 
 import Component.CustomTopAppBar
+import Component.CustomTopAppBar2
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,8 +53,9 @@ fun ScaffoldWithTopBarFechasScreen(
     val fechasDeTorneo = fechas.filter { it.idTorneo == torneoId}
 
     Scaffold(
+
         topBar = {
-            CustomTopAppBar(navControllerBack, "Fechas", true)
+            CustomTopAppBar2(navControllerBack, "Fechas", true)
         },
         content = { padding ->
             FechasContent(
